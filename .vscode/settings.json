@@ -1,0 +1,8 @@
+{
+  "eslint.workingDirectories": ["./logic"],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  }
+}

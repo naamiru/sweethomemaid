@@ -1,0 +1,22 @@
+{
+  "name": "sweethomemaid",
+  "version": "1.0.0",
+  "description": "app for sweethomemaid",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naamiru/sweethomemaid.git"
+  },
+  "author": "naamiru",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/naamiru/sweethomemaid/issues"
+  },
+  "homepage": "https://github.com/naamiru/sweethomemaid#readme",
+  "workspaces": [
+    "client",
+    "logic"
+  ]
+}
