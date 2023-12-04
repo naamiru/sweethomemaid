@@ -1,6 +1,6 @@
 import PriorityQueue from 'ts-priority-queue'
 import { Kind, Piece, type Board, type Booster, type Position } from './stage'
-import { NotImplemented, range } from './utils'
+import { GeneralSet, NotImplemented, range } from './utils'
 
 export enum Direction {
   Up,
@@ -291,6 +291,56 @@ export function findMatches(board: Board): Match[] {
     lineMap.delete(line)
   }
 
+  // 2x2 の並びを消す
+  for (const [sx, sy] of findSquares(
+    board,
+    new GeneralSet(positionToInt, matches.map(m => m.positions).flat())
+  )) {
+    const positions = new GeneralSet(positionToInt)
+    const overlaps = new Set<Line>() // 2x2 と重なる 3x1
+
+    for (const pos of squarePositions([sx, sy])) {
+      positions.add(pos)
+      // 2x2 と重なる 3x1 を探す
+      const lines = lineMap.linesAt(pos)
+      if (lines !== undefined) {
+        for (const line of lines) overlaps.add(line)
+      }
+    }
+
+    const bosterPosition: Position = [sx + 1, sy + 1]
+
+    if (overlaps.size > 0) {
+      // 重なった 3x1 の内1つだけを同時に消す
+      // 複数の 3x1 が重なっている場合の優先順は不明
+      const [line] = overlaps
+      for (const pos of line.positions()) positions.add(pos)
+      // 重なり方によって booster ができる位置が変わる
+      if (
+        (line.axis === Axis.H && line.x < sx) ||
+        (line.axis === Axis.V && line.x > sx)
+      ) {
+        bosterPosition[0] = sx
+      }
+      if (
+        (line.axis === Axis.V && line.y < sy) ||
+        (line.axis === Axis.H && line.y > sy)
+      ) {
+        bosterPosition[1] = sy
+      }
+
+      for (const line of overlaps) lineMap.delete(line)
+    }
+
+    matches.push(
+      new Match([...positions], {
+        kind: Kind.Missile,
+        position: bosterPosition
+      })
+    )
+  }
+
+  // 残りは3個の並びのみ
   return matches.concat(
     Array.from(lineMap.lines).map(line => new Match(line.positions()))
   )
@@ -306,18 +356,10 @@ class LineMap {
     this.map = new Map()
   }
 
-  mapKey(position: Position): number {
-    return position[0] * 10 + position[1]
-  }
-
-  decodeMapKey(key: number): Position {
-    return [Math.floor(key / 10), key % 10]
-  }
-
   add(line: Line): void {
     this.lines.add(line)
     for (const position of line.positions()) {
-      const key = this.mapKey(position)
+      const key = positionToInt(position)
       const lines = this.map.get(key)
       if (lines !== undefined) {
         lines.push(line)
@@ -330,7 +372,7 @@ class LineMap {
   delete(line: Line): void {
     this.lines.delete(line)
     for (const position of line.positions()) {
-      const key = this.mapKey(position)
+      const key = positionToInt(position)
       const lines = this.map.get(key)
       if (lines === undefined) continue
       const index = lines.indexOf(line)
@@ -344,18 +386,26 @@ class LineMap {
   }
 
   linesAt(position: Position): Line[] | undefined {
-    return this.map.get(this.mapKey(position))
+    return this.map.get(positionToInt(position))
   }
 
   crosses(): Array<[Position, Line[]]> {
     const crosses: Array<[Position, Line[]]> = []
     for (const [key, lines] of this.map) {
       if (lines.length === 2) {
-        crosses.push([this.decodeMapKey(key), lines])
+        crosses.push([intToPosition(key), lines])
       }
     }
     return crosses
   }
+}
+
+function positionToInt(position: Position): number {
+  return position[0] * 10 + position[1]
+}
+
+function intToPosition(key: number): Position {
+  return [Math.floor(key / 10), key % 10]
 }
 
 function createLineMap(board: Board): LineMap {
@@ -443,6 +493,48 @@ function findLines(board: Board): Line[] {
   }
 
   return lines
+}
+
+/** 同色 2x2 を探して左上の座標を返す。重なりなし。 */
+function findSquares(board: Board, mask: GeneralSet<Position>): Position[] {
+  const positions: Position[] = []
+
+  for (const y of range(1, board.height + 1)) {
+    let x = 0
+    while (x < board.width + 1) {
+      const targets = squarePositions([x, y])
+      // 他のマッチで使用済みかチェック
+      if (targets.some(pos => mask.has(pos))) {
+        x += 1
+        continue
+      }
+      // 同一色チェック
+      const piece = board.piece([x, y])
+      if (
+        piece.isColor() &&
+        targets.slice(1).every(pos => board.piece(pos).face === piece.face)
+      ) {
+        positions.push([x, y])
+        for (const pos of targets) mask.add(pos)
+        x += 2
+        continue
+      }
+      x += 1
+    }
+  }
+
+  return positions
+}
+
+/** 左上を起点とした 2x2 の対象領域 */
+function squarePositions(position: Position): Position[] {
+  const [x, y] = position
+  return [
+    [x, y],
+    [x + 1, y],
+    [x, y + 1],
+    [x + 1, y + 1]
+  ]
 }
 
 function applyMatches(board: Board, matches: Match[]): void {
