@@ -150,12 +150,8 @@ export class Board {
     if (booster === Kind.HRocket || booster === Kind.VRocket)
       return killer.rocket ?? 0
     if (booster === Kind.Missile) return killer.missile ?? 0
+    if (booster === Kind.Special)
+      return Math.max(killer.bomb ?? 0, killer.rocket ?? 0, killer.missile ?? 0)
     return 0
-  }
-
-  maxKiller(type: keyof Killers): number {
-    const killer = this.killers[type]
-    if (killer === undefined) return 0
-    return Math.max(killer.bomb ?? 0, killer.rocket ?? 0, killer.missile ?? 0)
   }
 }

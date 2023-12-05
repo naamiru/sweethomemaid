@@ -1267,4 +1267,196 @@ describe('applyMove', () => {
       createBoard('xxxx')
     )
   })
+
+  test('スペシャル+スペシャルで全消し', () => {
+    expectMove(
+      `
+      SS.
+      ...
+      `,
+      new Move([1, 1], Direction.Right),
+      `
+      xxx
+      xxx
+      `
+    )
+  })
+
+  test('スペシャル+スペシャルは最大キラーが乗る', () => {
+    expectMove(
+      createBoard('SS--', {
+        ice: '0045',
+        killers: { ice: { bomb: 1, rocket: 2, missile: 3 } }
+      }),
+      new Move([1, 1], Direction.Right),
+      createBoard('xx--', { ice: '0001' })
+    )
+  })
+
+  test('スペシャル+ボムで全消し、ボムのキラーが乗る', () => {
+    expectMove(
+      createBoard('SB----', {
+        ice: '000123',
+        killers: { ice: { bomb: 1, rocket: 2, missile: 3 } }
+      }),
+      new Move([1, 1], Direction.Right),
+      createBoard('xxx---', { ice: '000001' })
+    )
+  })
+
+  test('スペシャル+ロケットで全消し、ロケットのキラーが乗る', () => {
+    expectMove(
+      createBoard('SV----', {
+        ice: '000123',
+        killers: { ice: { bomb: 3, rocket: 1, missile: 2 } }
+      }),
+      new Move([1, 1], Direction.Right),
+      createBoard('xxx---', { ice: '000001' })
+    )
+  })
+
+  test('スペシャル+ミサイルで全消し、ミサイルのキラーが乗る', () => {
+    expectMove(
+      createBoard('SM----', {
+        ice: '000123',
+        killers: { ice: { bomb: 2, rocket: 3, missile: 1 } }
+      }),
+      new Move([1, 1], Direction.Right),
+      createBoard('xxx---', { ice: '000001' })
+    )
+  })
+
+  test('ボム+ボム', () => {
+    // 爆発前にずらした位置への落下処理が入ることに注意
+    expectMove(
+      `
+      rbrbrbrbr
+      gygygygyg
+      rbrbrbrbr
+      gygygygyg
+      rbrBBbrbr
+      gygygygyg
+      rbrbrbrbr
+      gygygygyg
+      rbrbrbrrb
+      `,
+      new Move([4, 5], Direction.Right),
+      `
+      rxxxxxxxr
+      gxxxxxxxg
+      rxxxxxxxr
+      gbxxxxxbg
+      ryxxxxxyr
+      gbrxxxrbg
+      rbgxxxgbr
+      gygxrbgyg
+      rbrbrbrrb
+      `
+    )
+  })
+
+  test('ボム+ボム ボムのキラーが乗る', () => {
+    expectMove(
+      createBoard('BB--', {
+        ice: '0023',
+        killers: { ice: { bomb: 1 } }
+      }),
+      new Move([1, 1], Direction.Right),
+      createBoard('xx--', { ice: '0001' })
+    )
+  })
+
+  test('ボム+ロケット', () => {
+    expectMove(
+      `
+      rbrbr
+      gygyg
+      rHBbr
+      gygyg
+      rbrbr
+      `,
+      new Move([2, 3], Direction.Right),
+      `
+      xxxxx
+      xxxxx
+      xxxxx
+      rxxxr
+      rxxxr
+      `
+    )
+  })
+
+  test('ボム+ロケット ロケットのキラーが乗る', () => {
+    expectMove(
+      createBoard('HB--', {
+        ice: '0023',
+        killers: { ice: { bomb: 2, rocket: 1 } }
+      }),
+      new Move([1, 1], Direction.Right),
+      createBoard('xx--', { ice: '0001' })
+    )
+  })
+
+  test('ロケット+ロケット', () => {
+    // 爆発前にずらした位置への落下処理が入ることに注意
+    expectMove(
+      `
+      rbrbr
+      gygyg
+      rHHbr
+      gygyg
+      rbrbr
+      `,
+      new Move([2, 3], Direction.Right),
+      `
+      xxxxx
+      rxxbr
+      gbxyg
+      gyxyg
+      rbxbr
+      `
+    )
+  })
+
+  test('ロケット+ロケット ロケットのキラーが乗る', () => {
+    expectMove(
+      createBoard('VV--', {
+        ice: '0023',
+        killers: { ice: { bomb: 2, rocket: 1 } }
+      }),
+      new Move([1, 1], Direction.Right),
+      createBoard('xx--', { ice: '0001' })
+    )
+  })
+
+  test('ミサイル+ミサイル', () => {
+    expectMove(
+      `
+      rbrbr
+      gygyg
+      rMMbr
+      gygyg
+      rbrbr
+      `,
+      new Move([2, 3], Direction.Right),
+      `
+      rxxxr
+      gxxxg
+      rxxxr
+      gxrbg
+      rbrbr
+      `
+    )
+  })
+
+  test('ミサイル+ミサイル ミサイルのキラーが乗る', () => {
+    expectMove(
+      createBoard('MM--', {
+        ice: '0023',
+        killers: { ice: { bomb: 2, missile: 1 } }
+      }),
+      new Move([1, 1], Direction.Right),
+      createBoard('xx--', { ice: '0003' })
+    )
+  })
 })

@@ -2,12 +2,13 @@ import PriorityQueue from 'ts-priority-queue'
 import {
   Kind,
   Piece,
+  isColor,
   type Board,
   type Booster,
   type Color,
   type Position
 } from './board'
-import { GeneralSet, NotImplemented, partition, range } from './utils'
+import { GeneralSet, partition, range } from './utils'
 
 export enum Direction {
   Up,
@@ -45,28 +46,59 @@ export function applyMove(board: Board, move: Move): void {
     }
   }
 
-  if (!mv.swapSkill && mv.boosterCount() === 2) {
-    // ブースター結合は未実装
-    throw NotImplemented
+  // ブースターコンボの起点になるピース
+  let comboTriggerPiece: Piece | undefined
+
+  if (mv.isCombo()) {
+    comboTriggerPiece = board.piece(move.position)
+    // ブースターコンボの起点は除去して落下で埋める
+    fallAt(board, move.position, mv.positions()[1])
+  } else {
+    mv.swap()
   }
 
-  mv.swap()
   // ブースター起動前に色のマッチを取得。まだ消さない
   let matches = findMatches(board).map(match =>
     fixBoosterPosition(match, mv.positions())
   )
 
   // マッチがなければ元に戻して終了
-  if (matches.length === 0 && mv.boosterCount() === 0 && !mv.swapSkill) {
+  if (
+    comboTriggerPiece === undefined &&
+    matches.length === 0 &&
+    mv.boosterCount() === 0 &&
+    !mv.swapSkill
+  ) {
     mv.swap()
     throw new InvalidMove()
   }
 
   // ブースターを起動
-  const boosterPosition = mv.boosterPosition()
   let skips: GeneralSet<Position> | undefined
-  if (!mv.swapSkill && boosterPosition !== undefined) {
-    const effects = boosterEffects(board, boosterPosition, mv.color())
+  if (
+    comboTriggerPiece !== undefined ||
+    (!move.swapSkill && mv.boosterCount() > 0)
+  ) {
+    let boosterPosition: Position
+    let booster: Booster | [Booster, Booster] | [Kind.Special, Color]
+
+    if (comboTriggerPiece !== undefined) {
+      boosterPosition = mv.positions()[1]
+      const [p1, p2] = [comboTriggerPiece, board.piece(boosterPosition)]
+      if (p1.isBooster() && p2.isBooster()) {
+        booster = [p1.face as Booster, p2.face as Booster]
+      } else if (p1.isColor()) {
+        booster = [Kind.Special, p1.face as Color]
+      } else {
+        booster = [Kind.Special, p2.face as Color]
+      }
+    } else {
+      const [pos, bst] = mv.booster() as [Position, Booster]
+      boosterPosition = pos
+      booster = bst
+    }
+
+    const effects = boosterEffects(board, boosterPosition, booster)
     applyBoosterEffects(board, boosterPosition, effects)
     skips = new GeneralSet(positionToInt, [...effects.values()].flat())
   }
@@ -205,9 +237,10 @@ class BoardMove {
     ).length
   }
 
-  boosterPosition(): Position | undefined {
+  booster(): [Position, Booster] | undefined {
     for (const pos of this.positions()) {
-      if (this.board.piece(pos).isBooster()) return pos
+      const piece = this.board.piece(pos)
+      if (piece.isBooster()) return [pos, piece.face as Booster]
     }
     return undefined
   }
@@ -218,6 +251,19 @@ class BoardMove {
       if (piece.isColor()) return piece.face as Color
     }
     return undefined
+  }
+
+  isCombo(): boolean {
+    if (this.swapSkill) return false
+    if (this.move.direction === Direction.Zero) return false
+    const [p1, p2] = this.pieces()
+    if (p1.isBooster() && p2.isBooster()) return true
+    if (
+      (p1.face === Kind.Special && p2.isColor()) ||
+      (p1.isColor() && p2.face === Kind.Special)
+    )
+      return true
+    return false
   }
 
   swap(): void {
@@ -608,26 +654,28 @@ function applyMatches(
   }
 }
 
+type BoosterCombo = Booster | [Booster, Booster] | [Kind.Special, Color]
+
 function boosterEffects(
   board: Board,
   position: Position,
-  color: Color | undefined
-): Map<Booster, Position[]> {
-  const effects = new Map<Booster, Position[]>()
+  booster: BoosterCombo
+): Map<Booster | Kind.Empty, Position[]> {
+  const effects = new Map<Booster | Kind.Empty, Position[]>()
   const appeared = new GeneralSet(positionToInt, [position])
 
-  const boosterPositions = [position]
+  const boosters: Array<[Position, BoosterCombo]> = [[position, booster]]
 
-  while (boosterPositions.length > 0) {
-    const boosterPosition = boosterPositions.shift()
-    if (boosterPosition === undefined) break
-    const range = boosterRange(board, boosterPosition, color).filter(
+  while (boosters.length > 0) {
+    const posAndBooster = boosters.shift()
+    if (posAndBooster === undefined) break
+    const [boosterPosition, combo] = posAndBooster
+    const range = boosterRange(board, boosterPosition, combo).filter(
       pos => !appeared.has(pos)
     )
-    color = undefined
     if (range.length === 0) continue
 
-    const booster = board.piece(boosterPosition).face as Booster
+    const booster = boosterEffectAs(combo)
     let positions = effects.get(booster)
     if (positions === undefined) {
       positions = []
@@ -636,8 +684,9 @@ function boosterEffects(
     for (const pos of range) {
       appeared.add(pos)
       positions.push(pos)
-      if (board.piece(pos).isBooster()) {
-        boosterPositions.push(pos)
+      const piece = board.piece(pos)
+      if (piece.isBooster()) {
+        boosters.push([pos, piece.face as Booster])
       }
     }
   }
@@ -648,7 +697,7 @@ function boosterEffects(
 function boosterRange(
   board: Board,
   position: Position,
-  color: Color | undefined
+  booster: BoosterCombo
 ): Position[] {
   const [cx, cy] = position
 
@@ -667,14 +716,77 @@ function boosterRange(
     positions.push(pos)
   }
 
-  const booster = board.piece(position).face
-  if (booster === Kind.Special) {
-    // 誘発時のスペシャルは未対応。盤面中最多色が消える？
-    if (color !== undefined) {
+  if (booster instanceof Array) {
+    if (isColor(booster[1])) {
+      // スペシャル + 色
+      const color = booster[1]
       for (const pos of board.allPositions()) {
-        if (board.piece(pos).face === color) append(pos)
+        if (board.piece(pos).face === color) {
+          append(pos)
+        }
       }
+    } else {
+      const [b1, b2] = booster
+      if (b1 === Kind.Special || b2 === Kind.Special) {
+        // スペシャルを含むコンボはとりあえず全消し
+        for (const pos of board.allPositions()) {
+          append(pos)
+        }
+      } else if (b1 === Kind.Bomb && b2 === Kind.Bomb) {
+        // 中心 3x7 範囲
+        for (let i = -1; i <= 1; i++) {
+          for (let j = -3; j <= 3; j++) {
+            append([cx + i, cy + j])
+          }
+        }
+        // 中心の左右 1x5 範囲
+        for (let j = -2; j <= 2; j++) {
+          append([cx - 2, cy + j])
+          append([cx + 2, cy + j])
+        }
+        // さらに左右 1x3 範囲
+        for (let j = -1; j <= 1; j++) {
+          append([cx - 3, cy + j])
+          append([cx + 3, cy + j])
+        }
+      } else if (
+        (b1 === Kind.Bomb && (b2 === Kind.HRocket || b2 === Kind.VRocket)) ||
+        ((b1 === Kind.HRocket || b1 === Kind.VRocket) && b2 === Kind.Bomb)
+      ) {
+        // 横3列
+        for (let x = 1; x <= board.width; x++) {
+          append([x, cy - 1])
+          append([x, cy])
+          append([x, cy + 1])
+        }
+        // 縦3列
+        for (let y = 1; y <= board.height; y++) {
+          if (cy - 1 <= y && y <= cy + 1) continue // 横3列で追加済
+          append([cx - 1, y])
+          append([cx, y])
+          append([cx + 1, y])
+        }
+      } else if (
+        (b1 === Kind.HRocket || b1 === Kind.VRocket) &&
+        (b2 === Kind.HRocket || b2 === Kind.VRocket)
+      ) {
+        for (let x = 1; x <= board.width; x++) {
+          append([x, cy])
+        }
+        for (let y = 1; y <= board.height; y++) {
+          append([cx, y])
+        }
+      } else if (b1 === Kind.Missile && b2 === Kind.Missile) {
+        for (let i = -1; i <= 1; i++) {
+          for (let j = -1; j <= 1; j++) {
+            append([cx + i, cy + j])
+          }
+        }
+      }
+      // ミサイルの飛び先は未対応
     }
+  } else if (booster === Kind.Special) {
+    // 誘発時のスペシャルは未対応。盤面中最多色が消える？
   } else if (booster === Kind.Bomb) {
     // 中心 3x5 範囲
     for (let i = -1; i <= 1; i++) {
@@ -707,15 +819,45 @@ function boosterRange(
   return positions
 }
 
+function boosterEffectAs(booster: BoosterCombo): Booster | Kind.Empty {
+  if (booster instanceof Array) {
+    if (isColor(booster[1])) {
+      // スペシャル + 色
+      return Kind.Empty
+    }
+    const [b1, b2] = booster
+    if (b1 === Kind.Special) return b2
+    if (b2 === Kind.Special) return b1
+    if (
+      b1 === Kind.HRocket ||
+      b1 === Kind.VRocket ||
+      b2 === Kind.HRocket ||
+      b2 === Kind.VRocket
+    ) {
+      return Kind.HRocket
+    }
+    if (b1 === Kind.Bomb || b2 === Kind.Bomb) return Kind.Bomb
+    return Kind.Missile
+  }
+  return booster
+}
+
 function applyBoosterEffects(
   board: Board,
   position: Position,
-  effects: Map<Booster, Position[]>
+  effects: Map<Booster | Kind.Empty, Position[]>
 ): void {
   board.setPiece(position, new Piece(Kind.Empty))
   for (const [booster, positions] of effects.entries()) {
     for (const pos of positions) {
-      board.setPiece(pos, matchedPiece(board, board.piece(pos), booster))
+      board.setPiece(
+        pos,
+        matchedPiece(
+          board,
+          board.piece(pos),
+          booster === Kind.Empty ? undefined : booster
+        )
+      )
     }
   }
 }
@@ -752,7 +894,13 @@ export function fall(board: Board): void {
   }
 }
 
-function fallAt(board: Board, position: Position): void {
+function fallAt(
+  board: Board,
+  position: Position,
+  stop: Position | undefined = undefined
+): void {
+  if (position === stop) return
+
   const upstreamPosition = board.upstream(position)
   const upstreamPiece = board.piece(upstreamPosition)
 
@@ -762,7 +910,7 @@ function fallAt(board: Board, position: Position): void {
   }
 
   board.setPiece(position, upstreamPiece)
-  fallAt(board, upstreamPosition)
+  fallAt(board, upstreamPosition, stop)
 }
 
 function findEmpty(board: Board): Position | undefined {
