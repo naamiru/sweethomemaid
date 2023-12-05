@@ -1,6 +1,13 @@
 import PriorityQueue from 'ts-priority-queue'
-import { Kind, Piece, type Board, type Booster, type Position } from './stage'
-import { GeneralSet, NotImplemented, range } from './utils'
+import {
+  Kind,
+  Piece,
+  type Board,
+  type Booster,
+  type Color,
+  type Position
+} from './board'
+import { GeneralSet, NotImplemented, partition, range } from './utils'
 
 export enum Direction {
   Up,
@@ -10,10 +17,66 @@ export enum Direction {
   Zero
 }
 
-export type Move = {
-  position: Position
-  direction: Direction
-  swapSkill?: boolean
+export class Move {
+  constructor(
+    public position: Position,
+    public direction: Direction,
+    public swapSkill: boolean = false
+  ) {}
+}
+
+export class InvalidMove extends Error {
+  static {
+    this.prototype.name = 'InvalidMove'
+  }
+}
+
+export function applyMove(board: Board, move: Move): void {
+  const mv = new BoardMove(board, move)
+
+  if (mv.pieces().some(isFixedPiece)) {
+    throw new InvalidMove()
+  }
+
+  if (move.direction === Direction.Zero) {
+    const [piece] = mv.pieces()
+    if (!piece.isBooster() || piece.face === Kind.Special) {
+      throw new InvalidMove()
+    }
+  }
+
+  if (!mv.swapSkill && mv.boosterCount() === 2) {
+    // ブースター結合は未実装
+    throw NotImplemented
+  }
+
+  mv.swap()
+  // ブースター起動前に色のマッチを取得。まだ消さない
+  let matches = findMatches(board).map(match =>
+    fixBoosterPosition(match, mv.positions())
+  )
+
+  // マッチがなければ元に戻して終了
+  if (matches.length === 0 && mv.boosterCount() === 0 && !mv.swapSkill) {
+    mv.swap()
+    throw new InvalidMove()
+  }
+
+  // ブースターを起動
+  const boosterPosition = mv.boosterPosition()
+  let skips: GeneralSet<Position> | undefined
+  if (!mv.swapSkill && boosterPosition !== undefined) {
+    const effects = boosterEffects(board, boosterPosition, mv.color())
+    applyBoosterEffects(board, boosterPosition, effects)
+    skips = new GeneralSet(positionToInt, [...effects.values()].flat())
+  }
+
+  do {
+    applyMatches(board, matches, skips)
+    skips = undefined
+    fall(board)
+    matches = findMatches(board)
+  } while (matches.length > 0)
 }
 
 /** 揃っている色の並びと、それによってできるブースター */
@@ -97,12 +160,6 @@ class Line {
   }
 }
 
-export class InvalidMove extends Error {
-  static {
-    this.prototype.name = 'InvalidMove'
-  }
-}
-
 class BoardMove {
   constructor(
     public board: Board,
@@ -148,6 +205,21 @@ class BoardMove {
     ).length
   }
 
+  boosterPosition(): Position | undefined {
+    for (const pos of this.positions()) {
+      if (this.board.piece(pos).isBooster()) return pos
+    }
+    return undefined
+  }
+
+  color(): Color | undefined {
+    for (const pos of this.positions()) {
+      const piece = this.board.piece(pos)
+      if (piece.isColor()) return piece.face as Color
+    }
+    return undefined
+  }
+
   swap(): void {
     const [from, to] = this.positions()
     const piece = this.board.piece(to)
@@ -167,40 +239,6 @@ function isFixedPiece(piece: Piece): boolean {
     piece.face === Kind.Empty ||
     piece.face === Kind.Unknown
   )
-}
-
-export function applyMove(board: Board, move: Move): void {
-  const mv = new BoardMove(board, move)
-
-  if (mv.pieces().some(isFixedPiece)) {
-    throw InvalidMove
-  }
-
-  if (move.direction === Direction.Zero) {
-    const [piece] = mv.pieces()
-    if (!piece.isBooster() || piece.face === Kind.Special) {
-      throw InvalidMove
-    }
-  }
-
-  if (mv.boosterCount() === 2 && !mv.swapSkill) {
-    // ブースター結合は未実装
-    throw NotImplemented
-  }
-
-  mv.swap()
-  let matches = findMatches(board)
-
-  if (matches.length === 0 && mv.boosterCount() === 0 && !mv.swapSkill) {
-    mv.swap()
-    throw InvalidMove
-  }
-
-  do {
-    applyMatches(board, matches)
-    fall(board)
-    matches = findMatches(board)
-  } while (matches.length > 0)
 }
 
 /** 揃っている色を探す  */
@@ -537,14 +575,247 @@ function squarePositions(position: Position): Position[] {
   ]
 }
 
-function applyMatches(board: Board, matches: Match[]): void {
+function fixBoosterPosition(match: Match, positions: Position[]): Match {
+  if (match.booster === undefined) return match
+  for (const position of positions) {
+    if (
+      match.positions.some(
+        pos => pos[0] === position[0] && pos[1] === position[1]
+      )
+    ) {
+      return new Match(match.positions, { kind: match.booster.kind, position })
+    }
+  }
+  return match
+}
+
+function applyMatches(
+  board: Board,
+  matches: Match[],
+  skips: GeneralSet<Position> | undefined
+): void {
   for (const match of matches) {
     for (const position of match.positions) {
-      board.setPiece(position, new Piece(Kind.Empty))
+      if (skips !== undefined && skips.has(position)) continue
+      board.setPiece(position, matchedPiece(board, board.piece(position)))
+    }
+    if (
+      match.booster !== undefined &&
+      board.piece(match.booster.position).face === Kind.Empty
+    ) {
+      board.setPiece(match.booster.position, new Piece(match.booster.kind))
     }
   }
 }
 
-function fall(board: Board): void {
-  throw NotImplemented
+function boosterEffects(
+  board: Board,
+  position: Position,
+  color: Color | undefined
+): Map<Booster, Position[]> {
+  const effects = new Map<Booster, Position[]>()
+  const appeared = new GeneralSet(positionToInt, [position])
+
+  const boosterPositions = [position]
+
+  while (boosterPositions.length > 0) {
+    const boosterPosition = boosterPositions.shift()
+    if (boosterPosition === undefined) break
+    const range = boosterRange(board, boosterPosition, color).filter(
+      pos => !appeared.has(pos)
+    )
+    color = undefined
+    if (range.length === 0) continue
+
+    const booster = board.piece(boosterPosition).face as Booster
+    let positions = effects.get(booster)
+    if (positions === undefined) {
+      positions = []
+      effects.set(booster, positions)
+    }
+    for (const pos of range) {
+      appeared.add(pos)
+      positions.push(pos)
+      if (board.piece(pos).isBooster()) {
+        boosterPositions.push(pos)
+      }
+    }
+  }
+
+  return effects
+}
+
+function boosterRange(
+  board: Board,
+  position: Position,
+  color: Color | undefined
+): Position[] {
+  const [cx, cy] = position
+
+  const positions: Position[] = []
+  function append(pos: Position): void {
+    const [x, y] = pos
+    if (x === cx && y === cy) return
+    if (x < 1 || x > board.width || y < 1 || y > board.height) return
+    const piece = board.piece(pos)
+    if (
+      piece.face === Kind.Out ||
+      piece.face === Kind.Empty ||
+      piece.face === Kind.Unknown
+    )
+      return
+    positions.push(pos)
+  }
+
+  const booster = board.piece(position).face
+  if (booster === Kind.Special) {
+    // 誘発時のスペシャルは未対応。盤面中最多色が消える？
+    if (color !== undefined) {
+      for (const pos of board.allPositions()) {
+        if (board.piece(pos).face === color) append(pos)
+      }
+    }
+  } else if (booster === Kind.Bomb) {
+    // 中心 3x5 範囲
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -2; j <= 2; j++) {
+        append([cx + i, cy + j])
+      }
+    }
+    // 左右それぞれ 1x3 範囲
+    for (let j = -1; j <= 1; j++) {
+      append([cx - 2, cy + j])
+      append([cx + 2, cy + j])
+    }
+  } else if (booster === Kind.HRocket) {
+    for (let x = 1; x <= board.width; x++) {
+      append([x, cy])
+    }
+  } else if (booster === Kind.VRocket) {
+    for (let y = 1; y <= board.height; y++) {
+      append([cx, y])
+    }
+  } else if (booster === Kind.Missile) {
+    // 飛び先は未対応
+    append([cx, cy])
+    append([cx - 1, cy])
+    append([cx + 1, cy])
+    append([cx, cy - 1])
+    append([cx, cy + 1])
+  }
+
+  return positions
+}
+
+function applyBoosterEffects(
+  board: Board,
+  position: Position,
+  effects: Map<Booster, Position[]>
+): void {
+  board.setPiece(position, new Piece(Kind.Empty))
+  for (const [booster, positions] of effects.entries()) {
+    for (const pos of positions) {
+      board.setPiece(pos, matchedPiece(board, board.piece(pos), booster))
+    }
+  }
+}
+
+function matchedPiece(
+  board: Board,
+  piece: Piece,
+  booster: Booster | undefined = undefined
+): Piece {
+  if (piece.ice > 0) {
+    const count = 1 + board.killer('ice', booster)
+    return new Piece(piece.face, Math.max(piece.ice - count, 0))
+  }
+
+  const face = piece.face
+
+  if (face instanceof Object && face.kind === Kind.Mouse) {
+    const count = 1 + board.killer('mouse', booster)
+    if (count < face.count) {
+      return new Piece({ kind: Kind.Mouse, count: face.count - count })
+    } else {
+      return new Piece(Kind.Empty)
+    }
+  }
+
+  return new Piece(Kind.Empty)
+}
+
+export function fall(board: Board): void {
+  while (true) {
+    const pos = findEmpty(board)
+    if (pos === undefined) return
+    fallAt(board, pos)
+  }
+}
+
+function fallAt(board: Board, position: Position): void {
+  const upstreamPosition = board.upstream(position)
+  const upstreamPiece = board.piece(upstreamPosition)
+
+  if (upstreamPiece.face === Kind.Out) {
+    board.setPiece(position, new Piece(Kind.Unknown))
+    return
+  }
+
+  board.setPiece(position, upstreamPiece)
+  fallAt(board, upstreamPosition)
+}
+
+function findEmpty(board: Board): Position | undefined {
+  for (const pos of getFallablePositions(board)) {
+    if (board.piece(pos).face === Kind.Empty) {
+      return pos
+    }
+  }
+  return undefined
+}
+
+function getFallablePositions(board: Board): Position[] {
+  if (board.fallablePositions !== undefined) {
+    return board.fallablePositions
+  }
+
+  // 下流マスを計算
+  const downstreams: Position[][][] = Array.from(
+    { length: board.width + 2 },
+    () => Array.from({ length: board.height + 2 }, () => [])
+  )
+  for (const pos of board.allPositions()) {
+    if (board.piece(pos).face === Kind.Out) continue
+    const up = board.upstream(pos)
+    if (board.piece(up).face === Kind.Out) continue
+    downstreams[up[0]][up[1]].push(pos)
+  }
+
+  const positions = new GeneralSet(positionToInt)
+
+  function register(root: Position): void {
+    if (positions.has(root)) return
+    positions.add(root)
+
+    // 直線的な下流 -> 斜めな下流 の順で深さ優先で下流を登録
+    const [straights, angles] = partition(
+      downstreams[root[0]][root[1]],
+      pos => pos[0] === root[0] || pos[1] === root[1]
+    )
+    for (const pos of straights) register(pos)
+    for (const pos of angles) register(pos)
+  }
+
+  // 最上流マスから順次処理
+  for (const pos of board.allPositions()) {
+    if (
+      board.piece(pos).face !== Kind.Out &&
+      board.piece(board.upstream(pos)).face === Kind.Out
+    ) {
+      register(pos)
+    }
+  }
+
+  board.fallablePositions = [...positions]
+  return board.fallablePositions
 }

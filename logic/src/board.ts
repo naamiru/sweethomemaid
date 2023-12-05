@@ -66,6 +66,10 @@ export class Piece {
     public readonly ice = 0
   ) {}
 
+  get kind(): Kind {
+    return getKind(this.face)
+  }
+
   isBooster(): boolean {
     return isBooster(this.face)
   }
@@ -92,6 +96,10 @@ export class Board {
   pieces: Piece[][]
   upstreams: Position[][]
   killers: Killers
+
+  // 落下処理を行う順に並べた位置。
+  // move.ts でのみ使うが、キャッシュのため Board インスタンスに持たせる
+  fallablePositions: Position[] | undefined = undefined
 
   constructor(width: number, height: number) {
     this.pieces = Array.from({ length: width + 2 }, () =>
@@ -123,11 +131,31 @@ export class Board {
     return this.upstreams[position[0]][position[1]]
   }
 
+  setUpstream(position: Position, upstream: Position): void {
+    this.upstreams[position[0]][position[1]] = upstream
+  }
+
   *allPositions(): Generator<Position, void, void> {
     for (let x = 1; x <= this.width; x++) {
       for (let y = 1; y <= this.height; y++) {
         yield [x, y]
       }
     }
+  }
+
+  killer(type: keyof Killers, booster: Booster | undefined): number {
+    const killer = this.killers[type]
+    if (killer === undefined || booster === undefined) return 0
+    if (booster === Kind.Bomb) return killer.bomb ?? 0
+    if (booster === Kind.HRocket || booster === Kind.VRocket)
+      return killer.rocket ?? 0
+    if (booster === Kind.Missile) return killer.missile ?? 0
+    return 0
+  }
+
+  maxKiller(type: keyof Killers): number {
+    const killer = this.killers[type]
+    if (killer === undefined) return 0
+    return Math.max(killer.bomb ?? 0, killer.rocket ?? 0, killer.missile ?? 0)
   }
 }
