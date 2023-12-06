@@ -1,11 +1,4 @@
-import {
-  InvalidMove,
-  applyMove,
-  type Board,
-  type Move,
-  type Piece,
-  type Position
-} from '@sweethomemaid/logic'
+import { type Board, type Piece, type Position } from '@sweethomemaid/logic'
 import {
   createContext,
   useReducer,
@@ -19,6 +12,7 @@ export type AppState = {
   stage: StageName
   board: Board
   pieces: Piece[][]
+  isPlaying: boolean
   swap?: {
     position: Position
     triggerPosition: Position
@@ -36,8 +30,8 @@ export type AppAction =
       triggerPosition?: Position
     }
   | {
-      type: 'move'
-      move: Move
+      type: 'moved'
+      complete: boolean
     }
 
 const initialStage = 'xmas_4_1'
@@ -45,7 +39,8 @@ const initialBoard = createBoard(initialStage)
 const initialState: AppState = {
   stage: initialStage,
   board: initialBoard,
-  pieces: initialBoard.pieces
+  pieces: initialBoard.pieces,
+  isPlaying: false
 }
 
 function reduce(state: AppState, action: AppAction): AppState {
@@ -54,8 +49,8 @@ function reduce(state: AppState, action: AppAction): AppState {
       return setStage(state, action.stage)
     case 'setSwap':
       return setSwap(state, action.position, action.triggerPosition)
-    case 'move':
-      return startMoving(state, action.move)
+    case 'moved':
+      return moved(state, action.complete)
   }
 }
 
@@ -65,7 +60,8 @@ function setStage(state: AppState, stage: StageName): AppState {
   return {
     stage,
     board,
-    pieces: board.pieces
+    pieces: board.pieces,
+    isPlaying: false
   }
 }
 
@@ -89,21 +85,11 @@ function setSwap(
   }
 }
 
-function startMoving(state: AppState, move: Move): AppState {
-  try {
-    state.board.pieces = state.pieces // reducer 複数回呼ばれる対策
-    applyMove(state.board, move)
-  } catch (e) {
-    if (e instanceof InvalidMove) {
-      console.warn('InvalidMove', move)
-      return state
-    }
-    throw e
-  }
-
+function moved(state: AppState, complete: boolean): AppState {
   return {
     ...state,
-    pieces: state.board.pieces
+    pieces: state.board.pieces,
+    isPlaying: !complete
   }
 }
 

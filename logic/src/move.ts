@@ -51,7 +51,22 @@ export class InvalidMove extends Error {
   }
 }
 
+export enum MoveScene {
+  Swap,
+  Match,
+  Fall
+}
+
 export function applyMove(board: Board, move: Move): void {
+  // eslint-disable-next-line no-empty, @typescript-eslint/no-unused-vars
+  for (const _ of moveScenes(board, move)) {
+  }
+}
+
+export function* moveScenes(
+  board: Board,
+  move: Move
+): Generator<MoveScene, void, void> {
   const mv = new BoardMove(board, move)
 
   if (mv.pieces().some(isFixedPiece)) {
@@ -92,6 +107,8 @@ export function applyMove(board: Board, move: Move): void {
     throw new InvalidMove()
   }
 
+  yield MoveScene.Swap
+
   // ブースターを起動
   let skips: GeneralSet<Position> | undefined
   if (
@@ -125,7 +142,9 @@ export function applyMove(board: Board, move: Move): void {
   do {
     applyMatches(board, matches, skips)
     skips = undefined
+    yield MoveScene.Match
     fall(board)
+    yield MoveScene.Fall
     matches = findMatches(board)
   } while (matches.length > 0)
 }

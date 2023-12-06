@@ -15,13 +15,14 @@ import classNames from 'classnames'
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import './PieceView.css'
 import { useApp } from './context/use-app'
+import { usePlayMove } from './play-move'
 
 export default function PieceView({
   position
 }: {
   position: Position
 }): ReactNode {
-  const { board, pieces, swap, dispatch } = useApp()
+  const { board, pieces, isPlaying, swap, dispatch } = useApp()
   const piece = pieces[position[0]][position[1]]
 
   const [isMoving, setIsMoving] = useState(false)
@@ -31,10 +32,16 @@ export default function PieceView({
   const [comboDirs, setComboDirs] = useState(new Set<Direction>())
   const [{ x, y }, api] = useSpring(() => ({
     x: 0,
-    y: 0
+    y: 0,
+    config: {
+      tension: 300
+    }
   }))
+  const playMove = usePlayMove()
   const bind = useDrag(
     ({ first, down, movement }) => {
+      if (isPlaying) return
+
       if (first) {
         clearTimeout(stopTimer)
         setIsMoving(true)
@@ -96,7 +103,7 @@ export default function PieceView({
       } else {
         dispatch({ type: 'setSwap' })
         if (dir !== undefined) {
-          dispatch({ type: 'move', move: new Move(position, dir) })
+          playMove(new Move(position, dir)).catch(console.error)
         }
       }
 
