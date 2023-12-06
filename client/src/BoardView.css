@@ -1,0 +1,29 @@
+.board-view {
+  display: grid;
+
+  > .pieces {
+    grid-column: 1;
+    grid-row: 1;
+
+    > .row {
+      display: flex;
+    }
+  }
+
+  .background-piece {
+    flex-grow: 1;
+    position: relative;
+
+    &:not(.is-out) {
+      background-size: cover;
+      background-image: url('/piece-images/empty.png');
+    }
+
+    > .piece {
+      width: 100%;
+      padding-bottom: 100%;
+
+      touch-action: none;
+    }
+  }
+}

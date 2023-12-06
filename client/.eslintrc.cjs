@@ -16,6 +16,7 @@ module.exports = {
       'warn',
       { allowConstantExport: true }
     ],
-    'import/no-absolute-path': 'off'
+    'import/no-absolute-path': 'off',
+    '@typescript-eslint/consistent-type-definitions': ['error', 'type']
   }
 }

@@ -1,38 +1,27 @@
-import { useState, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import './App.css'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import BoardView from './BoardView'
+import StageSelect from './StageSelect'
+import { AppProvider } from './context/app.tsx'
 
 function App(): ReactNode {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <AppProvider>
+      <div className="container app-container is-max-desktop">
+        <nav className="app-navbar">
+          <div className="brand">
+            <h1 className="title is-5">スイートホームメイド</h1>
+            <h2 className="title is-5">パズルシミュレーター</h2>
+          </div>
+          <a className="social" href="https://github.com/naamiru/sweethomemaid">
+            <i className="fa-brands fa-github fa-2xl"></i>
+          </a>
+        </nav>
+
+        <StageSelect />
+        <BoardView />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button
-          onClick={() => {
-            setCount(count => count + 1)
-          }}
-        >
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </AppProvider>
   )
 }
 

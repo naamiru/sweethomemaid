@@ -24,6 +24,25 @@ export class Move {
     public direction: Direction,
     public swapSkill: boolean = false
   ) {}
+
+  private diff(): [number, number] {
+    switch (this.direction) {
+      case Direction.Up:
+        return [0, -1]
+      case Direction.Down:
+        return [0, 1]
+      case Direction.Left:
+        return [-1, 0]
+      case Direction.Right:
+        return [1, 0]
+      case Direction.Zero:
+        return [0, 0]
+    }
+  }
+
+  positions(): Position[] {
+    return [this.position, add(this.position, this.diff())]
+  }
 }
 
 export class InvalidMove extends Error {
@@ -109,6 +128,37 @@ export function applyMove(board: Board, move: Move): void {
     fall(board)
     matches = findMatches(board)
   } while (matches.length > 0)
+}
+
+export function canMove(board: Board, move: Move): boolean {
+  const mv = new BoardMove(board, move)
+
+  if (mv.pieces().some(isFixedPiece)) {
+    return false
+  }
+
+  if (move.direction === Direction.Zero) {
+    const [piece] = mv.pieces()
+    return piece.isBooster() && piece.face !== Kind.Special
+  }
+
+  if (mv.swapSkill) {
+    return true
+  }
+
+  if (mv.boosterCount() > 0) {
+    return true
+  }
+
+  mv.swap()
+  const hasMatch = findMatches(board).length > 0
+  mv.swap()
+
+  return hasMatch
+}
+
+export function isCombo(board: Board, move: Move): boolean {
+  return new BoardMove(board, move).isCombo()
 }
 
 /** 揃っている色の並びと、それによってできるブースター */
@@ -202,23 +252,8 @@ class BoardMove {
     return this.move.swapSkill ?? false
   }
 
-  private diff(): [number, number] {
-    switch (this.move.direction) {
-      case Direction.Up:
-        return [0, -1]
-      case Direction.Down:
-        return [0, 1]
-      case Direction.Left:
-        return [-1, 0]
-      case Direction.Right:
-        return [1, 0]
-      case Direction.Zero:
-        return [0, 0]
-    }
-  }
-
   positions(): Position[] {
-    return [this.move.position, add(this.move.position, this.diff())]
+    return this.move.positions()
   }
 
   uniquePositions(): Position[] {
@@ -878,6 +913,15 @@ function matchedPiece(
     const count = 1 + board.killer('mouse', booster)
     if (count < face.count) {
       return new Piece({ kind: Kind.Mouse, count: face.count - count })
+    } else {
+      return new Piece(Kind.Empty)
+    }
+  }
+
+  if (face instanceof Object && face.kind === Kind.Wood) {
+    const count = 1 + board.killer('wood', booster)
+    if (count < face.count) {
+      return new Piece({ kind: Kind.Wood, count: face.count - count })
     } else {
       return new Piece(Kind.Empty)
     }

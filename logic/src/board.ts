@@ -17,7 +17,8 @@ export enum Kind {
   VRocket,
   Missile,
 
-  Mouse
+  Mouse,
+  Wood
 }
 
 const boosters = [
@@ -41,9 +42,11 @@ const colors = [
 
 export type Color = (typeof colors)[number]
 
-export type Face =
-  | Exclude<Kind, Kind.Mouse>
-  | { kind: Kind.Mouse; count: number }
+const obstacles = [Kind.Mouse, Kind.Wood] as const
+
+export type Obstacle = (typeof obstacles)[number]
+
+export type Face = Exclude<Kind, Obstacle> | { kind: Obstacle; count: number }
 
 export function getKind(face: Face): Kind {
   if (face instanceof Object) {
@@ -88,6 +91,7 @@ export type Killer = {
 export type Killers = {
   ice?: Killer
   mouse?: Killer
+  wood?: Killer
 }
 
 export type Position = [number, number]
@@ -124,7 +128,12 @@ export class Board {
   }
 
   setPiece(position: Position, piece: Piece): void {
-    this.pieces[position[0]][position[1]] = piece
+    const [x, y] = position
+    this.pieces = [
+      ...this.pieces.slice(0, x),
+      [...this.pieces[x].slice(0, y), piece, ...this.pieces[x].slice(y + 1)],
+      ...this.pieces.slice(x + 1)
+    ]
   }
 
   upstream(position: Position): Position {
