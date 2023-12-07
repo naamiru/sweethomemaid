@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "app for sweethomemaid",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npm -w client run dev",
+    "ss": "cd detect && poetry run flask --app ss_server run --port 5000"
   },
   "repository": {
     "type": "git",
