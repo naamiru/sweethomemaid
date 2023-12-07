@@ -12,7 +12,15 @@ import {
 } from '@sweethomemaid/logic'
 import { useDrag } from '@use-gesture/react'
 import classNames from 'classnames'
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode
+} from 'react'
+import { useDoubleTap } from 'use-double-tap'
 import './PieceView.css'
 import { useApp } from './context/use-app'
 import { usePlayMove } from './play-move'
@@ -144,6 +152,15 @@ export default function PieceView({
     }
   }, [pieces]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const handleDoubleTap = useCallback(() => {
+    if (isMoving || isSwapping) return
+    const move = new Move(position, Direction.Zero)
+    if (!canMove(board, move)) return
+    playMove(move).catch(console.error)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMoving, isSwapping, position, board, piece])
+  const doubleTapBind = useDoubleTap(handleDoubleTap)
+
   const classes = useMemo(() => pieceClasses(piece), [piece])
 
   return (
@@ -152,6 +169,7 @@ export default function PieceView({
         'is-moving': isMoving,
         'is-swapping': isSwapping
       })}
+      {...doubleTapBind}
       ref={el}
     >
       <animated.div

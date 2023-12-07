@@ -143,8 +143,8 @@ export function* moveScenes(
     applyMatches(board, matches, skips)
     skips = undefined
     yield MoveScene.Match
-    fall(board)
-    yield MoveScene.Fall
+    const falled = fall(board)
+    if (falled) yield MoveScene.Fall
     matches = findMatches(board)
   } while (matches.length > 0)
 }
@@ -949,12 +949,15 @@ function matchedPiece(
   return new Piece(Kind.Empty)
 }
 
-export function fall(board: Board): void {
+export function fall(board: Board): boolean {
+  let falled = false
   while (true) {
     const pos = findEmpty(board)
-    if (pos === undefined) return
+    if (pos === undefined) break
+    falled = true
     fallAt(board, pos)
   }
+  return falled
 }
 
 function fallAt(

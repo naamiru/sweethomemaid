@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import './App.css'
 import BoardView from './BoardView'
+import HistoryNav from './HistoryNav.tsx'
 import StageSelect from './StageSelect'
 import { AppProvider } from './context/app.tsx'
 
@@ -19,6 +20,7 @@ function App(): ReactNode {
         </nav>
 
         <StageSelect />
+        <HistoryNav />
         <BoardView />
       </div>
     </AppProvider>
