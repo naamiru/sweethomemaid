@@ -50,13 +50,20 @@ async function* detectPieces(
   const session = await InferenceSession.create(MODEL_URL, {
     executionProviders: ['webgl']
   })
-  for (const [position, input] of inputTensors(img, width, height)) {
-    const feeds: Record<string, Tensor> = {}
-    feeds[session.inputNames[0]] = input
-    const outputData = await session.run(feeds)
-    const output = outputData[session.outputNames[0]]
-    const index = argmax(output.data as Float32Array)
-    yield [position, PIECE_FOR_INDEX[index]]
+  try {
+    for (const [position, input] of inputTensors(img, width, height)) {
+      const feeds: Record<string, Tensor> = {}
+      feeds[session.inputNames[0]] = input
+      const outputData = await session.run(feeds)
+      const output = outputData[session.outputNames[0]]
+      const index = argmax(output.data as Float32Array)
+      yield [position, PIECE_FOR_INDEX[index]]
+    }
+  } finally {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(session as any).handler.dispose()
+    } catch (e) {}
   }
 }
 
