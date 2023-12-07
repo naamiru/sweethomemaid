@@ -32,3 +32,5 @@ __pycache__
 !/detect/data/.keep
 /detect/models/*
 !/detect/models/.keep
+/client/public/models/*
+!/client/public/models/.keep

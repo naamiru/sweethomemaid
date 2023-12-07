@@ -1,5 +1,4 @@
 import { type ReactNode } from 'react'
-import './HistoryNav.css'
 import { useApp } from './context/use-app'
 
 export default function HistoryNav(): ReactNode {

@@ -21,6 +21,7 @@ lightning = "^2.1.2"
 flask = "^3.0.0"
 pyobjc-framework-quartz = "^10.0"
 pillow = "^10.1.0"
+flask-cors = "^4.0.0"
 
 
 [build-system]

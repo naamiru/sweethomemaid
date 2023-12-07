@@ -4,7 +4,7 @@ import {
   moveScenes,
   type Move
 } from '@sweethomemaid/logic'
-import { useApp } from './context/use-app'
+import { useApp } from './use-app'
 
 export function usePlayMove(): (move: Move) => Promise<void> {
   const { board, dispatch } = useApp()

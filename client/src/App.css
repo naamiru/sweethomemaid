@@ -45,3 +45,28 @@
     }
   }
 }
+
+.app-operations {
+  display: flex;
+  margin-bottom: 5px;
+
+  .button {
+    &:focus {
+      border-color: #b5b5b5;
+      box-shadow: none;
+    }
+
+    &:active {
+      border-color: #4a4a4a;
+    }
+
+    &:not(:hover):not(:active),
+    &[disabled] {
+      border-color: transparent;
+    }
+  }
+
+  > .history-nav {
+    flex-grow: 1;
+  }
+}

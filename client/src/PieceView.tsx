@@ -23,7 +23,7 @@ import {
 import { useDoubleTap } from 'use-double-tap'
 import './PieceView.css'
 import { useApp } from './context/use-app'
-import { usePlayMove } from './play-move'
+import { usePlayMove } from './context/use-play-move'
 
 export default function PieceView({
   position

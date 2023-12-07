@@ -2,12 +2,14 @@ import os
 from io import BytesIO
 from tempfile import NamedTemporaryFile
 from flask import Flask, abort, send_file, Response
+from flask_cors import CORS
 from PIL import Image
 from Quartz import (
     CGWindowListCopyWindowInfo, kCGNullWindowID, kCGWindowListOptionAll
 )
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/<size>")

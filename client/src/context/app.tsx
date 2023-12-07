@@ -51,6 +51,9 @@ export type AppAction =
   | {
       type: 'historyForwardLast'
     }
+  | {
+      type: 'reset'
+    }
 
 const initialStage = 'xmas_4_1'
 const initialBoard = createBoard(initialStage)
@@ -79,6 +82,8 @@ function reduce(state: AppState, action: AppAction): AppState {
       return historyTo(state, state.historyIndex + 1)
     case 'historyForwardLast':
       return historyTo(state, state.histories.length - 1)
+    case 'reset':
+      return reset(state)
   }
 }
 
@@ -139,6 +144,17 @@ function historyTo(state: AppState, historyIndex: number): AppState {
     ...state,
     pieces: state.board.pieces,
     historyIndex
+  }
+}
+
+function reset(state: AppState): AppState {
+  return {
+    ...state,
+    pieces: state.board.pieces,
+    histories: [state.board.pieces],
+    historyIndex: 0,
+    isPlaying: false,
+    swap: undefined
   }
 }
 
