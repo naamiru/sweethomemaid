@@ -157,17 +157,6 @@ tests = ["attrs[tests-no-zope]", "zope-interface"]
 tests-no-zope = ["cloudpickle", "hypothesis", "mypy (>=1.1.1)", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins", "pytest-xdist[psutil]"]
 
 [[package]]
-name = "blinker"
-version = "1.7.0"
-description = "Fast, simple object-to-object and broadcast signaling"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "blinker-1.7.0-py3-none-any.whl", hash = "sha256:c3f865d4d54db7abc53758a01601cf343fe55b84c1de4e3fa910e420b438d5b9"},
-    {file = "blinker-1.7.0.tar.gz", hash = "sha256:e6820ff6fa4e4d1d8e2747c2283749c3f547e4fee112b98555cdcdae32996182"},
-]
-
-[[package]]
 name = "certifi"
 version = "2023.11.17"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -342,20 +331,6 @@ files = [
 ]
 
 [[package]]
-name = "click"
-version = "8.1.7"
-description = "Composable command line interface toolkit"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "click-8.1.7-py3-none-any.whl", hash = "sha256:ae74fb96c20a0277a1d615f1e4d73c8414f5a98db8b799a7931d1582f3390c28"},
-    {file = "click-8.1.7.tar.gz", hash = "sha256:ca9853ad459e787e2192211578cc907e7594e294c7ccc834310722b41b9ca6de"},
-]
-
-[package.dependencies]
-colorama = {version = "*", markers = "platform_system == \"Windows\""}
-
-[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -528,42 +503,6 @@ files = [
 docs = ["furo (>=2023.9.10)", "sphinx (>=7.2.6)", "sphinx-autodoc-typehints (>=1.24)"]
 testing = ["covdefaults (>=2.3)", "coverage (>=7.3.2)", "diff-cover (>=8)", "pytest (>=7.4.3)", "pytest-cov (>=4.1)", "pytest-mock (>=3.12)", "pytest-timeout (>=2.2)"]
 typing = ["typing-extensions (>=4.8)"]
-
-[[package]]
-name = "flask"
-version = "3.0.0"
-description = "A simple framework for building complex web applications."
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "flask-3.0.0-py3-none-any.whl", hash = "sha256:21128f47e4e3b9d597a3e8521a329bf56909b690fcc3fa3e477725aa81367638"},
-    {file = "flask-3.0.0.tar.gz", hash = "sha256:cfadcdb638b609361d29ec22360d6070a77d7463dcb3ab08d2c2f2f168845f58"},
-]
-
-[package.dependencies]
-blinker = ">=1.6.2"
-click = ">=8.1.3"
-itsdangerous = ">=2.1.2"
-Jinja2 = ">=3.1.2"
-Werkzeug = ">=3.0.0"
-
-[package.extras]
-async = ["asgiref (>=3.2)"]
-dotenv = ["python-dotenv"]
-
-[[package]]
-name = "flask-cors"
-version = "4.0.0"
-description = "A Flask extension adding a decorator for CORS support"
-optional = false
-python-versions = "*"
-files = [
-    {file = "Flask-Cors-4.0.0.tar.gz", hash = "sha256:f268522fcb2f73e2ecdde1ef45e2fd5c71cc48fe03cffb4b441c6d1b40684eb0"},
-    {file = "Flask_Cors-4.0.0-py2.py3-none-any.whl", hash = "sha256:bc3492bfd6368d27cfe79c7821df5a8a319e1a6d5eab277a3794be19bdc51783"},
-]
-
-[package.dependencies]
-Flask = ">=0.9"
 
 [[package]]
 name = "fonttools"
@@ -817,17 +756,6 @@ parallel = ["ipyparallel"]
 qtconsole = ["qtconsole"]
 test = ["pickleshare", "pytest (<7.1)", "pytest-asyncio (<0.22)", "testpath"]
 test-extra = ["curio", "matplotlib (!=3.2.0)", "nbformat", "numpy (>=1.22)", "pandas", "pickleshare", "pytest (<7.1)", "pytest-asyncio (<0.22)", "testpath", "trio"]
-
-[[package]]
-name = "itsdangerous"
-version = "2.1.2"
-description = "Safely pass data to untrusted environments and back."
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "itsdangerous-2.1.2-py3-none-any.whl", hash = "sha256:2c2349112351b88699d8d4b6b075022c0808887cb7ad10069318a8b0bc88db44"},
-    {file = "itsdangerous-2.1.2.tar.gz", hash = "sha256:5dbbc68b317e5e42f327f9021763545dc3fc3bfe22e6deb96aaf1fc38874156a"},
-]
 
 [[package]]
 name = "jedi"
@@ -1914,61 +1842,6 @@ plugins = ["importlib-metadata"]
 windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
-name = "pyobjc-core"
-version = "10.0"
-description = "Python<->ObjC Interoperability Module"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "pyobjc-core-10.0.tar.gz", hash = "sha256:3dd0a7b3acd7e0b8ffd3f5331b29a3aaebe79a03323e61efeece38627a6020b3"},
-    {file = "pyobjc_core-10.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:61ea5112a672d21b5b0ed945778707c655b17c400672aef144705674c4b95499"},
-    {file = "pyobjc_core-10.0-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:99b72cda4593e0c66037b25a178f2bcc6efffb6d5d9dcd477ecca859a1f9ae8e"},
-    {file = "pyobjc_core-10.0-cp312-cp312-macosx_10_9_universal2.whl", hash = "sha256:2843ca32e86a01ccee67d7ad82a325ddd72d754929d1f2c0d96bc8741dc9af09"},
-    {file = "pyobjc_core-10.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:a886b9d2a93210cab4ae72601ab005ca6f627fa2f0cc62c43c03ef1405067a11"},
-    {file = "pyobjc_core-10.0-cp38-cp38-macosx_11_0_universal2.whl", hash = "sha256:166666b5c380a49e8aa1ad1dda978c581e29a00703d82203216f3c65a3f397a4"},
-    {file = "pyobjc_core-10.0-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:198a0360f64e4c0148eed07b42d1de0545f56c498c356d1d5524422bb3352907"},
-]
-
-[[package]]
-name = "pyobjc-framework-cocoa"
-version = "10.0"
-description = "Wrappers for the Cocoa frameworks on macOS"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "pyobjc-framework-Cocoa-10.0.tar.gz", hash = "sha256:723421eff4f59e4ca9a9bb8ec6dafbc0f778141236fa85a49fdd86732d58a74c"},
-    {file = "pyobjc_framework_Cocoa-10.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:80c22a8fc7f085746d9cd222adeca8fe6790e3e6ad7eed5fc70b32aa87c10adb"},
-    {file = "pyobjc_framework_Cocoa-10.0-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:0187cba228976a45f41116c74aab079b64bacb3ffc3c886a4bd8e472bf9be581"},
-    {file = "pyobjc_framework_Cocoa-10.0-cp312-cp312-macosx_10_9_universal2.whl", hash = "sha256:a81dabdc40268591e3196087388e680c6570fed1b521df9b04733cb3ece0414e"},
-    {file = "pyobjc_framework_Cocoa-10.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:0a23db9ab99e338e1d8a268d873cc15408f78cec9946308393ca2241820c18b8"},
-    {file = "pyobjc_framework_Cocoa-10.0-cp38-cp38-macosx_11_0_universal2.whl", hash = "sha256:a3c66fe56a5156a818fbf056c589f8140a5fdb1dcb1f1075cb34d3755474d900"},
-    {file = "pyobjc_framework_Cocoa-10.0-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:bf9020e85ead569021b15272dcd90207aab6c754093f520b11d4210a2efbdd06"},
-]
-
-[package.dependencies]
-pyobjc-core = ">=10.0"
-
-[[package]]
-name = "pyobjc-framework-quartz"
-version = "10.0"
-description = "Wrappers for the Quartz frameworks on macOS"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "pyobjc-framework-Quartz-10.0.tar.gz", hash = "sha256:ff7c938d9c8adff87d577d63e58f9be6e4bc75274384715fa7a20032a1ce8b0e"},
-    {file = "pyobjc_framework_Quartz-10.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:f06be24fdd2112c9f5b96ede54ec48ad7623e107b85ebbd5b4155d0b1da4d45f"},
-    {file = "pyobjc_framework_Quartz-10.0-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:52848a5e283a508c6895a73cb0c950bd4dca9b1186b70dd73ddc8f436d64fd42"},
-    {file = "pyobjc_framework_Quartz-10.0-cp312-cp312-macosx_10_9_universal2.whl", hash = "sha256:f0cc89890de411a341e90d2c4148831b6d241fca66e734b5470d27869c04e33c"},
-    {file = "pyobjc_framework_Quartz-10.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:dc8d6edcdb0bb3dab4dbe6e6a6d420c28aa0caca53715a3e49d7f299601a723f"},
-    {file = "pyobjc_framework_Quartz-10.0-cp38-cp38-macosx_11_0_universal2.whl", hash = "sha256:c4b03fade2c4aff2682cd5eae8469f3f15e089c7dd09641e24e5b54d015edfae"},
-    {file = "pyobjc_framework_Quartz-10.0-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:6975be7f776ad4c3a41655b90d67e45a9c7fa2d715b189d8599e8d227f790280"},
-]
-
-[package.dependencies]
-pyobjc-core = ">=10.0"
-pyobjc-framework-Cocoa = ">=10.0"
-
-[[package]]
 name = "pyparsing"
 version = "3.1.1"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
@@ -2672,23 +2545,6 @@ files = [
 ]
 
 [[package]]
-name = "werkzeug"
-version = "3.0.1"
-description = "The comprehensive WSGI web application library."
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "werkzeug-3.0.1-py3-none-any.whl", hash = "sha256:90a285dc0e42ad56b34e696398b8122ee4c681833fb35b8334a095d82c56da10"},
-    {file = "werkzeug-3.0.1.tar.gz", hash = "sha256:507e811ecea72b18a404947aded4b3390e1db8f826b494d76550ef45bb3b1dcc"},
-]
-
-[package.dependencies]
-MarkupSafe = ">=2.1.1"
-
-[package.extras]
-watchdog = ["watchdog (>=2.3)"]
-
-[[package]]
 name = "yarl"
 version = "1.9.4"
 description = "Yet another URL library"
@@ -2794,4 +2650,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.6"
-content-hash = "df5b97c573e1f6c6702cb28dc5a8a0b699ce6c6dd1ce2adae8e4e1d00996a421"
+content-hash = "707a511836d62fe4b0c9e28c96e35afce6f642530d29126ba72c20b9bea13851"
