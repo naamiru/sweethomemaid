@@ -836,8 +836,15 @@ function boosterRange(
             append([cx + i, cy + j])
           }
         }
+        // 飛び先は未対応
+      } else if (b1 === Kind.Missile || b2 === Kind.Missile) {
+        append([cx, cy])
+        append([cx - 1, cy])
+        append([cx + 1, cy])
+        append([cx, cy - 1])
+        append([cx, cy + 1])
+        // 飛び先は未対応
       }
-      // ミサイルの飛び先は未対応
     }
   } else if (booster === Kind.Special) {
     // 誘発時のスペシャルは未対応。盤面中最多色が消える？
@@ -862,12 +869,12 @@ function boosterRange(
       append([cx, y])
     }
   } else if (booster === Kind.Missile) {
-    // 飛び先は未対応
     append([cx, cy])
     append([cx - 1, cy])
     append([cx + 1, cy])
     append([cx, cy - 1])
     append([cx, cy + 1])
+    // 飛び先は未対応
   }
 
   return positions
