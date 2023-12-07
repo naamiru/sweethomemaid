@@ -2,12 +2,14 @@
 logs
 *.log
 npm-debug.log*
+lightning_logs
 
 node_modules
 dist
 dist-ssr
 *.local
 coverage
+.venv
 
 # Editor directories and files
 .vscode/*
@@ -23,3 +25,9 @@ coverage
 
 # Local settings
 .envrc
+
+# leaning data and models
+/detect/data/*
+!/detect/data/.keep
+/detect/models/*
+!/detect/models/.keep

@@ -102,8 +102,8 @@ const configs: Record<StageName, BoardConfig> = {
     `,
     upstreams: `
     rrrrrrrrd
-    rrrrrrrdd
-    rrrrrrddd
+    urrrrrrdd
+    uurrrrddd
     uuu   ddd
     uuu   ddd
     uuu
