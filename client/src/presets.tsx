@@ -1,6 +1,6 @@
 import { load, type Board, type BoardConfig } from '@sweethomemaid/logic'
 
-export type StageName = 'xmas_4_1' | 'xmas_4_2'
+export type StageName = 'xmas_4_1' | 'xmas_4_2' | 'masters_3_3'
 
 export function createBoard(name: StageName): Board {
   return load(configs[name])
@@ -75,6 +75,41 @@ const configs: Record<StageName, BoardConfig> = {
     uuuu dddd
     uuuu dddd
          dddd
+    `
+  },
+  masters_3_3: {
+    colors: `
+    byarayyra
+    ra.aayayb
+    ayayyaayb
+    byb   b.y
+    baa   ary
+    y.y
+    abryrab.y
+    abbrbyrra
+    byy.abryr
+    `,
+    woods: `
+    000000000
+    003000000
+    000000000
+    000   030
+    000   000
+    030
+    000000030
+    000000000
+    000300000
+    `,
+    upstreams: `
+    rrrrrrrrd
+    rrrrrrrdd
+    rrrrrrddd
+    uuu   ddd
+    uuu   ddd
+    uuu
+    uuullllll
+    uulllllll
+    ullllllll
     `
   }
 }

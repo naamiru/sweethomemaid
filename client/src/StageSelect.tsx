@@ -19,9 +19,12 @@ export default function StageSelect(): ReactNode {
       <div className="control is-expanded">
         <div className="select is-fullwidth">
           <select value={stage} onChange={handleChange}>
-            <optgroup label="クリスマス">
-              <option value="xmas_4_1">クリスマス4 wave1</option>
-              <option value="xmas_4_2">クリスマス4 wave2</option>
+            <optgroup label="マスターズランキング">
+              <option value="masters_3_3">第3回 薪（C字）</option>
+            </optgroup>
+            <optgroup label="クリスマスメイキング">
+              <option value="xmas_4_1">クリスマス 4 wave1</option>
+              <option value="xmas_4_2">クリスマス 4 wave2</option>
             </optgroup>
           </select>
         </div>

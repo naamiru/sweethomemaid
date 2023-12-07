@@ -160,5 +160,14 @@
         background-image: url('/piece-images/p6.png');
       }
     }
+    &.is-wood-1 {
+      background-image: url('/piece-images/wood1.png');
+    }
+    &.is-wood-2 {
+      background-image: url('/piece-images/wood2.png');
+    }
+    &.is-wood-3 {
+      background-image: url('/piece-images/wood3.png');
+    }
   }
 }
