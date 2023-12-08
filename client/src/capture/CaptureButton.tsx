@@ -25,7 +25,7 @@ export default function CaptureButton(): ReactNode {
     <div
       className="file capture-button"
       aria-label={`スクリーンショットから
-盤面配置を読み込みます`}
+盤面配置を読み取ります`}
       data-microtip-position="top"
       role="tooltip"
     >
@@ -40,7 +40,7 @@ export default function CaptureButton(): ReactNode {
           <span className="file-icon">
             <i className="fas fa-image"></i>
           </span>
-          <span className="file-label">画像で配置</span>
+          <span className="file-label">画像読取</span>
         </span>
       </label>
     </div>

@@ -87,7 +87,7 @@ export default function ImagePlacer({
             disabled={isLoading}
             onClick={submit}
           >
-            完了
+            読み取る
           </button>
           <button className="button is-small" onClick={cancel}>
             キャンセル
