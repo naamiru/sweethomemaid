@@ -1,11 +1,5 @@
 import { type Board, type Piece, type Position } from '@sweethomemaid/logic'
-import {
-  createContext,
-  useReducer,
-  type Dispatch,
-  type FC,
-  type ReactNode
-} from 'react'
+import { createContext, type Dispatch } from 'react'
 import { createBoard, type StageName } from '../presets'
 
 type Pieces = Piece[][]
@@ -57,7 +51,7 @@ export type AppAction =
 
 const initialStage = 'xmas_4_1'
 const initialBoard = createBoard(initialStage)
-const initialState: AppState = {
+export const initialState: AppState = {
   stage: initialStage,
   board: initialBoard,
   pieces: initialBoard.pieces,
@@ -66,7 +60,7 @@ const initialState: AppState = {
   isPlaying: false
 }
 
-function reduce(state: AppState, action: AppAction): AppState {
+export function reduce(state: AppState, action: AppAction): AppState {
   switch (action.type) {
     case 'setStage':
       return setStage(state, action.stage)
@@ -162,12 +156,3 @@ export const AppContext = createContext<[AppState, Dispatch<AppAction>]>([
   initialState,
   () => {}
 ])
-
-export const AppProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [state, dispatch] = useReducer(reduce, initialState)
-  return (
-    <AppContext.Provider value={[state, dispatch]}>
-      {children}
-    </AppContext.Provider>
-  )
-}

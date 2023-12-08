@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { type ReactNode } from 'react'
 import './BoardView.css'
 import PieceView from './PieceView'
-import { useApp } from './context/use-app'
+import { useApp } from './app/use-app'
 
 export default function BoardView(): ReactNode {
   const { board } = useApp()

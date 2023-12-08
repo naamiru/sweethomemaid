@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import { useApp } from './context/use-app'
+import { useApp } from './app/use-app'
 
 export default function HistoryNav(): ReactNode {
   const { histories, historyIndex, dispatch } = useApp()

@@ -1,6 +1,6 @@
 import { useCallback, type ChangeEvent, type ReactNode } from 'react'
 import './StageSelect.css'
-import { useApp } from './context/use-app'
+import { useApp } from './app/use-app'
 import { type StageName } from './presets'
 
 export default function StageSelect(): ReactNode {

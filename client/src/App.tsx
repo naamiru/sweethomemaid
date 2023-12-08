@@ -2,10 +2,10 @@ import { type ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 import './App.css'
 import BoardView from './BoardView'
-import CaptureButton from './CaptureButton.tsx'
-import HistoryNav from './HistoryNav.tsx'
+import HistoryNav from './HistoryNav'
 import StageSelect from './StageSelect'
-import { AppProvider } from './context/app.tsx'
+import { AppProvider } from './app/provider'
+import Capture from './capture/Capture'
 
 function App(): ReactNode {
   return (
@@ -24,7 +24,7 @@ function App(): ReactNode {
         <StageSelect />
         <div className="app-operations">
           <HistoryNav />
-          <CaptureButton />
+          <Capture />
         </div>
         <BoardView />
         <Toaster position="bottom-center" />

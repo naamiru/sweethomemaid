@@ -22,8 +22,8 @@ import {
 } from 'react'
 import { useDoubleTap } from 'use-double-tap'
 import './PieceView.css'
-import { useApp } from './context/use-app'
-import { usePlayMove } from './context/use-play-move'
+import { useApp } from './app/use-app'
+import { usePlayMove } from './app/use-play-move'
 
 export default function PieceView({
   position

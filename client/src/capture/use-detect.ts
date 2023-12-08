@@ -3,47 +3,41 @@ import ndarray from 'ndarray'
 import ops from 'ndarray-ops'
 import { InferenceSession, Tensor } from 'onnxruntime-web'
 import { useCallback } from 'react'
-import { useApp } from '../context/use-app'
+import { useApp } from '../app/use-app'
 
-const SS_URL = 'http://localhost:5174/'
 const MODEL_URL = '/models/piece_classifier.onnx'
-
 const IMAGE_SIZE = 64
 const MEAN = [0.57665089, 0.5822121, 0.54763596]
 const STD = [0.18085433, 0.21391266, 0.23309964]
 
-export function useCapture(): () => Promise<void> {
-  const { board, dispatch } = useApp()
-  return useCallback(async () => {
-    const img = await loadImage(SS_URL + `${board.width}x${board.height}`)
-    for await (const [position, piece] of detectPieces(
-      img,
-      board.width,
-      board.height
-    )) {
-      if (board.piece(position).face !== Kind.Out) {
-        board.setPiece(position, piece)
-      }
-    }
-    dispatch({ type: 'reset' })
-  }, [board, dispatch])
-}
+type Bounds = [number, number, number, number]
 
-async function loadImage(url: string): Promise<HTMLImageElement> {
-  const res = await fetch(url)
-  if (!res.ok) throw new Error('fail to fetch image')
-  const img = new Image()
-  img.src = URL.createObjectURL(await res.blob())
-  return await new Promise(resolve => {
-    img.onload = () => {
-      URL.revokeObjectURL(img.src)
-      resolve(img)
-    }
-  })
+export function useDetect(): (
+  image: HTMLImageElement,
+  bounds: Bounds
+) => Promise<void> {
+  const { board, dispatch } = useApp()
+  return useCallback(
+    async (image, bounds) => {
+      for await (const [position, piece] of detectPieces(
+        image,
+        bounds,
+        board.width,
+        board.height
+      )) {
+        if (board.piece(position).face !== Kind.Out) {
+          board.setPiece(position, piece)
+        }
+      }
+      dispatch({ type: 'reset' })
+    },
+    [board, dispatch]
+  )
 }
 
 async function* detectPieces(
-  img: HTMLImageElement,
+  image: HTMLImageElement,
+  bounds: Bounds,
   width: number,
   height: number
 ): AsyncGenerator<[Position, Piece]> {
@@ -51,7 +45,12 @@ async function* detectPieces(
     executionProviders: ['webgl']
   })
   try {
-    for (const [position, input] of inputTensors(img, width, height)) {
+    for (const [position, input] of inputTensors(
+      image,
+      bounds,
+      width,
+      height
+    )) {
       const feeds: Record<string, Tensor> = {}
       feeds[session.inputNames[0]] = input
       const outputData = await session.run(feeds)
@@ -80,7 +79,8 @@ function argmax(data: Float32Array): number {
 }
 
 function* inputTensors(
-  img: HTMLImageElement,
+  image: HTMLImageElement,
+  bounds: Bounds,
   width: number,
   height: number
 ): Generator<[Position, Tensor]> {
@@ -89,15 +89,15 @@ function* inputTensors(
   const ctx = (canvas as HTMLCanvasElement).getContext('2d')
   if (ctx === null) throw Error('no canvas context')
 
-  const pieceWidth = Math.floor(img.naturalWidth / width)
-  const pieceHeight = Math.floor(img.naturalHeight / height)
+  const pieceWidth = Math.floor(bounds[2] / width)
+  const pieceHeight = Math.floor(bounds[3] / height)
 
   for (let x = 0; x < width; x++) {
     for (let y = 0; y < height; y++) {
       ctx.drawImage(
-        img,
-        x * pieceWidth,
-        y * pieceHeight,
+        image,
+        bounds[0] + x * pieceWidth,
+        bounds[1] + y * pieceHeight,
         pieceWidth,
         pieceHeight,
         0,
