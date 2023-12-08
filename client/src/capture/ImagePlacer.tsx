@@ -10,6 +10,7 @@ import { useDetect } from './use-detect'
 type Bounds = [number, number, number, number]
 
 const BOUNDS_CACHE_KEY = 'ImagePlacer.bounds'
+type BoundCache = { bounds: Bounds; size: [number, number] }
 
 export default function ImagePlacer({
   image
@@ -19,8 +20,13 @@ export default function ImagePlacer({
   const { dispatch } = useCapture()
   const [pageWidth, pageHeight] = useBodySize()
   const [bounds, setBounds] = useState<Bounds>(() => {
-    const cached = cache.get<Bounds>(BOUNDS_CACHE_KEY)
-    if (cached !== undefined) return cached
+    const cached = cache.get<BoundCache>(BOUNDS_CACHE_KEY)
+    if (
+      cached?.size?.[0] === image.naturalWidth &&
+      cached?.size?.[1] === image.naturalHeight
+    ) {
+      return cached.bounds
+    }
 
     const width = Math.min(640, pageWidth - 20)
     const height = width * (image.naturalHeight / image.naturalWidth)
@@ -44,7 +50,10 @@ export default function ImagePlacer({
         ?.getBoundingClientRect()
       if (board === undefined || img === undefined) return
 
-      cache.set(BOUNDS_CACHE_KEY, bounds)
+      cache.set(BOUNDS_CACHE_KEY, {
+        bounds,
+        size: [image.naturalWidth, image.naturalHeight]
+      })
 
       const ratio = image.naturalWidth / img.width
       await detect(image, [
