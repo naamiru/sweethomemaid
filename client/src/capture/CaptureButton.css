@@ -1,4 +1,9 @@
 .capture-button {
+  &.is-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
   .file-label .file-cta {
     background-color: white;
 

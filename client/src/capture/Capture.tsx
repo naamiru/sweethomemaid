@@ -1,9 +1,9 @@
-import { type ReactNode } from 'react'
+import { Suspense, lazy, type ReactNode } from 'react'
 import Canvas from './Canvas'
 import CaptureButton from './CaptureButton'
-import ImagePlacer from './ImagePlacer'
 import { CaptureProvider } from './provider'
 import { useCapture } from './use-capture'
+const ImagePlacer = lazy(async () => await import('./ImagePlacer'))
 
 export default function Capture(): ReactNode {
   return (
@@ -19,7 +19,11 @@ function CaptureInner(): ReactNode {
     <>
       <CaptureButton />
       <Canvas />
-      {image !== undefined && <ImagePlacer image={image} />}
+      {image !== undefined && (
+        <Suspense>
+          <ImagePlacer image={image} />
+        </Suspense>
+      )}
     </>
   )
 }
