@@ -467,8 +467,8 @@ const configs: Record<StageName, BoardConfig> = {
     _________
     __a______
     __ ___b__
+    __ ___ __
     __A___ __
-    ______ __
     ______B__
     _________
     _________
