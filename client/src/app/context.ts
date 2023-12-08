@@ -1,6 +1,9 @@
 import { type Board, type Piece, type Position } from '@sweethomemaid/logic'
 import { createContext, type Dispatch } from 'react'
-import { createBoard, type StageName } from '../presets'
+import * as cache from '../cache'
+import { createBoard, stages, type StageName } from '../presets'
+
+const STAGE_CACHE_KEY = 'AppContext.stage'
 
 type Pieces = Piece[][]
 
@@ -49,7 +52,11 @@ export type AppAction =
       type: 'reset'
     }
 
-const initialStage = 'xmas_4_1'
+const cachedStage = cache.get<StageName>(STAGE_CACHE_KEY)
+const initialStage =
+  cachedStage !== undefined && stages.includes(cachedStage)
+    ? cachedStage
+    : 'xmas_4_1'
 const initialBoard = createBoard(initialStage)
 export const initialState: AppState = {
   stage: initialStage,
@@ -84,6 +91,7 @@ export function reduce(state: AppState, action: AppAction): AppState {
 function setStage(state: AppState, stage: StageName): AppState {
   if (state.stage === stage) return state
   const board = createBoard(stage)
+  cache.set(STAGE_CACHE_KEY, stage)
   return {
     stage,
     board,

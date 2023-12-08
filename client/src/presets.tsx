@@ -1,6 +1,8 @@
 import { load, type Board, type BoardConfig } from '@sweethomemaid/logic'
 
-export type StageName = 'xmas_4_1' | 'xmas_4_2' | 'masters_3_3'
+export const stages = ['xmas_4_1', 'xmas_4_2', 'masters_3_3'] as const
+
+export type StageName = (typeof stages)[number]
 
 export function createBoard(name: StageName): Board {
   return load(configs[name])
