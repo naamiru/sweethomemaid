@@ -102,7 +102,7 @@ function updateUpstream(board: Board, expr: string): void {
 function updateWarp(board: Board, expr: string): void {
   const warps = new Map<string, Array<[number, number]>>()
   for (const [pos, token] of tokens(expr)) {
-    if (!/^a-z$/i.test(token)) continue
+    if (!/^[a-z]$/i.test(token)) continue
     const key = token.toLowerCase()
     let positions = warps.get(key)
     if (positions === undefined) {

@@ -1,14 +1,26 @@
 import { Kind, range, type Position } from '@sweethomemaid/logic'
 import classNames from 'classnames'
-import { type ReactNode } from 'react'
+import { useMemo, type ReactNode } from 'react'
 import './BoardView.css'
 import PieceView from './PieceView'
 import { useApp } from './app/use-app'
 
+const PIECE_SIZE = 64
+
 export default function BoardView(): ReactNode {
   const { board } = useApp()
+  const margins = useMemo(
+    () => [
+      ((9 - board.width) * PIECE_SIZE) / 2,
+      ((9 - board.height) * PIECE_SIZE) / 2
+    ],
+    [board]
+  )
   return (
-    <div className="board-view">
+    <div
+      className="board-view"
+      style={{ marginLeft: `${margins[0]}px`, marginTop: `${margins[1]}px` }}
+    >
       <div className="pieces is-bg">
         {range(1, board.height + 1).map(y => (
           <div className="row" key={y}>

@@ -56,7 +56,7 @@ const cachedStage = cache.get<StageName>(STAGE_CACHE_KEY)
 const initialStage =
   cachedStage !== undefined && stages.includes(cachedStage)
     ? cachedStage
-    : 'xmas_4_1'
+    : 'masters_3_1'
 const initialBoard = createBoard(initialStage)
 export const initialState: AppState = {
   stage: initialStage,
