@@ -17,157 +17,157 @@
     touch-action: none;
 
     &.is-unknown {
-      background-image: url('/piece-images/unknown.png');
+      background-image: url('./assets/piece-images/unknown.png');
     }
     &.is-special {
-      background-image: url('/piece-images/n.png');
+      background-image: url('./assets/piece-images/n.png');
     }
     &.is-bomb {
-      background-image: url('/piece-images/b.png');
+      background-image: url('./assets/piece-images/b.png');
     }
     &.is-hrocket {
-      background-image: url('/piece-images/rh.png');
+      background-image: url('./assets/piece-images/rh.png');
     }
     &.is-vrocket {
-      background-image: url('/piece-images/rv.png');
+      background-image: url('./assets/piece-images/rv.png');
     }
     &.is-missile {
-      background-image: url('/piece-images/m.png');
+      background-image: url('./assets/piece-images/m.png');
     }
     &.is-red {
-      background-image: url('/piece-images/r0.png');
+      background-image: url('./assets/piece-images/r0.png');
       &.is-ice-1 {
-        background-image: url('/piece-images/r1.png');
+        background-image: url('./assets/piece-images/r1.png');
       }
       &.is-ice-2 {
-        background-image: url('/piece-images/r2.png');
+        background-image: url('./assets/piece-images/r2.png');
       }
       &.is-ice-3 {
-        background-image: url('/piece-images/r3.png');
+        background-image: url('./assets/piece-images/r3.png');
       }
       &.is-ice-4 {
-        background-image: url('/piece-images/r4.png');
+        background-image: url('./assets/piece-images/r4.png');
       }
       &.is-ice-5 {
-        background-image: url('/piece-images/r5.png');
+        background-image: url('./assets/piece-images/r5.png');
       }
       &.is-ice-6 {
-        background-image: url('/piece-images/r6.png');
+        background-image: url('./assets/piece-images/r6.png');
       }
     }
     &.is-blue {
-      background-image: url('/piece-images/b0.png');
+      background-image: url('./assets/piece-images/b0.png');
       &.is-ice-1 {
-        background-image: url('/piece-images/b1.png');
+        background-image: url('./assets/piece-images/b1.png');
       }
       &.is-ice-2 {
-        background-image: url('/piece-images/b2.png');
+        background-image: url('./assets/piece-images/b2.png');
       }
       &.is-ice-3 {
-        background-image: url('/piece-images/b3.png');
+        background-image: url('./assets/piece-images/b3.png');
       }
       &.is-ice-4 {
-        background-image: url('/piece-images/b4.png');
+        background-image: url('./assets/piece-images/b4.png');
       }
       &.is-ice-5 {
-        background-image: url('/piece-images/b5.png');
+        background-image: url('./assets/piece-images/b5.png');
       }
       &.is-ice-6 {
-        background-image: url('/piece-images/b6.png');
+        background-image: url('./assets/piece-images/b6.png');
       }
     }
     &.is-green {
-      background-image: url('/piece-images/g0.png');
+      background-image: url('./assets/piece-images/g0.png');
       &.is-ice-1 {
-        background-image: url('/piece-images/g1.png');
+        background-image: url('./assets/piece-images/g1.png');
       }
       &.is-ice-2 {
-        background-image: url('/piece-images/g2.png');
+        background-image: url('./assets/piece-images/g2.png');
       }
       &.is-ice-3 {
-        background-image: url('/piece-images/g3.png');
+        background-image: url('./assets/piece-images/g3.png');
       }
       &.is-ice-4 {
-        background-image: url('/piece-images/g4.png');
+        background-image: url('./assets/piece-images/g4.png');
       }
       &.is-ice-5 {
-        background-image: url('/piece-images/g5.png');
+        background-image: url('./assets/piece-images/g5.png');
       }
       &.is-ice-6 {
-        background-image: url('/piece-images/g6.png');
+        background-image: url('./assets/piece-images/g6.png');
       }
     }
     &.is-yellow {
-      background-image: url('/piece-images/y0.png');
+      background-image: url('./assets/piece-images/y0.png');
       &.is-ice-1 {
-        background-image: url('/piece-images/y1.png');
+        background-image: url('./assets/piece-images/y1.png');
       }
       &.is-ice-2 {
-        background-image: url('/piece-images/y2.png');
+        background-image: url('./assets/piece-images/y2.png');
       }
       &.is-ice-3 {
-        background-image: url('/piece-images/y3.png');
+        background-image: url('./assets/piece-images/y3.png');
       }
       &.is-ice-4 {
-        background-image: url('/piece-images/y4.png');
+        background-image: url('./assets/piece-images/y4.png');
       }
       &.is-ice-5 {
-        background-image: url('/piece-images/y5.png');
+        background-image: url('./assets/piece-images/y5.png');
       }
       &.is-ice-6 {
-        background-image: url('/piece-images/y6.png');
+        background-image: url('./assets/piece-images/y6.png');
       }
     }
     &.is-aqua {
-      background-image: url('/piece-images/a0.png');
+      background-image: url('./assets/piece-images/a0.png');
       &.is-ice-1 {
-        background-image: url('/piece-images/a1.png');
+        background-image: url('./assets/piece-images/a1.png');
       }
       &.is-ice-2 {
-        background-image: url('/piece-images/a2.png');
+        background-image: url('./assets/piece-images/a2.png');
       }
       &.is-ice-3 {
-        background-image: url('/piece-images/a3.png');
+        background-image: url('./assets/piece-images/a3.png');
       }
       &.is-ice-4 {
-        background-image: url('/piece-images/a4.png');
+        background-image: url('./assets/piece-images/a4.png');
       }
       &.is-ice-5 {
-        background-image: url('/piece-images/a5.png');
+        background-image: url('./assets/piece-images/a5.png');
       }
       &.is-ice-6 {
-        background-image: url('/piece-images/a6.png');
+        background-image: url('./assets/piece-images/a6.png');
       }
     }
     &.is-pink {
-      background-image: url('/piece-images/p0.png');
+      background-image: url('./assets/piece-images/p0.png');
       &.is-ice-1 {
-        background-image: url('/piece-images/p1.png');
+        background-image: url('./assets/piece-images/p1.png');
       }
       &.is-ice-2 {
-        background-image: url('/piece-images/p2.png');
+        background-image: url('./assets/piece-images/p2.png');
       }
       &.is-ice-3 {
-        background-image: url('/piece-images/p3.png');
+        background-image: url('./assets/piece-images/p3.png');
       }
       &.is-ice-4 {
-        background-image: url('/piece-images/p4.png');
+        background-image: url('./assets/piece-images/p4.png');
       }
       &.is-ice-5 {
-        background-image: url('/piece-images/p5.png');
+        background-image: url('./assets/piece-images/p5.png');
       }
       &.is-ice-6 {
-        background-image: url('/piece-images/p6.png');
+        background-image: url('./assets/piece-images/p6.png');
       }
     }
     &.is-wood-1 {
-      background-image: url('/piece-images/wood1.png');
+      background-image: url('./assets/piece-images/wood1.png');
     }
     &.is-wood-2 {
-      background-image: url('/piece-images/wood2.png');
+      background-image: url('./assets/piece-images/wood2.png');
     }
     &.is-wood-3 {
-      background-image: url('/piece-images/wood3.png');
+      background-image: url('./assets/piece-images/wood3.png');
     }
   }
 }

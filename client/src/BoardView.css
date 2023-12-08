@@ -16,7 +16,7 @@
 
     &:not(.is-out) {
       background-size: cover;
-      background-image: url('/piece-images/empty.png');
+      background-image: url('./assets/piece-images/empty.png');
     }
 
     > .piece {

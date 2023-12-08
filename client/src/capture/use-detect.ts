@@ -4,8 +4,8 @@ import ops from 'ndarray-ops'
 import { InferenceSession, Tensor } from 'onnxruntime-web'
 import { useCallback } from 'react'
 import { useApp } from '../app/use-app'
+import modelUrl from '../assets/piece_classifier.onnx'
 
-const MODEL_URL = '/models/piece_classifier.onnx'
 const IMAGE_SIZE = 64
 const MEAN = [0.57665089, 0.5822121, 0.54763596]
 const STD = [0.18085433, 0.21391266, 0.23309964]
@@ -41,7 +41,7 @@ async function* detectPieces(
   width: number,
   height: number
 ): AsyncGenerator<[Position, Piece]> {
-  const session = await InferenceSession.create(MODEL_URL, {
+  const session = await InferenceSession.create(modelUrl, {
     executionProviders: ['webgl']
   })
   try {
@@ -86,7 +86,9 @@ function* inputTensors(
 ): Generator<[Position, Tensor]> {
   const canvas = document.getElementById('capture-canvas')
   if (canvas === null) throw Error('capture/Canvas must be in document')
-  const ctx = (canvas as HTMLCanvasElement).getContext('2d')
+  const ctx = (canvas as HTMLCanvasElement).getContext('2d', {
+    willReadFrequently: true
+  })
   if (ctx === null) throw Error('no canvas context')
 
   const pieceWidth = Math.floor(bounds[2] / width)
