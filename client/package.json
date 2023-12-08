@@ -15,6 +15,7 @@
     "@sweethomemaid/logic": "file:../logic",
     "@use-gesture/react": "^10.3.0",
     "classnames": "^2.3.2",
+    "microtip": "^0.2.2",
     "ndarray": "^1.0.19",
     "ndarray-ops": "^1.2.2",
     "onnxruntime-web": "^1.16.3",

@@ -1,3 +1,9 @@
+@import 'microtip';
+
+[aria-label][role~='tooltip']::after {
+  white-space: pre;
+}
+
 html,
 body {
   height: 100%;

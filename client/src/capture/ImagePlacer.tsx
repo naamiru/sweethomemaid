@@ -1,4 +1,5 @@
 import { useDrag, useGesture } from '@use-gesture/react'
+import classNames from 'classnames'
 import { useCallback, useRef, useState, type ReactNode } from 'react'
 import toast from 'react-hot-toast'
 import * as cache from '../cache'
@@ -39,9 +40,11 @@ export default function ImagePlacer({
     dispatch({ type: 'setImage', image: undefined })
   }, [dispatch])
 
+  const [isLoading, setIsLoading] = useState(false)
   const detect = useDetect()
   const submit = useCallback(() => {
     ;(async () => {
+      setIsLoading(true)
       const board = document
         .querySelector('.board-view')
         ?.getBoundingClientRect()
@@ -63,9 +66,13 @@ export default function ImagePlacer({
         Math.floor(board.height * ratio)
       ])
       dispatch({ type: 'setImage', image: undefined })
-    })().catch(() => {
-      toast.error('盤面の認識に失敗しました')
-    })
+    })()
+      .catch(() => {
+        toast.error('盤面の認識に失敗しました')
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }, [image, detect, dispatch, bounds])
 
   return (
@@ -73,7 +80,13 @@ export default function ImagePlacer({
       <div className="operations">
         <div className="text">盤面の位置と大きさを揃えてください</div>
         <div className="buttons">
-          <button className="button is-small is-info" onClick={submit}>
+          <button
+            className={classNames('button is-small is-info', {
+              'is-loading': isLoading
+            })}
+            disabled={isLoading}
+            onClick={submit}
+          >
             完了
           </button>
           <button className="button is-small" onClick={cancel}>

@@ -22,7 +22,13 @@ export default function CaptureButton(): ReactNode {
   )
 
   return (
-    <div className="file capture-button">
+    <div
+      className="file capture-button"
+      aria-label={`スクリーンショットから
+盤面配置を読み込みます`}
+      data-microtip-position="top"
+      role="tooltip"
+    >
       <label className="file-label">
         <input
           className="file-input"
