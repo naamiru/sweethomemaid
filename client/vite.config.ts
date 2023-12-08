@@ -5,8 +5,5 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   assetsInclude: ['**/*.onnx'],
-  base: '/sweethomemaid/',
-  build: {
-    outDir: '../docs'
-  }
+  base: '/sweethomemaid/'
 })
