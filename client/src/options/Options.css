@@ -1,0 +1,52 @@
+.options {
+  margin-top: 20px;
+  display: flex;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  > .option {
+    > .head {
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+      display: flex;
+
+      > .action {
+        font-weight: normal;
+        margin-left: 1em;
+      }
+    }
+
+    > .body {
+      .checkbox {
+        font-size: 0.9rem;
+
+        input {
+          margin-right: 6px;
+        }
+      }
+    }
+
+    &.skill-option {
+      flex-grow: 1;
+    }
+
+    &.killer-option {
+      > .body {
+        display: flex;
+        gap: 10px;
+
+        @media screen and (max-width: 768px) {
+          flex-direction: column;
+        }
+
+        > .field {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}

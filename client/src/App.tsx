@@ -6,6 +6,7 @@ import HistoryNav from './HistoryNav'
 import StageSelect from './StageSelect'
 import { AppProvider } from './app/provider'
 import Capture from './capture/Capture'
+import Options from './options/Options'
 
 function App(): ReactNode {
   return (
@@ -27,6 +28,7 @@ function App(): ReactNode {
           <Capture />
         </div>
         <BoardView />
+        <Options />
         <Toaster position="bottom-center" />
       </div>
     </AppProvider>

@@ -30,7 +30,7 @@ export default function PieceView({
 }: {
   position: Position
 }): ReactNode {
-  const { board, pieces, isPlaying, swap, dispatch } = useApp()
+  const { board, pieces, isPlaying, swap, useSwapSkill, dispatch } = useApp()
   const piece = pieces[position[0]][position[1]]
 
   const [isMoving, setIsMoving] = useState(false)
@@ -59,10 +59,14 @@ export default function PieceView({
           Direction.Down,
           Direction.Left,
           Direction.Right
-        ].filter(dir => canMove(board, new Move(position, dir)))
+        ].filter(dir => canMove(board, new Move(position, dir, useSwapSkill)))
         setMovableDirs(new Set(dirs))
         setComboDirs(
-          new Set(dirs.filter(dir => isCombo(board, new Move(position, dir))))
+          new Set(
+            dirs.filter(dir =>
+              isCombo(board, new Move(position, dir, useSwapSkill))
+            )
+          )
         )
       }
       if (!down) {
@@ -102,7 +106,7 @@ export default function PieceView({
         if (dir !== undefined && !comboDirs.has(dir)) {
           dispatch({
             type: 'setSwap',
-            position: new Move(position, dir).positions()[1],
+            position: new Move(position, dir, useSwapSkill).positions()[1],
             triggerPosition: position
           })
         } else {
@@ -111,7 +115,7 @@ export default function PieceView({
       } else {
         dispatch({ type: 'setSwap' })
         if (dir !== undefined) {
-          playMove(new Move(position, dir)).catch(console.error)
+          playMove(new Move(position, dir, useSwapSkill)).catch(console.error)
         }
       }
 
