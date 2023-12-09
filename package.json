@@ -4,7 +4,7 @@
   "description": "app for sweethomemaid",
   "scripts": {
     "dev": "npm -w client run dev",
-    "ss": "cd detect && poetry run flask --app ss_server run --port 5174 --host 0.0.0.0"
+    "ss": "cd screenshot && poetry run flask --app server run --port 5174 --host 0.0.0.0"
   },
   "repository": {
     "type": "git",
