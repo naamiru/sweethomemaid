@@ -34,7 +34,8 @@ export default function StageSelect(): ReactNode {
               <option value="xmas_7">クリスマス 7</option>
               <option value="xmas_8">クリスマス 8</option>
               <option value="xmas_9">クリスマス 9</option>
-              <option value="xmas_10">クリスマス 10</option>
+              <option value="xmas_10_1">クリスマス 10 wave1</option>
+              <option value="xmas_10_2">クリスマス 10 wave2</option>
             </optgroup>
           </select>
         </div>

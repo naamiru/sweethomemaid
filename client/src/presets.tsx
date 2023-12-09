@@ -10,7 +10,8 @@ export const stages = [
   'xmas_7',
   'xmas_8',
   'xmas_9',
-  'xmas_10',
+  'xmas_10_1',
+  'xmas_10_2',
   'masters_3_1',
   'masters_3_2',
   'masters_3_3'
@@ -358,7 +359,7 @@ const configs: Record<StageName, BoardConfig> = {
     uuuu1uuuu
     `
   },
-  xmas_10: {
+  xmas_10_1: {
     colors: `
     bry r rgy
     rg yyg br
@@ -391,6 +392,41 @@ const configs: Record<StageName, BoardConfig> = {
     3 uu1uu 1
     u3 uuu 1u
     uu3 u 1uu
+    `
+  },
+  xmas_10_2: {
+    colors: `
+    bg yrr yy
+    gry g gbg
+     rggrgbr
+    r rbryy b
+    ybbr gryg
+    r ybgbr y
+     rgbgryg
+    ybr r byb
+    yg ygy gy
+    `,
+    ices: `
+    33 333 33
+    330 0 033
+     0000000
+    3 00000 3
+    3300 0033
+    3 00000 3
+     0000000
+    330 0 033
+    33 333 33
+    `,
+    upstreams: `
+    uu uuu uu
+    u3u u 1uu
+     uu3u1uu
+    3 uuuuu 1
+    u1uu uu3u
+    u uu1uu u
+     1uuuuu3
+    3uu u uu1
+    uu 1u3 uu
     `
   },
   masters_3_1: {
