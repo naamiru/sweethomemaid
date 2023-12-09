@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "screenshot"
+version = "0.1.0"
+description = ""
+authors = ["naamiru <152694159+naamiru@users.noreply.github.com>"]
+license = "Unlicense"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.11.6"
+flask = "^3.0.0"
+pillow = "^10.1.0"
+flask-cors = "^4.0.0"
+pyobjc-framework-quartz = "^10.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
