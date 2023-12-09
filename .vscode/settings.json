@@ -11,10 +11,10 @@
   "[javascriptreact]": {
     "editor.tabSize": 2
   },
-  "[typescriptreact]": {
+  "[typescript]": {
     "editor.tabSize": 2
   },
-  "[typescript]": {
+  "[typescriptreact]": {
     "editor.tabSize": 2
   },
   "[css]": {
