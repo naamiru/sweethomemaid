@@ -261,7 +261,7 @@ class Line {
   }
 }
 
-class BoardMove {
+export class BoardMove {
   constructor(
     public board: Board,
     public move: Move
@@ -538,7 +538,7 @@ class LineMap {
   }
 }
 
-function positionToInt(position: Position): number {
+export function positionToInt(position: Position): number {
   return position[0] * 10 + position[1]
 }
 

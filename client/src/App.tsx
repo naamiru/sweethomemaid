@@ -2,6 +2,7 @@ import { type ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 import './App.css'
 import BoardView from './BoardView'
+import GoodMove from './GoodMove'
 import HistoryNav from './HistoryNav'
 import StageSelect from './StageSelect'
 import { AppProvider } from './app/provider'
@@ -29,6 +30,7 @@ function App(): ReactNode {
         </div>
         <BoardView />
         <Options />
+        <GoodMove />
         <Toaster position="bottom-center" />
       </div>
     </AppProvider>

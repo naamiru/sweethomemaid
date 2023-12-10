@@ -1,0 +1,63 @@
+.good-move {
+  position: absolute;
+  left: calc(50% + 288px + 20px);
+  top: 152px;
+  width: 300px;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+
+  &.is-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  > .step {
+    margin-bottom: 10px;
+
+    > .num {
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+
+    > .conditions > .tag {
+      margin-right: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background-color 0.1s ease-in-out;
+
+      &:hover {
+        background-color: #e0e0e0;
+      }
+    }
+  }
+}
+
+.good-move-overlay {
+  position: absolute;
+
+  > .move {
+    position: absolute;
+    color: white;
+    transform: translate(-50%, -50%);
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+
+    &.is-right {
+      margin-left: 32px;
+    }
+    &.is-left {
+      margin-left: -32px;
+    }
+    &.is-down {
+      margin-top: 32px;
+    }
+    &.is-up {
+      margin-top: -32px;
+    }
+
+    &.is-swap {
+      color: red;
+    }
+  }
+}
