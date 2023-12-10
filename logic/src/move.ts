@@ -361,61 +361,7 @@ export function findMatches(board: Board): Match[] {
   }
 
   // Bomb の並びを消す
-  // 十字, L字, T字 の順で優先される？
-  for (const [[x, y], lines] of lineMap.crosses()) {
-    const [hLine, vLine] =
-      lines[0].axis === Axis.H ? lines : [lines[1], lines[0]]
-
-    let sx: number // 横列の開始点（Line長が4以上の場合は hLine.x と異なる）
-    let sy: number // 縦列の開始点（Line長が4以上の場合は vLine.y と異なる）
-    let isL = true // L字かどうか
-
-    if (
-      hLine.x < x &&
-      x < hLine.x + hLine.length - 1 &&
-      vLine.y < y &&
-      y < vLine.y + vLine.length - 1
-    ) {
-      // 十字
-      sx = x - 1
-      sy = y - 1
-      isL = false
-    } else {
-      // L字 または T字
-      if (hLine.x <= x - 2) {
-        sx = x - 2
-      } else if (hLine.x + hLine.length - 1 >= x + 2) {
-        sx = x
-      } else {
-        sx = x - 1
-        isL = false
-      }
-      if (vLine.y <= y - 2) {
-        sy = y - 2
-      } else if (vLine.y + vLine.length - 1 >= y + 2) {
-        sy = y
-      } else {
-        sy = y - 1
-        isL = false
-      }
-    }
-
-    matches.push(
-      new Match(
-        range(0, 3)
-          .map(i => [sx + i, y] as Position) // 横列
-          .filter(([px, py]) => px !== x || py !== y) // 縦列と重複する点を除く
-          .concat(range(0, 3).map(i => [x, sy + i] as Position)), // 縦列
-        {
-          kind: Kind.Bomb,
-          position: isL ? [x, y] : [sx + 1, sy + 1]
-        }
-      )
-    )
-    for (const line of [...lines]) {
-      lineMap.delete(line)
-    }
-  }
+  matches.push(...deleteAndCreateBomb(lineMap))
 
   // 4個の並びを消す
   for (const line of [...lineMap.lines]) {
@@ -482,6 +428,81 @@ export function findMatches(board: Board): Match[] {
   return matches.concat(
     Array.from(lineMap.lines).map(line => new Match(line.positions()))
   )
+}
+
+// Bomb の並びを消す
+// 十字, L字, T字 の順で優先される？
+function deleteAndCreateBomb(lineMap: LineMap): Match[] {
+  const matches: Match[] = []
+
+  for (const [[x, y], lines] of lineMap.crosses()) {
+    if (lines.length < 2) {
+      // 複数交点がある line がループの過程ですでに消された場合
+      // 使用済みの交点を削除して再計算
+      for (const line of lines) {
+        lineMap.delete(line)
+        for (const subline of line.split([x, y])) {
+          lineMap.add(subline)
+        }
+      }
+      return matches.concat(deleteAndCreateBomb(lineMap))
+    }
+
+    const [hLine, vLine] =
+      lines[0].axis === Axis.H ? lines : [lines[1], lines[0]]
+
+    let sx: number // 横列の開始点（Line長が4以上の場合は hLine.x と異なる）
+    let sy: number // 縦列の開始点（Line長が4以上の場合は vLine.y と異なる）
+    let isL = true // L字かどうか
+
+    if (
+      hLine.x < x &&
+      x < hLine.x + hLine.length - 1 &&
+      vLine.y < y &&
+      y < vLine.y + vLine.length - 1
+    ) {
+      // 十字
+      sx = x - 1
+      sy = y - 1
+      isL = false
+    } else {
+      // L字 または T字
+      if (hLine.x <= x - 2) {
+        sx = x - 2
+      } else if (hLine.x + hLine.length - 1 >= x + 2) {
+        sx = x
+      } else {
+        sx = x - 1
+        isL = false
+      }
+      if (vLine.y <= y - 2) {
+        sy = y - 2
+      } else if (vLine.y + vLine.length - 1 >= y + 2) {
+        sy = y
+      } else {
+        sy = y - 1
+        isL = false
+      }
+    }
+
+    matches.push(
+      new Match(
+        range(0, 3)
+          .map(i => [sx + i, y] as Position) // 横列
+          .filter(([px, py]) => px !== x || py !== y) // 縦列と重複する点を除く
+          .concat(range(0, 3).map(i => [x, sy + i] as Position)), // 縦列
+        {
+          kind: Kind.Bomb,
+          position: isL ? [x, y] : [sx + 1, sy + 1]
+        }
+      )
+    )
+    for (const line of [...lines]) {
+      lineMap.delete(line)
+    }
+  }
+
+  return matches
 }
 
 // Line とそれらが占める位置を保持する
