@@ -97,22 +97,26 @@ export type Killers = {
 export type Position = [number, number]
 
 export class Board {
-  pieces: Piece[][]
-  upstreams: Position[][]
-  killers: Killers
+  private constructor(
+    public pieces: Piece[][],
+    public upstreams: Position[][],
+    public killers: Killers,
 
-  // 落下処理を行う順に並べた位置。
-  // move.ts でのみ使うが、キャッシュのため Board インスタンスに持たせる
-  fallablePositions: Position[] | undefined = undefined
+    // 落下処理を行う順に並べた位置。
+    // move.ts でのみ使うが、キャッシュのため Board インスタンスに持たせる
+    public fallablePositions: Position[] | undefined = undefined
+  ) {}
 
-  constructor(width: number, height: number) {
-    this.pieces = Array.from({ length: width + 2 }, () =>
-      Array.from({ length: height + 2 }, () => new Piece(Kind.Out))
+  static create(width: number, height: number): Board {
+    return new Board(
+      Array.from({ length: width + 2 }, () =>
+        Array.from({ length: height + 2 }, () => new Piece(Kind.Out))
+      ),
+      Array.from({ length: width + 2 }, (_, x) =>
+        Array.from({ length: height + 2 }, (_, y) => [x, y - 1])
+      ),
+      {}
     )
-    this.upstreams = Array.from({ length: width + 2 }, (_, x) =>
-      Array.from({ length: height + 2 }, (_, y) => [x, y - 1])
-    )
-    this.killers = {}
   }
 
   get width(): number {
@@ -162,5 +166,14 @@ export class Board {
     if (booster === Kind.Special)
       return Math.max(killer.bomb ?? 0, killer.rocket ?? 0, killer.missile ?? 0)
     return 0
+  }
+
+  copy(): Board {
+    return new Board(
+      this.pieces,
+      this.upstreams,
+      this.killers,
+      this.fallablePositions
+    )
   }
 }
