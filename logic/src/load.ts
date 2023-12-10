@@ -12,7 +12,7 @@ export type BoardConfig = {
 }
 
 export function load(config: BoardConfig): Board {
-  const board = new Board(config.width ?? 9, config.height ?? 9)
+  const board = Board.create(config.width ?? 9, config.height ?? 9)
   if (config.colors !== undefined) updateColor(board, config.colors)
   if (config.mice !== undefined) updateMouse(board, config.mice)
   if (config.woods !== undefined) updateWood(board, config.woods)

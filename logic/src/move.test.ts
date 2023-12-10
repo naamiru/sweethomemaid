@@ -30,7 +30,7 @@ function createBoard(
     .split('\n')
     .map(line => [...line])
 
-  const board = new Board(tokens[0].length, tokens.length)
+  const board = Board.create(tokens[0].length, tokens.length)
   for (const [y, line] of tokens.entries()) {
     for (const [x, token] of line.entries()) {
       board.setPiece([x + 1, y + 1], new Piece(parseFace(token, x + 1, y + 1)))
