@@ -1,5 +1,5 @@
 import { Kind, type Board, type Piece } from './board'
-import { Direction, InvalidMove, Move, applyMove } from './move'
+import { BoardMove, Direction, InvalidMove, Move, applyMove } from './move'
 
 type Condition = (board: Board) => boolean
 type Path = Move[]
@@ -61,27 +61,48 @@ export function* search<T extends Record<string, Condition>>(
 
   const initialPieces = board.pieces
 
-  type State = [Piece[][], Path, Move | undefined]
-  let states: State[] = [[board.pieces, [], undefined]]
+  type State = [Piece[][], boolean, Path, Move | undefined]
+  let states: State[] = [[board.pieces, swapSkill, [], undefined]]
   let unfulfilleds = Object.values(conditions)
   for (let step = 0; step <= maxMove; step++) {
     const nextStates: State[] = []
 
     const fulfilleds = new Set<Condition>()
     while (states.length > 0) {
-      const [pieces, path, move] = states.shift() as State
+      const [pieces, swap, path, move] = states.shift() as State
       board.pieces = pieces
 
       let newPath = path
       if (move !== undefined) {
+        const pair = new BoardMove(board, move).pieces()
+        const canSwap = swap && move.direction !== Direction.Zero
+
         try {
           applyMove(board, move)
         } catch (error) {
           if (error instanceof InvalidMove) {
+            if (canSwap && pair.every(p => p.isColor())) {
+              states.push([
+                pieces,
+                false,
+                path,
+                new Move(move.position, move.direction, true)
+              ])
+            }
             continue
           }
           throw error
         }
+
+        if (canSwap && pair.some(p => p.isBooster())) {
+          states.push([
+            pieces,
+            false,
+            path,
+            new Move(move.position, move.direction, true)
+          ])
+        }
+
         newPath = path.concat([move])
       }
 
@@ -96,7 +117,7 @@ export function* search<T extends Record<string, Condition>>(
       }
 
       for (const move of allMoves(board)) {
-        nextStates.push([board.pieces, newPath, move])
+        nextStates.push([board.pieces, swap, newPath, move])
       }
     }
 

@@ -21,7 +21,7 @@ export default function GoodMove(): ReactNode {
   const [goodMoves, setGoodMoves] = useState<GoodMoves>({})
   const { board, histories, historyIndex, isPlaying, useSwapSkill } = useApp()
   useEffect(() => {
-    setGoodMoves(searchGoodMoves(board, useSwapSkill))
+    setGoodMoves(searchGoodMoves(board.copy(), useSwapSkill))
   }, [board, histories, historyIndex, useSwapSkill])
 
   const [selectedMoves, setSelectedMoves] = useState<Move[]>([])
