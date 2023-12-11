@@ -9,6 +9,7 @@ import * as cache from '../cache'
 import { createBoard, stages, type StageName } from '../presets'
 
 const STAGE_CACHE_KEY = 'AppContext.stage'
+const INITIAL_STAGE = 'xmas_4_1'
 
 type Pieces = Piece[][]
 type SimpleKillers = [number, number, number]
@@ -73,7 +74,7 @@ const cachedStage = cache.get<StageName>(STAGE_CACHE_KEY)
 const initialStage =
   cachedStage !== undefined && stages.includes(cachedStage)
     ? cachedStage
-    : 'masters_3_1'
+    : INITIAL_STAGE
 const initialBoard = createBoard(initialStage)
 export const initialState: AppState = {
   stage: initialStage,
