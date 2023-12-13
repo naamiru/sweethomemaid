@@ -14,15 +14,19 @@ import {
   Move,
   applyMove,
   fall,
-  findMatches
+  findMatches,
+  positionToInt
 } from './move'
+import { GeneralSet } from './utils'
 
 function createBoard(
   expr: string,
   options: {
     upstream?: string
+    link?: string
     mouse?: string
     ice?: string
+    chain?: string
     killers?: Killers
   } = {}
 ): Board {
@@ -41,12 +45,20 @@ function createBoard(
     updateUpstream(board, options.upstream)
   }
 
+  if (options.link !== undefined) {
+    updateLink(board, options.link)
+  }
+
   if (options.mouse !== undefined) {
     updateMouse(board, options.mouse)
   }
 
   if (options.ice !== undefined) {
     updateIce(board, options.ice)
+  }
+
+  if (options.chain !== undefined) {
+    updateChain(board, options.chain)
   }
 
   if (options.killers !== undefined) {
@@ -99,17 +111,34 @@ function updateUpstream(board: Board, expr: string): void {
   }
 }
 
+function updateLink(board: Board, expr: string): void {
+  board.linkPositions = new GeneralSet(positionToInt)
+  for (const [pos, token] of tokens(expr)) {
+    if (token === '+') board.linkPositions.add(pos)
+  }
+}
+
 function updateMouse(board: Board, expr: string): void {
   for (const [pos, count] of digitToken(expr)) {
     const piece = board.piece(pos)
-    board.setPiece(pos, new Piece({ kind: Kind.Mouse, count }, piece.ice))
+    board.setPiece(
+      pos,
+      new Piece({ kind: Kind.Mouse, count }, piece.ice, piece.chain)
+    )
   }
 }
 
 function updateIce(board: Board, expr: string): void {
   for (const [pos, count] of digitToken(expr)) {
     const piece = board.piece(pos)
-    board.setPiece(pos, new Piece(piece.face, count))
+    board.setPiece(pos, new Piece(piece.face, count, piece.chain))
+  }
+}
+
+function updateChain(board: Board, expr: string): void {
+  for (const [pos, count] of digitToken(expr)) {
+    const piece = board.piece(pos)
+    board.setPiece(pos, new Piece(piece.face, piece.ice, count))
   }
 }
 
@@ -856,6 +885,294 @@ describe('fall', () => {
       --x-
       -br-
       `
+    )
+  })
+})
+
+describe('fallWithChain', () => {
+  function expectFall(initial: Board, expected: Board): void {
+    if (initial.linkPositions === undefined)
+      initial.linkPositions = new GeneralSet(positionToInt)
+    fall(initial)
+    expect(initial.pieces).toEqual(expected.pieces)
+  }
+
+  test('空位置に不明なピースが落下', () => {
+    expectFall(
+      createBoard(
+        `
+        -.-
+        ---
+        `
+      ),
+      createBoard(
+        `
+        -x-
+        ---
+        `
+      )
+    )
+  })
+
+  test('空位置に上流のピースが落下', () => {
+    expectFall(
+      createBoard(
+        `
+        -+-
+        -.-
+        ---
+        `
+      ),
+      createBoard(
+        `
+        -x-
+        -+-
+        ---
+        `
+      )
+    )
+  })
+
+  test('直線的な落下が優先 左寄り', () => {
+    expectFall(
+      createBoard(
+        `
+        b_
+        r_
+        ..
+        `
+      ),
+      createBoard(
+        `
+        x_
+        x_
+        rb
+        `
+      )
+    )
+  })
+
+  test('直線的な落下が優先 右寄り', () => {
+    expectFall(
+      createBoard(
+        `
+        _b
+        _r
+        ..
+        `
+      ),
+      createBoard(
+        `
+        _x
+        _x
+        br
+        `
+      )
+    )
+  })
+
+  test('優先度が同じであれば右側が落下', () => {
+    expectFall(
+      createBoard(
+        `
+        r___y
+        _._._
+        __.__
+        `
+      ),
+      createBoard(
+        `
+        x___x
+        _r_x_
+        __y__
+        `
+      )
+    )
+  })
+
+  test('直前に斜め移動していない方が優先的に落下', () => {
+    expectFall(
+      createBoard(
+        `
+        r__y
+        ._._
+        _.__
+        `
+      ),
+      createBoard(
+        `
+        x__x
+        x_y_
+        _r__
+        `
+      )
+    )
+  })
+
+  test('直前でない斜め移動は落下に影響しない', () => {
+    expectFall(
+      createBoard(
+        `
+        r__y
+        ._._
+        ._._
+        _.__
+        `
+      ),
+      createBoard(
+        `
+        x__x
+        x_x_
+        r_x_
+        _y__
+        `
+      )
+    )
+  })
+
+  test('下にある方が先に落下', () => {
+    expectFall(
+      createBoard(
+        `
+        ._y
+        r_.
+        _._
+        `
+      ),
+      createBoard(
+        `
+        x_x
+        x_y
+        _r_
+        `
+      )
+    )
+  })
+
+  test('角通常落下', () => {
+    expectFall(
+      createBoard(
+        `
+        _b
+        r.
+        ..
+        `
+      ),
+      createBoard(
+        `
+        _x
+        xx
+        rb
+        `
+      )
+    )
+  })
+
+  test('角 リンクした落下', () => {
+    expectFall(
+      createBoard(
+        `
+        _b
+        r.
+        ..
+        `,
+        {
+          link: `
+          --
+          +-
+          --
+          `
+        }
+      ),
+      createBoard(
+        `
+        _x
+        bx
+        rx
+        `
+      )
+    )
+  })
+
+  test('リンク箇所にピースがない場合は効果がない', () => {
+    expectFall(
+      createBoard(
+        `
+        _b
+        ..
+        ..
+        `,
+        {
+          link: `
+          --
+          +-
+          --
+          `
+        }
+      ),
+      createBoard(
+        `
+        _x
+        xx
+        xb
+        `
+      )
+    )
+  })
+
+  test('鎖は落下しない', () => {
+    expectFall(
+      createBoard(
+        `
+        rb
+        yg
+        ..
+        `,
+        {
+          chain: `
+          00
+          01
+          00
+          `
+        }
+      ),
+      createBoard(
+        `
+        xb
+        xg
+        yr
+        `,
+        {
+          chain: `
+          00
+          01
+          00
+          `
+        }
+      )
+    )
+  })
+
+  test('1未満の鎖は1step後に消える', () => {
+    const board = createBoard(
+      `
+      rb
+      yg
+      ..
+      `
+    )
+    const piece = board.piece([2, 2])
+    board.setPiece([2, 2], new Piece(piece.face, 0, 0.5))
+
+    expectFall(
+      board,
+      createBoard(
+        `
+        xx
+        rb
+        yg
+        `
+      )
     )
   })
 })

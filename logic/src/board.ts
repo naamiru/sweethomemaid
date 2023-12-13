@@ -1,3 +1,5 @@
+import { type GeneralSet } from './utils'
+
 export enum Kind {
   Out,
   Empty,
@@ -66,7 +68,8 @@ export function isColor(face: Face): face is Color {
 export class Piece {
   constructor(
     public readonly face: Face,
-    public readonly ice = 0
+    public readonly ice = 0,
+    public readonly chain = 0
   ) {}
 
   get kind(): Kind {
@@ -92,6 +95,7 @@ export type Killers = {
   ice?: Killer
   mouse?: Killer
   wood?: Killer
+  chain?: Killer
 }
 
 export type Position = [number, number]
@@ -104,7 +108,11 @@ export class Board {
 
     // 落下処理を行う順に並べた位置。
     // move.ts でのみ使うが、キャッシュのため Board インスタンスに持たせる
-    public fallablePositions: Position[] | undefined = undefined
+    public fallablePositions: Position[] | undefined = undefined,
+
+    // 上流ピースがリンクして落下する位置。
+    // 鎖用落下処理で使用
+    public linkPositions: GeneralSet<Position> | undefined = undefined
   ) {}
 
   static create(width: number, height: number): Board {
@@ -168,12 +176,22 @@ export class Board {
     return 0
   }
 
+  isChainEnabled(): boolean {
+    return this.linkPositions !== undefined
+  }
+
+  isLinkPosition(position: Position): boolean {
+    if (this.linkPositions === undefined) return false
+    return this.linkPositions.has(position)
+  }
+
   copy(): Board {
     return new Board(
       this.pieces,
       this.upstreams,
       this.killers,
-      this.fallablePositions
+      this.fallablePositions,
+      this.linkPositions
     )
   }
 }
