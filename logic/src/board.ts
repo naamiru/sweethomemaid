@@ -1,4 +1,4 @@
-import { type GeneralSet } from './utils'
+import { type GeneralMap, type GeneralSet } from './utils'
 
 export enum Kind {
   Out,
@@ -110,9 +110,16 @@ export class Board {
     // move.ts でのみ使うが、キャッシュのため Board インスタンスに持たせる
     public fallablePositions: Position[] | undefined = undefined,
 
-    // 上流ピースがリンクして落下する位置。
+    // ピースがリンクして落下する位置。
+    // 下流 -> [上流]
+    // 前にある位置を優先
     // 鎖用落下処理で使用
-    public linkPositions: GeneralSet<Position> | undefined = undefined
+    public links: GeneralMap<Position, Position[]> | undefined = undefined,
+
+    // 優先度が同じ場合に右上、左上のどちらから落下してくるか
+    // 左上から落下する位置を保持する。
+    // 鎖用落下処理で使用
+    public fallFromLeftPositions: GeneralSet<Position> | undefined = undefined
   ) {}
 
   static create(width: number, height: number): Board {
@@ -177,12 +184,17 @@ export class Board {
   }
 
   isChainEnabled(): boolean {
-    return this.linkPositions !== undefined
+    return this.links !== undefined
   }
 
-  isLinkPosition(position: Position): boolean {
-    if (this.linkPositions === undefined) return false
-    return this.linkPositions.has(position)
+  getLinkedUpstreams(position: Position): Position[] {
+    if (this.links === undefined) return []
+    return this.links.get(position) ?? []
+  }
+
+  isFallFromLeft(position: Position): boolean {
+    if (this.fallFromLeftPositions === undefined) return false
+    return this.fallFromLeftPositions.has(position)
   }
 
   copy(): Board {
@@ -191,7 +203,8 @@ export class Board {
       this.upstreams,
       this.killers,
       this.fallablePositions,
-      this.linkPositions
+      this.links,
+      this.fallFromLeftPositions
     )
   }
 }

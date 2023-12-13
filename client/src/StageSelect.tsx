@@ -24,9 +24,7 @@ export default function StageSelect(): ReactNode {
               <option value="masters_4_2">
                 マスターズ 鎖（X型）鎖は対応中！
               </option>
-              <option value="masters_4_3">
-                マスターズ 鎖（/型）鎖は対応中！
-              </option>
+              <option value="masters_4_3">マスターズ 鎖（/型）</option>
             </optgroup>
             <optgroup label="クリスマスメイキング">
               <option value="xmas_1">クリスマス 1</option>

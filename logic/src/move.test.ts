@@ -17,13 +17,14 @@ import {
   findMatches,
   positionToInt
 } from './move'
-import { GeneralSet } from './utils'
+import { GeneralMap, GeneralSet } from './utils'
 
 function createBoard(
   expr: string,
   options: {
     upstream?: string
-    link?: string
+    link?: Array<[Position, Position]>
+    fallFrom?: string
     mouse?: string
     ice?: string
     chain?: string
@@ -47,6 +48,10 @@ function createBoard(
 
   if (options.link !== undefined) {
     updateLink(board, options.link)
+  }
+
+  if (options.fallFrom !== undefined) {
+    updateFallFrom(board, options.fallFrom)
   }
 
   if (options.mouse !== undefined) {
@@ -111,11 +116,24 @@ function updateUpstream(board: Board, expr: string): void {
   }
 }
 
-function updateLink(board: Board, expr: string): void {
-  board.linkPositions = new GeneralSet(positionToInt)
-  for (const [pos, token] of tokens(expr)) {
-    if (token === '+') board.linkPositions.add(pos)
+function updateLink(board: Board, pairs: Array<[Position, Position]>): void {
+  const links = new GeneralMap<Position, Position[], number>(positionToInt)
+  for (const [from, to] of pairs) {
+    const upstreams = links.get(from) ?? []
+    upstreams.push(to)
+    links.set(from, upstreams)
   }
+  board.links = links
+}
+
+function updateFallFrom(board: Board, expr: string): void {
+  const fallFromLeftPositions = new GeneralSet(positionToInt)
+  for (const [pos, token] of tokens(expr)) {
+    if (token === 'l') {
+      fallFromLeftPositions.add(pos)
+    }
+  }
+  board.fallFromLeftPositions = fallFromLeftPositions
 }
 
 function updateMouse(board: Board, expr: string): void {
@@ -891,8 +909,8 @@ describe('fall', () => {
 
 describe('fallWithChain', () => {
   function expectFall(initial: Board, expected: Board): void {
-    if (initial.linkPositions === undefined)
-      initial.linkPositions = new GeneralSet(positionToInt)
+    if (initial.links === undefined)
+      initial.links = new GeneralMap(positionToInt)
     fall(initial)
     expect(initial.pieces).toEqual(expected.pieces)
   }
@@ -990,6 +1008,32 @@ describe('fallWithChain', () => {
     )
   })
 
+  test('優先度が同じ場合に左が落ちるように設定', () => {
+    expectFall(
+      createBoard(
+        `
+        r___y
+        _._._
+        __.__
+        `,
+        {
+          fallFrom: `
+          .___.
+          _._._
+          __l__
+          `
+        }
+      ),
+      createBoard(
+        `
+        x___x
+        _x_y_
+        __r__
+        `
+      )
+    )
+  })
+
   test('直前に斜め移動していない方が優先的に落下', () => {
     expectFall(
       createBoard(
@@ -1077,11 +1121,12 @@ describe('fallWithChain', () => {
         ..
         `,
         {
-          link: `
-          --
-          +-
-          --
-          `
+          link: [
+            [
+              [1, 2],
+              [2, 1]
+            ]
+          ]
         }
       ),
       createBoard(
@@ -1103,11 +1148,12 @@ describe('fallWithChain', () => {
         ..
         `,
         {
-          link: `
-          --
-          +-
-          --
-          `
+          link: [
+            [
+              [1, 2],
+              [2, 1]
+            ]
+          ]
         }
       ),
       createBoard(

@@ -9,7 +9,7 @@ import * as cache from '../cache'
 import { createBoard, stages, type StageName } from '../presets'
 
 const STAGE_CACHE_KEY = 'AppContext.stage'
-const INITIAL_STAGE = 'xmas_4_1'
+const INITIAL_STAGE = 'masters_4_1'
 
 type Pieces = Piece[][]
 type SimpleKillers = [number, number, number]
