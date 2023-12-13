@@ -1124,7 +1124,7 @@ function fallWithChain(
       function fallPiece(piece: Piece, from: Position, to: Position): void {
         if (movingPieces.has(piece)) return
 
-        const isFromOut = from[1] === 0 // TODO: Out判定ちゃんとやる
+        const isFromOut = board.piece(from).face === Kind.Out
 
         if (isFromOut) {
           piece = new Piece(Kind.Unknown)
@@ -1145,8 +1145,7 @@ function fallWithChain(
       }
 
       function followLink(pos: Position): void {
-        if (pos[1] === 1) {
-          // TODO: Out判定ちゃんとやる
+        if (isMostUpstream(board, pos)) {
           fallPiece(new Piece(Kind.Unknown), [pos[0], pos[1] - 1], pos)
           return
         }
@@ -1168,8 +1167,7 @@ function fallWithChain(
         const upstream: Position = [pos[0], pos[1] - 1]
         // 落下するピース
         const piece: Piece = board.piece(upstream)
-        if (pos[1] === 1 || isFallablePiece(piece)) {
-          // TODO: Out判定ちゃんとやる
+        if (isMostUpstream(board, pos) || isFallablePiece(piece)) {
           fallPiece(piece, upstream, pos)
           return false
         }
@@ -1218,7 +1216,9 @@ function fallWithChain(
 
       // 移動でできた空マスの内、上が空マスでないものを次の対象とする
       targetPositions = newEmptyPositions.filter(
-        pos => board.piece([pos[0], pos[1] - 1]).face !== Kind.Empty
+        pos =>
+          board.piece(pos).face === Kind.Empty &&
+          board.piece([pos[0], pos[1] - 1]).face !== Kind.Empty
       )
 
       delay += 1
@@ -1297,6 +1297,15 @@ function findActiveEmptyPositions(board: Board): Position[] {
     }
   }
   return positions
+}
+
+function isMostUpstream(board: Board, position: Position): boolean {
+  const [x, y] = position
+  return (
+    board.piece([x - 1, y - 1]).face === Kind.Out &&
+    board.piece([x, y - 1]).face === Kind.Out &&
+    board.piece([x + 1, y - 1]).face === Kind.Out
+  )
 }
 
 function fallAtWithChain(

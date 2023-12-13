@@ -1166,6 +1166,60 @@ describe('fallWithChain', () => {
     )
   })
 
+  test('リンク落下 右側', () => {
+    expectFall(
+      createBoard(
+        `
+        g_y
+        _r_
+        .__
+        `,
+        {
+          link: [
+            [
+              [2, 2],
+              [3, 1]
+            ]
+          ]
+        }
+      ),
+      createBoard(
+        `
+        g_x
+        _y_
+        r__
+        `
+      )
+    )
+  })
+
+  test('リンク落下 左側', () => {
+    expectFall(
+      createBoard(
+        `
+        g_y
+        _r_
+        .__
+        `,
+        {
+          link: [
+            [
+              [2, 2],
+              [1, 1]
+            ]
+          ]
+        }
+      ),
+      createBoard(
+        `
+        x_y
+        _g_
+        r__
+        `
+      )
+    )
+  })
+
   test('鎖は落下しない', () => {
     expectFall(
       createBoard(
