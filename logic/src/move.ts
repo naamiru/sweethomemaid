@@ -1151,15 +1151,11 @@ function fallWithChain(
           return
         }
 
-        if (!board.isLinkPosition(pos)) return
+        const upstreams = board.getLinkedUpstreams(pos)
+        if (upstreams.length === 0) return
         if (board.piece(pos).face !== Kind.Empty) return
 
-        for (const [dx, dy] of [
-          [0, -1],
-          [1, -1],
-          [-1, -1]
-        ]) {
-          const upstream: Position = [pos[0] + dx, pos[1] + dy]
+        for (const upstream of upstreams) {
           const piece = board.piece(upstream)
           if (isFallablePiece(piece)) {
             fallPiece(piece, upstream, pos)
@@ -1196,7 +1192,7 @@ function fallWithChain(
           let priority = -1
           if (isFallablePiece(piece) && groundedPositions.has(from)) {
             priority =
-              (lastAngleMovedPieces.has(piece) ? 0 : 1000) +
+              (lastAngleMovedPieces.has(piece) ? 0 : 2) + // 斜め移動を2time分として計算（本当？）
               100 -
               (moveDelays.get(piece) ?? 0)
           }

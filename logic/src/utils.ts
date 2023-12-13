@@ -45,6 +45,64 @@ export class GeneralSet<T, K = any> implements Iterable<T> {
   }
 }
 
+export class GeneralMap<TK, TV, K = any> implements Iterable<[TK, TV]> {
+  keyMap: Map<K, TK>
+  valueMap: Map<K, TV>
+
+  constructor(
+    private readonly keyFn: (value: TK) => K,
+    values: Iterable<[TK, TV]> | undefined = undefined
+  ) {
+    this.keyMap = new Map()
+    this.valueMap = new Map()
+    if (values !== undefined) {
+      for (const [key, value] of values) {
+        this.set(key, value)
+      }
+    }
+  }
+
+  [Symbol.iterator](): IterableIterator<[TK, TV]> {
+    return this.entries()
+  }
+
+  get size(): number {
+    return this.keyMap.size
+  }
+
+  set(key: TK, value: TV): GeneralMap<TK, TV, K> {
+    const k = this.keyFn(key)
+    this.keyMap.set(k, key)
+    this.valueMap.set(k, value)
+    return this
+  }
+
+  get(key: TK): TV | undefined {
+    return this.valueMap.get(this.keyFn(key))
+  }
+
+  has(key: TK): boolean {
+    return this.valueMap.has(this.keyFn(key))
+  }
+
+  keys(): IterableIterator<TK> {
+    return this.keyMap.values()
+  }
+
+  values(): IterableIterator<TV> {
+    return this.valueMap.values()
+  }
+
+  *entries(): IterableIterator<[TK, TV]> {
+    for (const [k, key] of this.keyMap.entries()) {
+      const value = this.valueMap.get(k)
+      if (value !== undefined) {
+        yield [key, value]
+      }
+    }
+  }
+}
+
 export function partition<T>(
   values: Iterable<T>,
   condition: (value: T) => boolean

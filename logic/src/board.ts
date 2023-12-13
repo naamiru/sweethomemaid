@@ -1,4 +1,4 @@
-import { type GeneralSet } from './utils'
+import { type GeneralMap } from './utils'
 
 export enum Kind {
   Out,
@@ -110,9 +110,11 @@ export class Board {
     // move.ts でのみ使うが、キャッシュのため Board インスタンスに持たせる
     public fallablePositions: Position[] | undefined = undefined,
 
-    // 上流ピースがリンクして落下する位置。
+    // ピースがリンクして落下する位置。
+    // 下流 -> [上流]
+    // 前にある位置を優先
     // 鎖用落下処理で使用
-    public linkPositions: GeneralSet<Position> | undefined = undefined
+    public links: GeneralMap<Position, Position[]> | undefined = undefined
   ) {}
 
   static create(width: number, height: number): Board {
@@ -177,12 +179,12 @@ export class Board {
   }
 
   isChainEnabled(): boolean {
-    return this.linkPositions !== undefined
+    return this.links !== undefined
   }
 
-  isLinkPosition(position: Position): boolean {
-    if (this.linkPositions === undefined) return false
-    return this.linkPositions.has(position)
+  getLinkedUpstreams(position: Position): Position[] {
+    if (this.links === undefined) return []
+    return this.links.get(position) ?? []
   }
 
   copy(): Board {
@@ -191,7 +193,7 @@ export class Board {
       this.upstreams,
       this.killers,
       this.fallablePositions,
-      this.linkPositions
+      this.links
     )
   }
 }

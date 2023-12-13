@@ -1,7 +1,7 @@
 import dedent from 'ts-dedent'
 import { Board, Kind, Piece, type Face, type Position } from './board'
 import { positionToInt } from './move'
-import { GeneralSet } from './utils'
+import { GeneralMap } from './utils'
 export type BoardConfig = {
   width?: number
   height?: number
@@ -12,7 +12,7 @@ export type BoardConfig = {
   chains?: string
   upstreams?: string
   warps?: string
-  links?: string
+  links?: Array<[Position, Position]>
 }
 
 export function load(config: BoardConfig): Board {
@@ -144,14 +144,14 @@ function updateWarp(board: Board, expr: string): void {
   }
 }
 
-function updateLink(board: Board, expr: string): void {
-  board.linkPositions = new GeneralSet(positionToInt)
-
-  for (const [pos, token] of tokens(expr)) {
-    if (token === '+') {
-      board.linkPositions.add(pos)
-    }
+function updateLink(board: Board, pairs: Array<[Position, Position]>): void {
+  const links = new GeneralMap<Position, Position[], number>(positionToInt)
+  for (const [from, to] of pairs) {
+    const upstreams = links.get(from) ?? []
+    upstreams.push(to)
+    links.set(from, upstreams)
   }
+  board.links = links
 }
 
 function* tokens(expr: string): Generator<[Position, string], void, void> {

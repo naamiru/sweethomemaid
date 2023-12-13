@@ -17,13 +17,13 @@ import {
   findMatches,
   positionToInt
 } from './move'
-import { GeneralSet } from './utils'
+import { GeneralMap } from './utils'
 
 function createBoard(
   expr: string,
   options: {
     upstream?: string
-    link?: string
+    link?: Array<[Position, Position]>
     mouse?: string
     ice?: string
     chain?: string
@@ -111,11 +111,14 @@ function updateUpstream(board: Board, expr: string): void {
   }
 }
 
-function updateLink(board: Board, expr: string): void {
-  board.linkPositions = new GeneralSet(positionToInt)
-  for (const [pos, token] of tokens(expr)) {
-    if (token === '+') board.linkPositions.add(pos)
+function updateLink(board: Board, pairs: Array<[Position, Position]>): void {
+  const links = new GeneralMap<Position, Position[], number>(positionToInt)
+  for (const [from, to] of pairs) {
+    const upstreams = links.get(from) ?? []
+    upstreams.push(to)
+    links.set(from, upstreams)
   }
+  board.links = links
 }
 
 function updateMouse(board: Board, expr: string): void {
@@ -891,8 +894,8 @@ describe('fall', () => {
 
 describe('fallWithChain', () => {
   function expectFall(initial: Board, expected: Board): void {
-    if (initial.linkPositions === undefined)
-      initial.linkPositions = new GeneralSet(positionToInt)
+    if (initial.links === undefined)
+      initial.links = new GeneralMap(positionToInt)
     fall(initial)
     expect(initial.pieces).toEqual(expected.pieces)
   }
@@ -1077,11 +1080,12 @@ describe('fallWithChain', () => {
         ..
         `,
         {
-          link: `
-          --
-          +-
-          --
-          `
+          link: [
+            [
+              [1, 2],
+              [2, 1]
+            ]
+          ]
         }
       ),
       createBoard(
@@ -1103,11 +1107,12 @@ describe('fallWithChain', () => {
         ..
         `,
         {
-          link: `
-          --
-          +-
-          --
-          `
+          link: [
+            [
+              [1, 2],
+              [2, 1]
+            ]
+          ]
         }
       ),
       createBoard(
