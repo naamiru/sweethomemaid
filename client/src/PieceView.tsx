@@ -229,5 +229,9 @@ function pieceClasses(piece: Piece): string[] {
     classes.push('is-ice-' + String(piece.ice))
   }
 
+  if (piece.chain >= 1) {
+    classes.push('is-chain-' + String(piece.chain))
+  }
+
   return classes
 }
