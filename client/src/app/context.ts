@@ -182,6 +182,7 @@ function simpleKillersToKillers(killers: SimpleKillers): Killers {
   const killer = { bomb: killers[0], rocket: killers[1], missile: killers[2] }
   return {
     ice: killer,
+    chain: killer,
     mouse: killer,
     wood: killer
   }

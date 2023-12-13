@@ -337,7 +337,8 @@ function isFixedPiece(piece: Piece): boolean {
   return (
     piece.face === Kind.Out ||
     piece.face === Kind.Empty ||
-    piece.face === Kind.Unknown
+    piece.face === Kind.Unknown ||
+    piece.chain > 0
   )
 }
 
@@ -952,6 +953,10 @@ function matchedPiece(
   if (piece.ice > 0) {
     const count = 1 + board.killer('ice', booster)
     return new Piece(piece.face, Math.max(piece.ice - count, 0))
+  } else if (piece.chain > 0) {
+    const count = 1 + board.killer('chain', booster)
+    // 鎖が完全に消えるのは1マス落下時
+    return new Piece(piece.face, piece.ice, Math.max(piece.chain - count, 0.5))
   }
 
   const face = piece.face
@@ -978,6 +983,10 @@ function matchedPiece(
 }
 
 export function fall(board: Board): boolean {
+  if (board.isChainEnabled()) {
+    return fallWithChain(board)
+  }
+
   let falled = false
   while (true) {
     const pos = findEmpty(board)
@@ -993,6 +1002,11 @@ function fallAt(
   position: Position,
   stop: Position | undefined = undefined
 ): void {
+  if (board.isChainEnabled()) {
+    fallAtWithChain(board, position, stop)
+    return
+  }
+
   if (position === stop) return
 
   const upstreamPosition = board.upstream(position)
@@ -1060,4 +1074,234 @@ function getFallablePositions(board: Board): Position[] {
 
   board.fallablePositions = [...positions]
   return board.fallablePositions
+}
+
+/**
+ * 鎖に対応できる暫定的な落下処理。下向き重力のみ対応
+ * */
+function fallWithChain(
+  board: Board,
+  stop: Position | undefined = undefined
+): boolean {
+  const stopPiece = stop !== undefined ? board.piece(stop) : undefined
+  function isFallablePiece(piece: Piece): boolean {
+    return (
+      piece.face !== Kind.Out &&
+      piece.face !== Kind.Empty &&
+      piece.chain === 0 &&
+      (stopPiece === undefined || stopPiece !== piece)
+    )
+  }
+
+  // ループカウント
+  let step = 0
+  // ピースが動き始めた時の遅延。大きいほど落下の優先度が下がる
+  const moveDelays = new Map<Piece, number>()
+  // 前回のループで斜め移動したピース。落下の優先度が下がる
+  let lastAngleMovedPieces = new Set<Piece>()
+
+  do {
+    // 上流が空マスでない空マスを落下処理の対象とする
+    let targetPositions = findActiveEmptyPositions(board)
+
+    // 接地していて動ける位置
+    const groundedPositions = new GeneralSet(
+      positionToInt,
+      findMovableGroundedPositions(board, isFallablePiece)
+    )
+    // 斜め移動したピース
+    const angleMovedPieces = new Set<Piece>()
+
+    // 連鎖ループで移動したピース
+    const movingPieces = new Set<Piece>()
+    // 連鎖ループ中の経過時間
+    let delay = 0
+
+    while (targetPositions.length > 0) {
+      // 今の連鎖でできた空マス
+      const newEmptyPositions: Position[] = []
+
+      function fallPiece(piece: Piece, from: Position, to: Position): void {
+        if (movingPieces.has(piece)) return
+
+        const isFromOut = from[1] === 0 // TODO: Out判定ちゃんとやる
+
+        if (isFromOut) {
+          piece = new Piece(Kind.Unknown)
+        } else {
+          newEmptyPositions.push(from)
+        }
+        movingPieces.add(piece)
+        if (!moveDelays.has(piece)) moveDelays.set(piece, delay)
+        if (from[0] !== to[0] || from[0] !== to[0]) {
+          angleMovedPieces.add(piece)
+        }
+        board.setPiece(to, piece)
+
+        if (!isFromOut) {
+          board.setPiece(from, new Piece(Kind.Empty))
+          followLink(from)
+        }
+      }
+
+      function followLink(pos: Position): void {
+        if (pos[1] === 1) {
+          // TODO: Out判定ちゃんとやる
+          fallPiece(new Piece(Kind.Unknown), [pos[0], pos[1] - 1], pos)
+          return
+        }
+
+        if (!board.isLinkPosition(pos)) return
+        if (board.piece(pos).face !== Kind.Empty) return
+
+        for (const [dx, dy] of [
+          [0, -1],
+          [1, -1],
+          [-1, -1]
+        ]) {
+          const upstream: Position = [pos[0] + dx, pos[1] + dy]
+          const piece = board.piece(upstream)
+          if (isFallablePiece(piece)) {
+            fallPiece(piece, upstream, pos)
+            return
+          }
+        }
+      }
+
+      targetPositions = targetPositions.filter(pos => {
+        const upstream: Position = [pos[0], pos[1] - 1]
+        // 落下するピース
+        const piece: Piece = board.piece(upstream)
+        if (pos[1] === 1 || isFallablePiece(piece)) {
+          // TODO: Out判定ちゃんとやる
+          fallPiece(piece, upstream, pos)
+          return false
+        }
+        return true
+      })
+
+      // 残りの対象位置に接地したピースを斜め落下
+      // 直線的な落下・動き出しの遅延が少ない方向を優先
+      for (const pos of targetPositions) {
+        const [left, right]: Array<{
+          piece: Piece
+          from: Position
+          priority: number
+        }> = [
+          [-1, -1],
+          [1, -1]
+        ].map(([dx, dy]) => {
+          const from: Position = [pos[0] + dx, pos[1] + dy]
+          const piece = board.piece(from)
+          let priority = -1
+          if (isFallablePiece(piece) && groundedPositions.has(from)) {
+            priority =
+              (lastAngleMovedPieces.has(piece) ? 0 : 1000) +
+              100 -
+              (moveDelays.get(piece) ?? 0)
+          }
+          return {
+            piece,
+            from,
+            priority
+          }
+        })
+        // 優先度が同一なら右上から落下
+        const selected = right.priority >= left.priority ? right : left
+        if (selected.priority > 0) {
+          fallPiece(selected.piece, selected.from, pos)
+        }
+      }
+
+      // 移動でできた空マスの内、上が空マスでないものを次の対象とする
+      targetPositions = newEmptyPositions.filter(
+        pos => board.piece([pos[0], pos[1] - 1]).face !== Kind.Empty
+      )
+
+      delay += 1
+    }
+
+    if (step === 0) {
+      // 初回ステップで鎖を消す
+      for (const pos of board.allPositions()) {
+        const piece = board.piece(pos)
+        if (piece.chain === 0 || piece.chain >= 1) continue
+        // 鎖が (0, 1) の範囲であれば消す
+        const newPiece = new Piece(piece.face, piece.ice)
+        for (const set of [movingPieces, angleMovedPieces]) {
+          if (set.has(piece)) {
+            set.delete(piece)
+            set.add(newPiece)
+          }
+        }
+        if (moveDelays.has(piece)) {
+          moveDelays.set(newPiece, moveDelays.get(piece) as number)
+        }
+        board.setPiece(pos, newPiece)
+      }
+    }
+
+    // 落下したピースがなければ終了
+    if (movingPieces.size === 0) return step !== 0
+
+    step += 1
+
+    // 斜め移動フラグ更新
+    lastAngleMovedPieces = angleMovedPieces
+    // 動かなかったピースの移動情報をリセット
+    for (const piece of [...moveDelays.keys()]) {
+      if (!movingPieces.has(piece)) moveDelays.delete(piece)
+    }
+  } while (true)
+}
+
+/** 接地していて動けるピースがある位置。これらからは斜め下に移動できる */
+function findMovableGroundedPositions(
+  board: Board,
+  isFallablePiece: (piece: Piece) => boolean
+): Position[] {
+  const positions: Position[] = []
+  for (let x = 1; x <= board.width; x++) {
+    let isGrounded = true
+    for (let y = board.height; y >= 1; y--) {
+      const piece = board.piece([x, y])
+      if (piece.face === Kind.Out || piece.chain > 0) {
+        isGrounded = true
+      } else if (piece.face === Kind.Empty) {
+        isGrounded = false
+      } else {
+        if (isGrounded && isFallablePiece(piece)) {
+          positions.push([x, y])
+        }
+      }
+    }
+  }
+  return positions
+}
+
+/** 上流が空マスでない空マス。落下処理の対象になる */
+function findActiveEmptyPositions(board: Board): Position[] {
+  const positions: Position[] = []
+  for (let x = 1; x <= board.width; x++) {
+    let isEmpty = false
+    for (let y = 1; y <= board.height; y++) {
+      if (board.piece([x, y]).face === Kind.Empty) {
+        if (!isEmpty) {
+          positions.push([x, y])
+        }
+        isEmpty = true
+      }
+    }
+  }
+  return positions
+}
+
+function fallAtWithChain(
+  board: Board,
+  position: Position,
+  stop: Position | undefined = undefined
+): void {
+  if (position === stop) return
+  board.setPiece(position, new Piece(Kind.Empty))
+  fallWithChain(board, stop)
 }

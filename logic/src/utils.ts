@@ -27,6 +27,10 @@ export class GeneralSet<T, K = any> implements Iterable<T> {
     return this.map.values()
   }
 
+  get size(): number {
+    return this.map.size
+  }
+
   add(value: T): GeneralSet<T, K> {
     this.map.set(this.keyFn(value), value)
     return this
