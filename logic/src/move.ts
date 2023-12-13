@@ -261,7 +261,7 @@ class Line {
   }
 }
 
-class BoardMove {
+export class BoardMove {
   constructor(
     public board: Board,
     public move: Move
@@ -1157,7 +1157,7 @@ function fallWithChain(
 
         for (const upstream of upstreams) {
           const piece = board.piece(upstream)
-          if (isFallablePiece(piece)) {
+          if (isFallablePiece(piece) && !movingPieces.has(piece)) {
             fallPiece(piece, upstream, pos)
             return
           }
