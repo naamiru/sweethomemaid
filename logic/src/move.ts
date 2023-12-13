@@ -1202,8 +1202,15 @@ function fallWithChain(
             priority
           }
         })
-        // 優先度が同一なら右上から落下
-        const selected = right.priority >= left.priority ? right : left
+
+        let selected = right
+        if (right.priority < left.priority) {
+          selected = left
+        } else if (right.priority === left.priority) {
+          if (board.isFallFromLeft(pos)) {
+            selected = left
+          }
+        }
         if (selected.priority > 0) {
           fallPiece(selected.piece, selected.from, pos)
         }

@@ -1,4 +1,4 @@
-import { type GeneralMap } from './utils'
+import { type GeneralMap, type GeneralSet } from './utils'
 
 export enum Kind {
   Out,
@@ -114,7 +114,12 @@ export class Board {
     // 下流 -> [上流]
     // 前にある位置を優先
     // 鎖用落下処理で使用
-    public links: GeneralMap<Position, Position[]> | undefined = undefined
+    public links: GeneralMap<Position, Position[]> | undefined = undefined,
+
+    // 優先度が同じ場合に右上、左上のどちらから落下してくるか
+    // 左上から落下する位置を保持する。
+    // 鎖用落下処理で使用
+    public fallFromLeftPositions: GeneralSet<Position> | undefined = undefined
   ) {}
 
   static create(width: number, height: number): Board {
@@ -187,13 +192,19 @@ export class Board {
     return this.links.get(position) ?? []
   }
 
+  isFallFromLeft(position: Position): boolean {
+    if (this.fallFromLeftPositions === undefined) return false
+    return this.fallFromLeftPositions.has(position)
+  }
+
   copy(): Board {
     return new Board(
       this.pieces,
       this.upstreams,
       this.killers,
       this.fallablePositions,
-      this.links
+      this.links,
+      this.fallFromLeftPositions
     )
   }
 }

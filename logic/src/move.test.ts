@@ -17,13 +17,14 @@ import {
   findMatches,
   positionToInt
 } from './move'
-import { GeneralMap } from './utils'
+import { GeneralMap, GeneralSet } from './utils'
 
 function createBoard(
   expr: string,
   options: {
     upstream?: string
     link?: Array<[Position, Position]>
+    fallFrom?: string
     mouse?: string
     ice?: string
     chain?: string
@@ -47,6 +48,10 @@ function createBoard(
 
   if (options.link !== undefined) {
     updateLink(board, options.link)
+  }
+
+  if (options.fallFrom !== undefined) {
+    updateFallFrom(board, options.fallFrom)
   }
 
   if (options.mouse !== undefined) {
@@ -119,6 +124,16 @@ function updateLink(board: Board, pairs: Array<[Position, Position]>): void {
     links.set(from, upstreams)
   }
   board.links = links
+}
+
+function updateFallFrom(board: Board, expr: string): void {
+  const fallFromLeftPositions = new GeneralSet(positionToInt)
+  for (const [pos, token] of tokens(expr)) {
+    if (token === 'l') {
+      fallFromLeftPositions.add(pos)
+    }
+  }
+  board.fallFromLeftPositions = fallFromLeftPositions
 }
 
 function updateMouse(board: Board, expr: string): void {
@@ -988,6 +1003,32 @@ describe('fallWithChain', () => {
         x___x
         _r_x_
         __y__
+        `
+      )
+    )
+  })
+
+  test('優先度が同じ場合に左が落ちるように設定', () => {
+    expectFall(
+      createBoard(
+        `
+        r___y
+        _._._
+        __.__
+        `,
+        {
+          fallFrom: `
+          .___.
+          _._._
+          __l__
+          `
+        }
+      ),
+      createBoard(
+        `
+        x___x
+        _x_y_
+        __r__
         `
       )
     )

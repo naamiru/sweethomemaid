@@ -1,7 +1,7 @@
 import dedent from 'ts-dedent'
 import { Board, Kind, Piece, type Face, type Position } from './board'
 import { positionToInt } from './move'
-import { GeneralMap } from './utils'
+import { GeneralMap, GeneralSet } from './utils'
 export type BoardConfig = {
   width?: number
   height?: number
@@ -13,6 +13,7 @@ export type BoardConfig = {
   upstreams?: string
   warps?: string
   links?: Array<[Position, Position]>
+  fallFrom?: string
 }
 
 export function load(config: BoardConfig): Board {
@@ -25,6 +26,7 @@ export function load(config: BoardConfig): Board {
   if (config.upstreams !== undefined) updateUpstream(board, config.upstreams)
   if (config.warps !== undefined) updateWarp(board, config.warps)
   if (config.links !== undefined) updateLink(board, config.links)
+  if (config.fallFrom !== undefined) updateFallFrom(board, config.fallFrom)
 
   return board
 }
@@ -152,6 +154,16 @@ function updateLink(board: Board, pairs: Array<[Position, Position]>): void {
     links.set(from, upstreams)
   }
   board.links = links
+}
+
+function updateFallFrom(board: Board, expr: string): void {
+  const fallFromLeftPositions = new GeneralSet(positionToInt)
+  for (const [pos, token] of tokens(expr)) {
+    if (token === 'l') {
+      fallFromLeftPositions.add(pos)
+    }
+  }
+  board.fallFromLeftPositions = fallFromLeftPositions
 }
 
 function* tokens(expr: string): Generator<[Position, string], void, void> {
