@@ -1,4 +1,7 @@
 import {
+  GeneralSet,
+  positionToInt,
+  suggest,
   type Board,
   type Killers,
   type Piece,
@@ -19,12 +22,15 @@ export type AppState = {
   board: Board
   pieces: Pieces
 
+  suggestedPositions: GeneralSet<Position>
+
   useSwapSkill: boolean
   killers: SimpleKillers
 
   histories: Pieces[]
   historyIndex: number
 
+  isHandlingPiece: boolean
   isPlaying: boolean
   swap?: {
     position: Position
@@ -36,6 +42,10 @@ export type AppAction =
   | {
       type: 'setStage'
       stage: StageName
+    }
+  | {
+      type: 'setIsHandlingPiece'
+      value: boolean
     }
   | {
       type: 'setSwap'
@@ -80,10 +90,12 @@ export const initialState: AppState = {
   stage: initialStage,
   board: initialBoard,
   pieces: initialBoard.pieces,
+  suggestedPositions: new GeneralSet(positionToInt, suggest(initialBoard)),
   useSwapSkill: false,
   killers: [0, 0, 0],
   histories: [initialBoard.pieces],
   historyIndex: 0,
+  isHandlingPiece: false,
   isPlaying: false
 }
 
@@ -91,6 +103,11 @@ export function reduce(state: AppState, action: AppAction): AppState {
   switch (action.type) {
     case 'setStage':
       return setStage(state, action.stage)
+    case 'setIsHandlingPiece':
+      return {
+        ...state,
+        isHandlingPiece: action.value
+      }
     case 'setSwap':
       return setSwap(state, action.position, action.triggerPosition)
     case 'moved':
@@ -124,10 +141,12 @@ function setStage(state: AppState, stage: StageName): AppState {
     stage,
     board,
     pieces: board.pieces,
+    suggestedPositions: new GeneralSet(positionToInt, suggest(board)),
     useSwapSkill: state.useSwapSkill,
     killers: state.killers,
     histories: [board.pieces],
     historyIndex: 0,
+    isHandlingPiece: false,
     isPlaying: false
   }
 }
@@ -165,6 +184,11 @@ function moved(state: AppState, complete: boolean): AppState {
     ...state,
     ...historyProps,
     pieces: state.board.pieces,
+    suggestedPositions: new GeneralSet(
+      positionToInt,
+      complete ? suggest(state.board) : []
+    ),
+    isHandlingPiece: false,
     isPlaying: !complete
   }
 }
@@ -194,6 +218,7 @@ function historyTo(state: AppState, historyIndex: number): AppState {
   return {
     ...state,
     pieces: state.board.pieces,
+    suggestedPositions: new GeneralSet(positionToInt, suggest(state.board)),
     historyIndex
   }
 }
@@ -202,8 +227,10 @@ function reset(state: AppState): AppState {
   return {
     ...state,
     pieces: state.board.pieces,
+    suggestedPositions: new GeneralSet(positionToInt, suggest(state.board)),
     histories: [state.board.pieces],
     historyIndex: 0,
+    isHandlingPiece: true,
     isPlaying: false,
     swap: undefined
   }

@@ -1,5 +1,6 @@
 .board-view {
   display: grid;
+  user-select: none;
 
   > .pieces {
     grid-column: 1;
@@ -25,5 +26,22 @@
 
       touch-action: none;
     }
+  }
+
+  > .animation-reference {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+    animation: board-suggest 1s ease-in-out infinite;
+  }
+}
+
+@keyframes board-suggest {
+  50% {
+    transform: scale(1.075);
   }
 }
