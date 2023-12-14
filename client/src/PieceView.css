@@ -16,6 +16,10 @@
     background-size: cover;
     touch-action: none;
 
+    &.is-suggested {
+      animation: piece-suggest 1s ease-in-out infinite;
+    }
+
     &.is-unknown {
       background-image: url('./assets/piece-images/unknown.png');
     }
@@ -205,5 +209,11 @@
     &.is-wood-3 {
       background-image: url('./assets/piece-images/wood3.png');
     }
+  }
+}
+
+@keyframes piece-suggest {
+  50% {
+    transform: scale(1.075);
   }
 }
