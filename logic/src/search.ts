@@ -132,15 +132,23 @@ export function* search<T extends Record<string, Condition>>(
 
 function allMoves(board: Board): Move[] {
   const moves = []
+
   for (let x = 1; x < board.width; x++) {
-    for (let y = 1; y < board.height; y++) {
+    for (let y = 1; y <= board.height; y++) {
       moves.push(new Move([x, y], Direction.Right))
+    }
+  }
+
+  for (let x = 1; x <= board.width; x++) {
+    for (let y = 1; y < board.height; y++) {
       moves.push(new Move([x, y], Direction.Down))
     }
   }
+
   for (const pos of board.allPositions()) {
     moves.push(new Move(pos, Direction.Zero))
   }
+
   return moves
 }
 
