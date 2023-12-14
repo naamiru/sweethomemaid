@@ -42,6 +42,6 @@
 
 @keyframes board-suggest {
   50% {
-    transform: scale(1.075);
+    transform: scale(1.05);
   }
 }
