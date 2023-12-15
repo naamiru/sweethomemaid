@@ -55,87 +55,90 @@ export default function PieceView({
     }
   }))
   const playMove = usePlayMove()
-  const bind = useDrag(({ first, down, movement }) => {
-    if (isPlaying) return
+  const bind = useDrag(
+    ({ first, down, movement }) => {
+      if (isPlaying) return
 
-    if (first) {
-      clearTimeout(stopTimer)
-      setIsMoving(true)
+      if (first) {
+        clearTimeout(stopTimer)
+        setIsMoving(true)
 
-      const dirs = [
-        Direction.Up,
-        Direction.Down,
-        Direction.Left,
-        Direction.Right
-      ].filter(dir => canMove(board, new Move(position, dir, useSwapSkill)))
-      setMovableDirs(new Set(dirs))
-      setComboDirs(
-        new Set(
-          dirs.filter(dir =>
-            isCombo(board, new Move(position, dir, useSwapSkill))
+        const dirs = [
+          Direction.Up,
+          Direction.Down,
+          Direction.Left,
+          Direction.Right
+        ].filter(dir => canMove(board, new Move(position, dir, useSwapSkill)))
+        setMovableDirs(new Set(dirs))
+        setComboDirs(
+          new Set(
+            dirs.filter(dir =>
+              isCombo(board, new Move(position, dir, useSwapSkill))
+            )
           )
         )
-      )
-    }
-    if (down) {
-      dispatch({ type: 'setIsHandlingPiece', value: true })
-    } else {
-      setStopTimer(
-        setTimeout(() => {
-          dispatch({ type: 'setIsHandlingPiece', value: false })
-          setIsMoving(false)
-        }, 500)
-      )
-    }
-
-    let [x, y] = movement
-    const size = el.current?.clientWidth ?? 64
-    if (Math.abs(x) > Math.abs(y)) {
-      y = 0
-      x = Math.max(x, movableDirs.has(Direction.Left) ? -size : 0)
-      x = Math.min(x, movableDirs.has(Direction.Right) ? size : 0)
-    } else {
-      x = 0
-      y = Math.max(y, movableDirs.has(Direction.Up) ? -size : 0)
-      y = Math.min(y, movableDirs.has(Direction.Down) ? size : 0)
-    }
-
-    let dir: Direction | undefined
-    if (Math.abs(x + y) > size / 2) {
-      if (x < 0) {
-        dir = Direction.Left
-      } else if (x > 0) {
-        dir = Direction.Right
-      } else if (y < 0) {
-        dir = Direction.Up
-      } else if (y > 0) {
-        dir = Direction.Down
       }
-    }
+      if (down) {
+        dispatch({ type: 'setIsHandlingPiece', value: true })
+      } else {
+        setStopTimer(
+          setTimeout(() => {
+            dispatch({ type: 'setIsHandlingPiece', value: false })
+            setIsMoving(false)
+          }, 500)
+        )
+      }
 
-    if (down) {
-      if (dir !== undefined && !comboDirs.has(dir)) {
-        dispatch({
-          type: 'setSwap',
-          position: new Move(position, dir, useSwapSkill).positions()[1],
-          triggerPosition: position
-        })
+      let [x, y] = movement
+      const size = el.current?.clientWidth ?? 64
+      if (Math.abs(x) > Math.abs(y)) {
+        y = 0
+        x = Math.max(x, movableDirs.has(Direction.Left) ? -size : 0)
+        x = Math.min(x, movableDirs.has(Direction.Right) ? size : 0)
+      } else {
+        x = 0
+        y = Math.max(y, movableDirs.has(Direction.Up) ? -size : 0)
+        y = Math.min(y, movableDirs.has(Direction.Down) ? size : 0)
+      }
+
+      let dir: Direction | undefined
+      if (Math.abs(x + y) > size / 2) {
+        if (x < 0) {
+          dir = Direction.Left
+        } else if (x > 0) {
+          dir = Direction.Right
+        } else if (y < 0) {
+          dir = Direction.Up
+        } else if (y > 0) {
+          dir = Direction.Down
+        }
+      }
+
+      if (down) {
+        if (dir !== undefined && !comboDirs.has(dir)) {
+          dispatch({
+            type: 'setSwap',
+            position: new Move(position, dir, useSwapSkill).positions()[1],
+            triggerPosition: position
+          })
+        } else {
+          dispatch({ type: 'setSwap' })
+        }
       } else {
         dispatch({ type: 'setSwap' })
+        if (dir !== undefined) {
+          playMove(new Move(position, dir, useSwapSkill)).catch(console.error)
+        }
       }
-    } else {
-      dispatch({ type: 'setSwap' })
-      if (dir !== undefined) {
-        playMove(new Move(position, dir, useSwapSkill)).catch(console.error)
-      }
-    }
 
-    api.start({
-      x: down ? x : 0,
-      y: down ? y : 0,
-      immediate: down || dir !== undefined
-    })
-  })
+      api.start({
+        x: down ? x : 0,
+        y: down ? y : 0,
+        immediate: down || dir !== undefined
+      })
+    },
+    { threshold: 1 }
+  )
 
   const [isSwapping, setIsSwapping] = useState(false)
   useEffect(() => {
