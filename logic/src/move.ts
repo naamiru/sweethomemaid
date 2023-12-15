@@ -1154,8 +1154,9 @@ function fallWithChain(
 
         let upstreams = board.getLinkedUpstreams(pos)
         // 上流が落下不可ピースの時のみ斜め移動リンクが機能する
-        if (isFallablePiece(board.piece([pos[0], pos[1] - 1]))) {
-          upstreams = upstreams.filter(([x, y]) => x === pos[0])
+        const upPiece = board.piece([pos[0], pos[1] - 1])
+        if (isFallablePiece(upPiece) || upPiece.face === Kind.Empty) {
+          upstreams = upstreams.filter(upstream => upstream[0] === pos[0])
         }
         if (upstreams.length === 0) return
 
