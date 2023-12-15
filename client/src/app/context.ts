@@ -230,7 +230,7 @@ function reset(state: AppState): AppState {
     suggestedPositions: new GeneralSet(positionToInt, suggest(state.board)),
     histories: [state.board.pieces],
     historyIndex: 0,
-    isHandlingPiece: true,
+    isHandlingPiece: false,
     isPlaying: false,
     swap: undefined
   }
