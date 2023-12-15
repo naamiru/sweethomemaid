@@ -1220,6 +1220,33 @@ describe('fallWithChain', () => {
     )
   })
 
+  test('障害物がない場合リンクは機能しない', () => {
+    expectFall(
+      createBoard(
+        `
+        gy
+        rb
+        .y
+        `,
+        {
+          link: [
+            [
+              [1, 2],
+              [2, 1]
+            ]
+          ]
+        }
+      ),
+      createBoard(
+        `
+        xy
+        gb
+        ry
+        `
+      )
+    )
+  })
+
   test('鎖は落下しない', () => {
     expectFall(
       createBoard(

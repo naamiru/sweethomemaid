@@ -1145,14 +1145,19 @@ function fallWithChain(
       }
 
       function followLink(pos: Position): void {
+        if (board.piece(pos).face !== Kind.Empty) return
+
         if (isMostUpstream(board, pos)) {
           fallPiece(new Piece(Kind.Unknown), [pos[0], pos[1] - 1], pos)
           return
         }
 
-        const upstreams = board.getLinkedUpstreams(pos)
+        let upstreams = board.getLinkedUpstreams(pos)
+        // 上流が落下不可ピースの時のみ斜め移動リンクが機能する
+        if (isFallablePiece(board.piece([pos[0], pos[1] - 1]))) {
+          upstreams = upstreams.filter(([x, y]) => x === pos[0])
+        }
         if (upstreams.length === 0) return
-        if (board.piece(pos).face !== Kind.Empty) return
 
         for (const upstream of upstreams) {
           const piece = board.piece(upstream)
