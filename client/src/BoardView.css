@@ -2,6 +2,10 @@
   display: grid;
   user-select: none;
 
+  @media screen and (max-width: 768px) {
+    margin: 0 !important;
+  }
+
   > .pieces {
     grid-column: 1;
     grid-row: 1;
