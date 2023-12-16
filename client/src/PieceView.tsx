@@ -178,7 +178,10 @@ export default function PieceView({
   const doubleTapBind = useDoubleTap(handleDoubleTap)
 
   const isSuggested =
-    suggestedPositions.has(position) && !isHandlingPiece && !isPlaying
+    suggestedPositions.has(position) &&
+    !isHandlingPiece &&
+    !isPlaying &&
+    !useSwapSkill
   const pieceRef = useCallback(
     (el: HTMLDivElement | null) => {
       if (!isSuggested) return

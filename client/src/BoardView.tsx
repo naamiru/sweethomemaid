@@ -8,7 +8,7 @@ import { useApp } from './app/use-app'
 const PIECE_SIZE = 64
 
 export default function BoardView(): ReactNode {
-  const { board, isHandlingPiece, isPlaying } = useApp()
+  const { board, isHandlingPiece, isPlaying, useSwapSkill } = useApp()
   const margins = useMemo(
     () => [
       ((9 - board.width) * PIECE_SIZE) / 2,
@@ -21,7 +21,7 @@ export default function BoardView(): ReactNode {
       className="board-view"
       style={{ marginLeft: `${margins[0]}px`, marginTop: `${margins[1]}px` }}
     >
-      {!isHandlingPiece && !isPlaying && (
+      {!isHandlingPiece && !isPlaying && !useSwapSkill && (
         <div className="animation-reference" />
       )}
       <div className="pieces is-bg">
