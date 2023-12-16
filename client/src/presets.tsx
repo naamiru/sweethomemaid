@@ -17,7 +17,10 @@ export const stages = [
   'masters_3_3',
   'masters_4_1',
   'masters_4_2',
-  'masters_4_3'
+  'masters_4_3',
+  'teams_1_1',
+  'teams_1_2',
+  'teams_1_3'
 ] as const
 
 export type StageName = (typeof stages)[number]
@@ -908,6 +911,106 @@ const configs: Record<StageName, BoardConfig> = {
         [9, 4]
       ]
     ]
+  },
+  teams_1_1: {
+    width: 7,
+    height: 7,
+    colors: `
+    _rbgrb
+    rgrbgyg
+    ygbbrgy
+    gyyrgbb
+     rbgyg
+    rbgygrg
+     bg yg
+    `,
+    ices: `
+    _00000
+    0000000
+    0000000
+    0000000
+     00000
+    0000000
+     22 22
+    `,
+    upstreams: `
+    _uuuuu
+    3uuuuu1
+    uuuuuuu
+    uuuuuuu
+     uuuuu
+    3uuuuu1
+     uu uu
+    `
+  },
+  teams_1_2: {
+    width: 7,
+    height: 8,
+    colors: `
+    yyg ybr
+    bgybgyg
+    rybgrby
+     rygbr
+    gyyrbbr
+    bgbbrbg
+    brgbgry
+     yyrrg
+    `,
+    ices: `
+    000 000
+    0000000
+    0000000
+     00000
+    2200022
+    1110111
+    2222222
+     11111
+    `,
+    upstreams: `
+    uuu uuu
+    uuu1uuu
+    uuuuuuu
+     uuuuu
+    3uuuuu1
+    uuuuuuu
+    uuuuuuu
+     uuuuu
+    `
+  },
+  teams_1_3: {
+    colors: `
+    _b g g g
+    brbrggyyb
+     ybrybbg
+    ryrgrbyrr
+     ggb ryg
+    bbyrgyrry
+     gbrybgr
+    byybgryyb
+     r b y b
+    `,
+    ices: `
+    _3 3 3 3
+    333333333
+     0000000
+    000000000
+     000 000
+    000000000
+     0000000
+    333333333
+     3 3 3 3
+    `,
+    upstreams: `
+    _u u u u
+    3u1u1u1u1
+     uuuuuuu
+    3uuuuuuu1
+     uuu uuu
+    3uuu1uuu1
+     uuuuuuu
+    3uuuuuuu1
+     u u u u
+    `
   }
 }
 
