@@ -338,7 +338,8 @@ function isFixedPiece(piece: Piece): boolean {
     piece.face === Kind.Out ||
     piece.face === Kind.Empty ||
     piece.face === Kind.Unknown ||
-    piece.chain > 0
+    piece.chain > 0 ||
+    piece.kind === Kind.Present
   )
 }
 
@@ -716,16 +717,29 @@ function applyMatches(
   matches: Match[],
   skips: GeneralSet<Position> | undefined
 ): void {
+  const adjacents = new GeneralSet(positionToInt)
+
   for (const match of matches) {
     for (const position of match.positions) {
       if (skips !== undefined && skips.has(position)) continue
       board.setPiece(position, matchedPiece(board, board.piece(position)))
+      adjacents.add([position[0] - 1, position[1]])
+      adjacents.add([position[0] + 1, position[1]])
+      adjacents.add([position[0], position[1] - 1])
+      adjacents.add([position[0], position[1] + 1])
     }
     if (
       match.booster !== undefined &&
       board.piece(match.booster.position).face === Kind.Empty
     ) {
       board.setPiece(match.booster.position, new Piece(match.booster.kind))
+    }
+  }
+
+  for (const position of adjacents) {
+    const piece = board.piece(position)
+    if (piece.kind === Kind.Present) {
+      board.setPiece(position, matchedPiece(board, piece))
     }
   }
 }
@@ -961,21 +975,18 @@ function matchedPiece(
 
   const face = piece.face
 
-  if (face instanceof Object && face.kind === Kind.Mouse) {
-    const count = 1 + board.killer('mouse', booster)
-    if (count < face.count) {
-      return new Piece({ kind: Kind.Mouse, count: face.count - count })
-    } else {
-      return new Piece(Kind.Empty)
-    }
-  }
-
-  if (face instanceof Object && face.kind === Kind.Wood) {
-    const count = 1 + board.killer('wood', booster)
-    if (count < face.count) {
-      return new Piece({ kind: Kind.Wood, count: face.count - count })
-    } else {
-      return new Piece(Kind.Empty)
+  for (const [killerName, kind] of [
+    ['mouse', Kind.Mouse],
+    ['wood', Kind.Wood],
+    ['present', Kind.Present]
+  ] as const) {
+    if (face instanceof Object && face.kind === kind) {
+      const count = 1 + board.killer(killerName, booster)
+      if (count < face.count) {
+        return new Piece({ kind, count: face.count - count })
+      } else {
+        return new Piece(Kind.Empty)
+      }
     }
   }
 
@@ -1089,6 +1100,7 @@ function fallWithChain(
       piece.face !== Kind.Out &&
       piece.face !== Kind.Empty &&
       piece.chain === 0 &&
+      piece.kind !== Kind.Present &&
       (stopPiece === undefined || stopPiece !== piece)
     )
   }
@@ -1290,7 +1302,11 @@ function findMovableGroundedPositions(
     let isGrounded = true
     for (let y = board.height; y >= 1; y--) {
       const piece = board.piece([x, y])
-      if (piece.face === Kind.Out || piece.chain > 0) {
+      if (
+        piece.face === Kind.Out ||
+        piece.chain > 0 ||
+        piece.kind === Kind.Present
+      ) {
         isGrounded = true
       } else if (piece.face === Kind.Empty) {
         isGrounded = false

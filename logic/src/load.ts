@@ -10,6 +10,7 @@ export type BoardConfig = {
   woods?: string
   ices?: string
   chains?: string
+  presents?: string
   upstreams?: string
   warps?: string
   links?: Array<[Position, Position]>
@@ -23,6 +24,7 @@ export function load(config: BoardConfig): Board {
   if (config.woods !== undefined) updateWood(board, config.woods)
   if (config.ices !== undefined) updateIce(board, config.ices)
   if (config.chains !== undefined) updateChain(board, config.chains)
+  if (config.presents !== undefined) updatePresent(board, config.presents)
   if (config.upstreams !== undefined) updateUpstream(board, config.upstreams)
   if (config.warps !== undefined) updateWarp(board, config.warps)
   if (config.links !== undefined) updateLink(board, config.links)
@@ -87,6 +89,16 @@ function updateChain(board: Board, expr: string): void {
   for (const [pos, count] of positiveDigitToken(expr)) {
     const piece = board.piece(pos)
     board.setPiece(pos, new Piece(piece.face, piece.ice, count))
+  }
+}
+
+function updatePresent(board: Board, expr: string): void {
+  for (const [pos, count] of positiveDigitToken(expr)) {
+    const piece = board.piece(pos)
+    board.setPiece(
+      pos,
+      new Piece({ kind: Kind.Present, count }, piece.ice, piece.chain)
+    )
   }
 }
 
