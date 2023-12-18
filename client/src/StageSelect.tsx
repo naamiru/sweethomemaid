@@ -25,9 +25,9 @@ export default function StageSelect(): ReactNode {
               <option value="teams_1_3">チームフェス wave3</option>
             </optgroup>
             <optgroup label="マスターズランキング">
-              <option value="masters_4_1">マスターズ 鎖（O型）</option>
-              <option value="masters_4_2">マスターズ 鎖（X型）</option>
-              <option value="masters_4_3">マスターズ 鎖（/型）</option>
+              <option value="masters_5_1">
+                マスターズ プレゼント箱（回型）
+              </option>
             </optgroup>
             <optgroup label="クリスマスメイキング">
               <option value="xmas_1">クリスマス 1</option>

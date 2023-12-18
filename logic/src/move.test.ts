@@ -1117,7 +1117,7 @@ describe('fallWithChain', () => {
       createBoard(
         `
         _b
-        r.
+        ry
         ..
         `,
         {
@@ -1133,7 +1133,7 @@ describe('fallWithChain', () => {
         `
         _x
         bx
-        rx
+        ry
         `
       )
     )
@@ -1215,6 +1215,37 @@ describe('fallWithChain', () => {
         x_y
         _g_
         r__
+        `
+      )
+    )
+  })
+
+  test('直線的なリンクが優先される', () => {
+    expectFall(
+      createBoard(
+        `
+        _g
+        rb
+        ..
+        `,
+        {
+          link: [
+            [
+              [1, 2],
+              [2, 1]
+            ],
+            [
+              [2, 2],
+              [2, 1]
+            ]
+          ]
+        }
+      ),
+      createBoard(
+        `
+        _x
+        xg
+        rb
         `
       )
     )

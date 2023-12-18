@@ -254,7 +254,8 @@ function pieceClasses(piece: Piece): string[] {
       'is-' +
         {
           [Kind.Mouse]: 'mouse',
-          [Kind.Wood]: 'wood'
+          [Kind.Wood]: 'wood',
+          [Kind.Present]: 'present'
         }[piece.face.kind] +
         '-' +
         String(piece.face.count)

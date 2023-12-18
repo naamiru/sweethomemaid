@@ -209,6 +209,21 @@
     &.is-wood-3 {
       background-image: url('./assets/piece-images/wood3.png');
     }
+    &.is-present-1 {
+      background-image: url('./assets/piece-images/present1.png');
+    }
+    &.is-present-2 {
+      background-image: url('./assets/piece-images/present2.png');
+    }
+    &.is-present-3 {
+      background-image: url('./assets/piece-images/present3.png');
+    }
+    &.is-present-4 {
+      background-image: url('./assets/piece-images/present4.png');
+    }
+    &.is-present-5 {
+      background-image: url('./assets/piece-images/present5.png');
+    }
   }
 }
 

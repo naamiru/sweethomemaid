@@ -208,7 +208,8 @@ function simpleKillersToKillers(killers: SimpleKillers): Killers {
     ice: killer,
     chain: killer,
     mouse: killer,
-    wood: killer
+    wood: killer,
+    present: killer
   }
 }
 
