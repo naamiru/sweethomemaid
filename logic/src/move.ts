@@ -1120,8 +1120,14 @@ function fallWithChain(
     while (targetPositions.length > 0) {
       // 今の連鎖でできた空マス
       const newEmptyPositions: Position[] = []
+      const skippedAngledLinks: Position[] = []
 
-      function fallPiece(piece: Piece, from: Position, to: Position): void {
+      function fallPiece(
+        piece: Piece,
+        from: Position,
+        to: Position,
+        skilAngledLink = false
+      ): void {
         if (movingPieces.has(piece)) return
 
         const isFromOut = board.piece(from).face === Kind.Out
@@ -1140,11 +1146,11 @@ function fallWithChain(
 
         if (!isFromOut) {
           board.setPiece(from, new Piece(Kind.Empty))
-          followLink(from)
+          followLink(from, skilAngledLink)
         }
       }
 
-      function followLink(pos: Position): void {
+      function followLink(pos: Position, skipAngled = false): void {
         if (board.piece(pos).face !== Kind.Empty) return
 
         if (isMostUpstream(board, pos)) {
@@ -1157,13 +1163,19 @@ function fallWithChain(
         const upPiece = board.piece([pos[0], pos[1] - 1])
         if (isFallablePiece(upPiece) || upPiece.face === Kind.Empty) {
           upstreams = upstreams.filter(upstream => upstream[0] === pos[0])
+        } else {
+          if (skipAngled) {
+            // 斜めリンク処理保留
+            skippedAngledLinks.push(pos)
+            return
+          }
         }
         if (upstreams.length === 0) return
 
         for (const upstream of upstreams) {
           const piece = board.piece(upstream)
           if (isFallablePiece(piece) && !movingPieces.has(piece)) {
-            fallPiece(piece, upstream, pos)
+            fallPiece(piece, upstream, pos, skipAngled)
             return
           }
         }
@@ -1174,7 +1186,7 @@ function fallWithChain(
         // 落下するピース
         const piece: Piece = board.piece(upstream)
         if (isMostUpstream(board, pos) || isFallablePiece(piece)) {
-          fallPiece(piece, upstream, pos)
+          fallPiece(piece, upstream, pos, true)
           return false
         }
         return true
@@ -1216,8 +1228,12 @@ function fallWithChain(
           }
         }
         if (selected.priority > 0) {
-          fallPiece(selected.piece, selected.from, pos)
+          fallPiece(selected.piece, selected.from, pos, true)
         }
+      }
+
+      for (const pos of skippedAngledLinks) {
+        followLink(pos, false)
       }
 
       // 移動でできた空マスの内、上が空マスでないものを次の対象とする
