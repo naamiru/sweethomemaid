@@ -8,7 +8,7 @@ import {
   type Color,
   type Position
 } from './board'
-import { GeneralSet, partition, range } from './utils'
+import { GeneralMap, GeneralSet, partition, range } from './utils'
 
 export enum Direction {
   Up,
@@ -1105,6 +1105,19 @@ function fallWithChain(
     )
   }
 
+  // ワープしているリンク
+  const warpLinks = new GeneralMap<Position, Position, number>(positionToInt)
+  if (board.links !== undefined) {
+    for (const [from, tos] of board.links) {
+      for (const to of tos) {
+        if (Math.abs(to[0] - from[0]) >= 2 || Math.abs(to[1] - from[1]) >= 2) {
+          warpLinks.set(from, to)
+          break
+        }
+      }
+    }
+  }
+
   // ループカウント
   let step = 0
   // ピースが動き始めた時の遅延。大きいほど落下の優先度が下がる
@@ -1193,9 +1206,12 @@ function fallWithChain(
         }
       }
 
+      // 真上から、またはワープリンクからの落下
       targetPositions = targetPositions.filter(pos => {
-        const upstream: Position = [pos[0], pos[1] - 1]
-        // 落下するピース
+        let upstream = warpLinks.get(pos)
+        if (upstream === undefined) {
+          upstream = [pos[0], pos[1] - 1]
+        }
         const piece: Piece = board.piece(upstream)
         if (isMostUpstream(board, pos) || isFallablePiece(piece)) {
           fallPiece(piece, upstream, pos, true)

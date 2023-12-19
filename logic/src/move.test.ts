@@ -1278,6 +1278,37 @@ describe('fallWithChain', () => {
     )
   })
 
+  test('ワープリンク', () => {
+    expectFall(
+      createBoard(
+        `
+        rb
+        __
+        ..
+        `,
+        {
+          link: [
+            [
+              [1, 3],
+              [1, 1]
+            ],
+            [
+              [2, 3],
+              [2, 1]
+            ]
+          ]
+        }
+      ),
+      createBoard(
+        `
+        xx
+        __
+        rb
+        `
+      )
+    )
+  })
+
   test('鎖は落下しない', () => {
     expectFall(
       createBoard(

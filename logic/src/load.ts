@@ -190,9 +190,9 @@ function* positiveDigitToken(
   expr: string
 ): Generator<[Position, number], void, void> {
   for (const [pos, token] of tokens(expr)) {
-    if (/^\d+$/.test(token)) {
-      const value = parseInt(token, 10)
-      if (value > 0) yield [pos, parseInt(token, 10)]
+    if (/^[a-f\d]+$/.test(token)) {
+      const value = parseInt(token, 16)
+      if (value > 0) yield [pos, value]
     }
   }
 }
