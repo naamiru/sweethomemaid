@@ -221,8 +221,22 @@
     &.is-present-4 {
       background-image: url('./assets/piece-images/present4.png');
     }
-    &.is-present-5 {
+    &.is-present-5,
+    &.is-present-6,
+    &.is-present-7,
+    &.is-present-8,
+    &.is-present-9 {
       background-image: url('./assets/piece-images/present5.png');
+    }
+    &.is-present-10,
+    &.is-present-11,
+    &.is-present-12,
+    &.is-present-13,
+    &.is-present-14 {
+      background-image: url('./assets/piece-images/present10.png');
+    }
+    &.is-present-15 {
+      background-image: url('./assets/piece-images/present15.png');
     }
   }
 }

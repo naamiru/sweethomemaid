@@ -28,6 +28,12 @@ export default function StageSelect(): ReactNode {
               <option value="masters_5_1">
                 マスターズ プレゼント箱（回型）
               </option>
+              <option value="masters_5_2">
+                マスターズ プレゼント箱（C型）
+              </option>
+              <option value="masters_5_3">
+                マスターズ プレゼント箱（目型）
+              </option>
             </optgroup>
             <optgroup label="クリスマスメイキング">
               <option value="xmas_1">クリスマス 1</option>
