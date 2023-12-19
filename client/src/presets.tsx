@@ -23,7 +23,8 @@ export const stages = [
   'masters_5_3',
   'teams_1_1',
   'teams_1_2',
-  'teams_1_3'
+  'teams_1_3',
+  'teams_2'
 ] as const
 
 export type StageName = (typeof stages)[number]
@@ -1574,6 +1575,41 @@ const configs: Record<StageName, BoardConfig> = {
         [6, 1]
       ]
     ]
+  },
+  teams_2: {
+    colors: `
+    _ry   yg
+    yrbryrgyy
+    rygbbybbg
+     ggyrbrb
+     ybbgyyr
+    yrrygbyyg
+    grgbbygby
+     yg   gb
+      rbgby
+    `,
+    ices: `
+    _30   03
+    230020032
+    230020032
+     3002003
+     3002003
+    230020032
+    230020032
+     30   03
+      00000
+    `,
+    upstreams: `
+    _uu   uu
+    3uuuuuuu1
+    uuuuuuuuu
+     uuuuuuu
+     uuuuuuu
+    3uuuuuuu1
+    uuuuuuuuu
+     uu   uu
+      u1u3u
+    `
   }
 }
 
