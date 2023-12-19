@@ -1,10 +1,9 @@
 {
   "name": "sweethomemaid",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "app for sweethomemaid",
   "scripts": {
-    "dev": "npm -w client run dev",
-    "ss": "cd detect && poetry run flask --app ss_server run --port 5174 --host 0.0.0.0"
+    "dev": "npm -w client run dev"
   },
   "repository": {
     "type": "git",
