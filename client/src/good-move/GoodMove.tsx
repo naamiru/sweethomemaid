@@ -7,14 +7,28 @@ import {
 import classNames from 'classnames'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useApp } from '../app/use-app'
+import bombImage from '../assets/piece-images/b.png'
+import rocketImage from '../assets/piece-images/rh.png'
+
+import specialImage from '../assets/piece-images/n.png'
 import './GoodMove.css'
 
-const CONDITION_NAMES = [
-  ['hasSpecialCombo', 'スペシャルコンボ'],
-  ['hasSpecial', 'スペシャル'],
-  ['hasBombCombo', 'ボムコンボ'],
-  ['hasBomb', 'ボム'],
-  ['hasRocket', 'ロケット']
+const CONDITION_NAMES: Array<[string, ReactNode]> = [
+  [
+    'hasSpecialCombo',
+    <>
+      <img src={specialImage} width="20" /> ➕
+    </>
+  ],
+  ['hasSpecial', <img src={specialImage} width="20" />],
+  [
+    'hasBombCombo',
+    <>
+      <img src={bombImage} width="20" /> ➕
+    </>
+  ],
+  ['hasBomb', <img src={bombImage} width="20" />],
+  ['hasRocket', <img src={rocketImage} width="20" />]
 ]
 
 export default function GoodMove(): ReactNode {
@@ -50,7 +64,12 @@ export default function GoodMove(): ReactNode {
           step =>
             step in goodMoves && (
               <div className="step" key={step}>
-                <div className="num">{step}手</div>
+                <div className="num">
+                  <span className="icon">
+                    <i className="fas fa-hand" />
+                  </span>
+                  {step}
+                </div>
                 <div className="conditions">
                   {CONDITION_NAMES.map(
                     ([key, label]) =>
@@ -120,6 +139,10 @@ function GoodMoveOverlay({ moves }: { moves: Move[] }): ReactNode {
     }))
   }, [board.width, bounds.width, moves])
 
+  const cssVars = {
+    '--unit': `${bounds.width / board.width}px`
+  }
+
   return (
     <div
       className="good-move-overlay"
@@ -127,7 +150,8 @@ function GoodMoveOverlay({ moves }: { moves: Move[] }): ReactNode {
         left: `${bounds.left}px`,
         top: `${bounds.top}px`,
         width: `${bounds.width}px`,
-        height: `${bounds.height}px`
+        height: `${bounds.height}px`,
+        ...cssVars
       }}
     >
       {contents.map(({ x, y, icon, direction, swapSkill }) => (
