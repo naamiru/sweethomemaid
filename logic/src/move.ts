@@ -142,7 +142,7 @@ export function* moveScenes(
   do {
     applyMatches(board, matches, skips)
     skips = undefined
-    yield MoveScene.Match
+    if (matches.length > 0) yield MoveScene.Match
     const falled = fall(board)
     if (falled) yield MoveScene.Fall
     matches = findMatches(board)

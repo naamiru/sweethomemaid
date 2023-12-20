@@ -5,9 +5,9 @@ import BoardView from './BoardView'
 import HistoryNav from './HistoryNav'
 import StageSelect from './StageSelect'
 import { AppProvider } from './app/provider'
+import Capture from './capture/Capture'
 import GoodMove from './good-move/GoodMove'
 import Options from './options/Options'
-import ScreenshotButton from './screenshot/ScreenshotButton'
 
 function App(): ReactNode {
   return (
@@ -26,7 +26,7 @@ function App(): ReactNode {
         <StageSelect />
         <div className="app-operations">
           <HistoryNav />
-          <ScreenshotButton />
+          <Capture />
         </div>
         <BoardView />
         <Options />

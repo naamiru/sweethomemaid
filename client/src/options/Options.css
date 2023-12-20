@@ -39,10 +39,6 @@
         display: flex;
         gap: 10px;
 
-        @media screen and (max-width: 768px) {
-          flex-direction: column;
-        }
-
         > .field {
           margin-bottom: 0;
         }

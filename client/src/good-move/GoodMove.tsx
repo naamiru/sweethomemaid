@@ -35,6 +35,7 @@ export default function GoodMove(): ReactNode {
   const [goodMoves, setGoodMoves] = useState<GoodMoves>({})
   const { board, histories, historyIndex, isPlaying, useSwapSkill } = useApp()
   useEffect(() => {
+    setGoodMoves({})
     const worker = new Worker(new URL('./worker.ts', import.meta.url), {
       type: 'module'
     })

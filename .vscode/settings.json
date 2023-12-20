@@ -20,8 +20,5 @@
   "[css]": {
     "editor.tabSize": 2
   },
-  "python.defaultInterpreterPath": "${workspaceFolder}/detect/.venv",
-  "files.exclude": {
-    "screenshot": true
-  }
+  "python.defaultInterpreterPath": "${workspaceFolder}/detect/.venv"
 }
