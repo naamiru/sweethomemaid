@@ -1,5 +1,8 @@
 import { useCallback, useMemo, type ChangeEvent, type ReactNode } from 'react'
 import { useApp } from '../app/use-app'
+import bombImage from '../assets/piece-images/b.png'
+import missileImage from '../assets/piece-images/m.png'
+import rocketImage from '../assets/piece-images/rh.png'
 
 export default function KillerOptions(): ReactNode {
   const { killers, dispatch } = useApp()
@@ -27,7 +30,9 @@ export default function KillerOptions(): ReactNode {
       <div className="body">
         <div className="field has-addons">
           <p className="control">
-            <a className="button is-static is-small">ボム</a>
+            <a className="button is-static is-small">
+              <img src={bombImage} width="20" />
+            </a>
           </p>
           <p className="control">
             <span className="select is-small">
@@ -42,7 +47,9 @@ export default function KillerOptions(): ReactNode {
         </div>
         <div className="field has-addons">
           <p className="control">
-            <a className="button is-static is-small">ロケット</a>
+            <a className="button is-static is-small">
+              <img src={rocketImage} width="20" />
+            </a>
           </p>
           <p className="control">
             <span className="select is-small">
@@ -57,7 +64,9 @@ export default function KillerOptions(): ReactNode {
         </div>
         <div className="field has-addons">
           <p className="control">
-            <a className="button is-static is-small">ミサイル</a>
+            <a className="button is-static is-small">
+              <img src={missileImage} width="20" />
+            </a>
           </p>
           <p className="control">
             <span className="select is-small">

@@ -6,6 +6,7 @@ import HistoryNav from './HistoryNav'
 import StageSelect from './StageSelect'
 import { AppProvider } from './app/provider'
 import Capture from './capture/Capture'
+import GoodMove from './good-move/GoodMove'
 import Options from './options/Options'
 
 function App(): ReactNode {
@@ -29,6 +30,7 @@ function App(): ReactNode {
         </div>
         <BoardView />
         <Options />
+        <GoodMove />
         <Toaster position="bottom-center" />
       </div>
     </AppProvider>

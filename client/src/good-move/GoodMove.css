@@ -1,0 +1,80 @@
+.good-move {
+  position: absolute;
+  top: 152px;
+  left: calc(50% + 288px + 20px);
+  right: 20px;
+
+  @media screen and (max-width: 768px) {
+    position: static;
+    width: auto;
+    margin-top: 30px;
+  }
+
+  &.is-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  > .step {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    > .num {
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    > .conditions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+
+      > .tag {
+        cursor: pointer;
+        transition: background-color 0.1s ease-in-out;
+
+        &:hover {
+          background-color: #e0e0e0;
+        }
+      }
+    }
+  }
+}
+
+.good-move-overlay {
+  position: absolute;
+
+  > .move {
+    position: absolute;
+    color: white;
+    transform: translate(-50%, -50%);
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+
+    &.is-right {
+      /* margin-left: 32px; */
+      margin-left: calc(var(--unit) / 2);
+    }
+    &.is-left {
+      /* margin-left: -32px; */
+      margin-left: calc(- var(--unit) / 2);
+    }
+    &.is-down {
+      /* margin-top: 32px; */
+      margin-top: calc(var(--unit) / 2);
+    }
+    &.is-up {
+      /* margin-top: -32px; */
+      margin-top: calc(- var(--unit) / 2);
+    }
+
+    &.is-swap {
+      color: red;
+    }
+
+    @media screen and (max-width: 768px) {
+      font-size: 12px;
+    }
+  }
+}
