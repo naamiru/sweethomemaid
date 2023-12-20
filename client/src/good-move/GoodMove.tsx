@@ -1,13 +1,13 @@
 import {
   Direction,
-  searchGoodMoves,
+  serialize,
   type GoodMoves,
   type Move
 } from '@sweethomemaid/logic'
 import classNames from 'classnames'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useApp } from '../app/use-app'
 import './GoodMove.css'
-import { useApp } from './app/use-app'
 
 const CONDITION_NAMES = [
   ['hasSpecialCombo', 'スペシャルコンボ'],
@@ -21,7 +21,17 @@ export default function GoodMove(): ReactNode {
   const [goodMoves, setGoodMoves] = useState<GoodMoves>({})
   const { board, histories, historyIndex, isPlaying, useSwapSkill } = useApp()
   useEffect(() => {
-    setGoodMoves(searchGoodMoves(board.copy(), useSwapSkill))
+    const worker = new Worker(new URL('./worker.ts', import.meta.url), {
+      type: 'module'
+    })
+    worker.onmessage = event => {
+      setGoodMoves(event.data)
+    }
+    worker.postMessage({ board: serialize(board), useSwapSkill })
+
+    return () => {
+      worker.terminate()
+    }
   }, [board, histories, historyIndex, useSwapSkill])
 
   const [selectedMoves, setSelectedMoves] = useState<Move[]>([])

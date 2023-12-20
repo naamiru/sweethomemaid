@@ -103,7 +103,7 @@ export type Killers = {
 export type Position = [number, number]
 
 export class Board {
-  private constructor(
+  constructor(
     public pieces: Piece[][],
     public upstreams: Position[][],
     public killers: Killers,
