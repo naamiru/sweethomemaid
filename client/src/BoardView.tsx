@@ -8,7 +8,7 @@ import { useApp } from './app/use-app'
 const PIECE_SIZE = 64
 
 export default function BoardView(): ReactNode {
-  const { board, isHandlingPiece, isPlaying, useSwapSkill } = useApp()
+  const { board, isHandlingPiece, isPlaying, activeSkill } = useApp()
   return (
     <div
       className="board-view"
@@ -17,7 +17,7 @@ export default function BoardView(): ReactNode {
         height: `${board.height * PIECE_SIZE}px`
       }}
     >
-      {!isHandlingPiece && !isPlaying && !useSwapSkill && (
+      {!isHandlingPiece && !isPlaying && activeSkill === undefined && (
         <div className="animation-reference" />
       )}
       <div className="pieces is-bg">

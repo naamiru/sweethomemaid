@@ -3,6 +3,7 @@
     font-size: 0.75rem;
     font-weight: bold;
     margin-bottom: 8px;
+    visibility: hidden;
   }
 
   &.is-disabled {

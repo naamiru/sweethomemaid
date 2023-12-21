@@ -1,5 +1,6 @@
 import {
   Direction,
+  Skill,
   serialize,
   type GoodMoves,
   type Move
@@ -33,7 +34,8 @@ const CONDITION_NAMES: Array<[string, ReactNode]> = [
 
 export default function GoodMove(): ReactNode {
   const [goodMoves, setGoodMoves] = useState<GoodMoves>({})
-  const { board, histories, historyIndex, isPlaying, useSwapSkill } = useApp()
+  const { board, histories, historyIndex, isPlaying, activeSkill } = useApp()
+  const useSwapSkill = activeSkill === Skill.Swap
   useEffect(() => {
     setGoodMoves({})
     const worker = new Worker(new URL('./worker.ts', import.meta.url), {
@@ -137,7 +139,7 @@ function GoodMoveOverlay({ moves }: { moves: Move[] }): ReactNode {
       y: (move.position[1] - 0.5) * unit,
       icon: DirectionIconName[move.direction],
       direction: DirectionName[move.direction],
-      swapSkill: move.swapSkill
+      swapSkill: move.skill === Skill.Swap
     }))
   }, [board.width, bounds.width, moves])
 

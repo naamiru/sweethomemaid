@@ -12,6 +12,7 @@ import {
   Direction,
   InvalidMove,
   Move,
+  Skill,
   applyMove,
   fall,
   findMatches,
@@ -1425,7 +1426,7 @@ describe('applyMove', () => {
   })
 
   test('スワップスキル使用時はマッチしない色を動かせる', () => {
-    expectMove('rbrb', new Move([1, 1], Direction.Right, true), 'brrb')
+    expectMove('rbrb', new Move([1, 1], Direction.Right, Skill.Swap), 'brrb')
   })
 
   test('マッチした色が消える', () => {
@@ -1978,6 +1979,64 @@ describe('applyMove', () => {
       }),
       new Move([1, 1], Direction.Right),
       createBoard('xx--', { ice: '0003' })
+    )
+  })
+
+  test('風呂ひまり子スキル', () => {
+    expectMove(
+      `
+      rbr
+      gyg
+      rbr
+      `,
+      new Move([2, 2], Direction.Zero, Skill.CrossRockets),
+      `
+      xxx
+      rxr
+      rxr
+      `
+    )
+  })
+
+  test('風呂ひまり子スキル ロケットのキラーが乗る', () => {
+    expectMove(
+      createBoard('---', {
+        ice: '023',
+        killers: { ice: { bomb: 2, rocket: 1 } }
+      }),
+      new Move([1, 1], Direction.Zero, Skill.CrossRockets),
+      createBoard('x--', { ice: '001' })
+    )
+  })
+
+  test('風呂ニアスキル', () => {
+    expectMove(
+      `
+      rbrbr
+      gygyg
+      rbrbr
+      gygyg
+      rbrbr
+      `,
+      new Move([3, 3], Direction.Zero, Skill.H3Rockets),
+      `
+      xxxxx
+      xxxxx
+      xxxxx
+      rbrbr
+      rbrbr
+      `
+    )
+  })
+
+  test('風呂ニアスキル ロケットのキラーが乗る', () => {
+    expectMove(
+      createBoard('---', {
+        ice: '023',
+        killers: { ice: { bomb: 2, rocket: 1 } }
+      }),
+      new Move([1, 1], Direction.Zero, Skill.H3Rockets),
+      createBoard('x--', { ice: '001' })
     )
   })
 })

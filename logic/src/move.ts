@@ -18,11 +18,17 @@ export enum Direction {
   Zero
 }
 
+export enum Skill {
+  Swap,
+  CrossRockets,
+  H3Rockets
+}
+
 export class Move {
   constructor(
     public position: Position,
     public direction: Direction,
-    public swapSkill: boolean = false
+    public skill: Skill | undefined = undefined
   ) {}
 
   private diff(): [number, number] {
@@ -69,74 +75,88 @@ export function* moveScenes(
 ): Generator<MoveScene, void, void> {
   const mv = new BoardMove(board, move)
 
-  if (mv.pieces().some(isFixedPiece)) {
-    throw new InvalidMove()
-  }
+  let matches: Match[] = []
+  let skips: GeneralSet<Position> | undefined
 
-  if (move.direction === Direction.Zero) {
-    const [piece] = mv.pieces()
-    if (!piece.isBooster() || piece.face === Kind.Special) {
+  if (move.skill !== undefined && move.skill !== Skill.Swap) {
+    if (board.piece(move.position).face === Kind.Out) {
       throw new InvalidMove()
     }
-  }
-
-  // ブースターコンボの起点になるピース
-  let comboTriggerPiece: Piece | undefined
-
-  if (mv.isCombo()) {
-    comboTriggerPiece = board.piece(move.position)
-    // ブースターコンボの起点は除去して落下で埋める
-    fallAt(board, move.position, mv.positions()[1])
+    applyBoosterEffects(
+      board,
+      undefined,
+      skillEffects(board, move.position, move.skill)
+    )
+    yield MoveScene.Match
   } else {
-    mv.swap()
-  }
-
-  // ブースター起動前に色のマッチを取得。まだ消さない
-  let matches = findMatches(board).map(match =>
-    fixBoosterPosition(match, mv.positions())
-  )
-
-  // マッチがなければ元に戻して終了
-  if (
-    comboTriggerPiece === undefined &&
-    matches.length === 0 &&
-    mv.boosterCount() === 0 &&
-    !mv.swapSkill
-  ) {
-    mv.swap()
-    throw new InvalidMove()
-  }
-
-  yield MoveScene.Swap
-
-  // ブースターを起動
-  let skips: GeneralSet<Position> | undefined
-  if (
-    comboTriggerPiece !== undefined ||
-    (!move.swapSkill && mv.boosterCount() > 0)
-  ) {
-    let boosterPosition: Position
-    let booster: Booster | [Booster, Booster] | [Kind.Special, Color]
-
-    if (comboTriggerPiece !== undefined) {
-      boosterPosition = mv.positions()[1]
-      const [p1, p2] = [comboTriggerPiece, board.piece(boosterPosition)]
-      if (p1.isBooster() && p2.isBooster()) {
-        booster = [p1.face as Booster, p2.face as Booster]
-      } else if (p1.isColor()) {
-        booster = [Kind.Special, p1.face as Color]
-      } else {
-        booster = [Kind.Special, p2.face as Color]
-      }
-    } else {
-      const [pos, bst] = mv.booster() as [Position, Booster]
-      boosterPosition = pos
-      booster = bst
+    if (mv.pieces().some(isFixedPiece)) {
+      throw new InvalidMove()
     }
 
-    const effects = boosterEffects(board, boosterPosition, booster)
-    applyBoosterEffects(board, boosterPosition, effects)
-    skips = new GeneralSet(positionToInt, [...effects.values()].flat())
+    if (move.direction === Direction.Zero) {
+      const [piece] = mv.pieces()
+      if (!piece.isBooster() || piece.face === Kind.Special) {
+        throw new InvalidMove()
+      }
+    }
+
+    // ブースターコンボの起点になるピース
+    let comboTriggerPiece: Piece | undefined
+
+    if (mv.isCombo()) {
+      comboTriggerPiece = board.piece(move.position)
+      // ブースターコンボの起点は除去して落下で埋める
+      fallAt(board, move.position, mv.positions()[1])
+    } else {
+      mv.swap()
+    }
+
+    // ブースター起動前に色のマッチを取得。まだ消さない
+    matches = findMatches(board).map(match =>
+      fixBoosterPosition(match, mv.positions())
+    )
+
+    // マッチがなければ元に戻して終了
+    if (
+      comboTriggerPiece === undefined &&
+      matches.length === 0 &&
+      mv.boosterCount() === 0 &&
+      !mv.swapSkill
+    ) {
+      mv.swap()
+      throw new InvalidMove()
+    }
+
+    yield MoveScene.Swap
+
+    // ブースターを起動
+    if (
+      comboTriggerPiece !== undefined ||
+      (move.skill !== Skill.Swap && mv.boosterCount() > 0)
+    ) {
+      let boosterPosition: Position
+      let booster: Booster | [Booster, Booster] | [Kind.Special, Color]
+
+      if (comboTriggerPiece !== undefined) {
+        boosterPosition = mv.positions()[1]
+        const [p1, p2] = [comboTriggerPiece, board.piece(boosterPosition)]
+        if (p1.isBooster() && p2.isBooster()) {
+          booster = [p1.face as Booster, p2.face as Booster]
+        } else if (p1.isColor()) {
+          booster = [Kind.Special, p1.face as Color]
+        } else {
+          booster = [Kind.Special, p2.face as Color]
+        }
+      } else {
+        const [pos, bst] = mv.booster() as [Position, Booster]
+        boosterPosition = pos
+        booster = bst
+      }
+
+      const effects = boosterEffects(board, boosterPosition, booster)
+      applyBoosterEffects(board, boosterPosition, effects)
+      skips = new GeneralSet(positionToInt, [...effects.values()].flat())
+    }
   }
 
   do {
@@ -151,6 +171,10 @@ export function* moveScenes(
 
 export function canMove(board: Board, move: Move): boolean {
   const mv = new BoardMove(board, move)
+
+  if (move.skill !== undefined && move.skill !== Skill.Swap) {
+    return board.piece(move.position).face !== Kind.Out
+  }
 
   if (mv.pieces().some(isFixedPiece)) {
     return false
@@ -268,7 +292,7 @@ export class BoardMove {
   ) {}
 
   get swapSkill(): boolean {
-    return this.move.swapSkill ?? false
+    return this.move.skill === Skill.Swap
   }
 
   positions(): Position[] {
@@ -941,10 +965,12 @@ function boosterEffectAs(booster: BoosterCombo): Booster | Kind.Empty {
 
 function applyBoosterEffects(
   board: Board,
-  position: Position,
+  position: Position | undefined,
   effects: Map<Booster | Kind.Empty, Position[]>
 ): void {
-  board.setPiece(position, new Piece(Kind.Empty))
+  if (position !== undefined) {
+    board.setPiece(position, new Piece(Kind.Empty))
+  }
   for (const [booster, positions] of effects.entries()) {
     for (const pos of positions) {
       board.setPiece(
@@ -957,6 +983,37 @@ function applyBoosterEffects(
       )
     }
   }
+}
+
+function skillEffects(
+  board: Board,
+  position: Position,
+  skill: Skill.CrossRockets | Skill.H3Rockets
+): Map<Booster | Kind.Empty, Position[]> {
+  const positions = new GeneralSet(positionToInt)
+  function add(pos: Position): void {
+    const piece = board.piece(pos)
+    if (piece.face !== Kind.Out && piece.face !== Kind.Empty) {
+      positions.add(pos)
+    }
+  }
+
+  if (skill === Skill.CrossRockets) {
+    for (let x = 1; x <= board.width; x++) {
+      add([x, position[1]])
+    }
+    for (let y = 1; y <= board.height; y++) {
+      add([position[0], y])
+    }
+  } else if (skill === Skill.H3Rockets) {
+    for (let y = position[1] - 1; y <= position[1] + 1; y++) {
+      for (let x = 1; x <= board.width; x++) {
+        add([x, y])
+      }
+    }
+  }
+
+  return new Map([[Kind.HRocket, [...positions]]])
 }
 
 function matchedPiece(

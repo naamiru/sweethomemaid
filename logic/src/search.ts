@@ -1,5 +1,12 @@
 import { Kind, type Board, type Piece } from './board'
-import { BoardMove, Direction, InvalidMove, Move, applyMove } from './move'
+import {
+  BoardMove,
+  Direction,
+  InvalidMove,
+  Move,
+  Skill,
+  applyMove
+} from './move'
 
 type Condition = (board: Board) => boolean
 type Path = Move[]
@@ -30,7 +37,7 @@ export function searchGoodMoves(
     if (!(step in goodMoves)) goodMoves[step] = {}
 
     const moves = paths.map(path => path[0])
-    moves.sort(a => (a.swapSkill ? 1 : -1))
+    moves.sort(a => (a.skill === Skill.Swap ? 1 : -1))
 
     const uniqueMoves: Move[] = []
     const appeared = new Set<string>()
@@ -86,7 +93,7 @@ export function* search<T extends Record<string, Condition>>(
                 pieces,
                 false,
                 path,
-                new Move(move.position, move.direction, true)
+                new Move(move.position, move.direction, Skill.Swap)
               ])
             }
             continue
@@ -99,7 +106,7 @@ export function* search<T extends Record<string, Condition>>(
             pieces,
             false,
             path,
-            new Move(move.position, move.direction, true)
+            new Move(move.position, move.direction, Skill.Swap)
           ])
         }
 

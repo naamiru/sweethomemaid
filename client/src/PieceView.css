@@ -11,10 +11,19 @@
   }
 
   > .piece {
+    position: relative;
     width: 100%;
     padding-bottom: 100%;
-    background-size: cover;
     touch-action: none;
+  }
+
+  .piece-image {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
 
     &.is-suggested {
       animation: piece-suggest 1s ease-in-out infinite;

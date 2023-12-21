@@ -3,6 +3,7 @@ import {
   Direction,
   Kind,
   Move,
+  Skill,
   canMove,
   isBooster,
   isColor,
@@ -36,11 +37,12 @@ export default function PieceView({
     isHandlingPiece,
     isPlaying,
     swap,
-    useSwapSkill,
+    activeSkill,
     suggestedPositions,
     dispatch
   } = useApp()
   const piece = pieces[position[0]][position[1]]
+  const moveSkill = activeSkill === Skill.Swap ? activeSkill : undefined
 
   const [isMoving, setIsMoving] = useState(false)
   const [stopTimer, setStopTimer] = useState<ReturnType<typeof setTimeout>>()
@@ -68,12 +70,12 @@ export default function PieceView({
           Direction.Down,
           Direction.Left,
           Direction.Right
-        ].filter(dir => canMove(board, new Move(position, dir, useSwapSkill)))
+        ].filter(dir => canMove(board, new Move(position, dir, moveSkill)))
         setMovableDirs(new Set(dirs))
         setComboDirs(
           new Set(
             dirs.filter(dir =>
-              isCombo(board, new Move(position, dir, useSwapSkill))
+              isCombo(board, new Move(position, dir, moveSkill))
             )
           )
         )
@@ -118,7 +120,7 @@ export default function PieceView({
         if (dir !== undefined && !comboDirs.has(dir)) {
           dispatch({
             type: 'setSwap',
-            position: new Move(position, dir, useSwapSkill).positions()[1],
+            position: new Move(position, dir, moveSkill).positions()[1],
             triggerPosition: position
           })
         } else {
@@ -127,7 +129,7 @@ export default function PieceView({
       } else {
         dispatch({ type: 'setSwap' })
         if (dir !== undefined) {
-          playMove(new Move(position, dir, useSwapSkill)).catch(console.error)
+          playMove(new Move(position, dir, moveSkill)).catch(console.error)
         }
       }
 
@@ -168,6 +170,7 @@ export default function PieceView({
     }
   }, [pieces]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ダブルクリックでブースター発動
   const handleDoubleTap = useCallback(() => {
     if (isMoving || isSwapping) return
     const move = new Move(position, Direction.Zero)
@@ -175,14 +178,26 @@ export default function PieceView({
     playMove(move).catch(console.error)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMoving, isSwapping, position, board, piece])
-  const doubleTapBind = useDoubleTap(handleDoubleTap)
+  // シングルタップでスキル発動
+  const handleSingleTap = useCallback(() => {
+    if (isMoving || isSwapping) return
+    if (activeSkill !== Skill.CrossRockets && activeSkill !== Skill.H3Rockets)
+      return
+    const move = new Move(position, Direction.Zero, activeSkill)
+    if (!canMove(board, move)) return
+    playMove(move).catch(console.error)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeSkill, isMoving, isSwapping, position, board, piece])
+  const doubleTapBind = useDoubleTap(handleDoubleTap, 300, {
+    onSingleTap: handleSingleTap
+  })
 
   const isSuggested =
     suggestedPositions.has(position) &&
     !isHandlingPiece &&
     !isPlaying &&
-    !useSwapSkill
-  const pieceRef = useCallback(
+    activeSkill === undefined
+  const pieceImageRef = useCallback(
     (el: HTMLDivElement | null) => {
       if (!isSuggested) return
       const anim = el?.getAnimations()?.[0]
@@ -209,14 +224,14 @@ export default function PieceView({
       {...doubleTapBind}
       ref={el}
     >
-      <animated.div
-        className={classNames('piece', classes, {
-          'is-suggested': isSuggested
-        })}
-        {...bind()}
-        style={{ x, y }}
-        ref={pieceRef}
-      />
+      <animated.div className="piece" {...bind()} style={{ x, y }}>
+        <div
+          className={classNames('piece-image', classes, {
+            'is-suggested': isSuggested
+          })}
+          ref={pieceImageRef}
+        />
+      </animated.div>
     </div>
   )
 }

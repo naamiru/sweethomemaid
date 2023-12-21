@@ -5,7 +5,8 @@ import {
   type Board,
   type Killers,
   type Piece,
-  type Position
+  type Position,
+  type Skill
 } from '@sweethomemaid/logic'
 import { createContext, type Dispatch } from 'react'
 import * as cache from '../cache'
@@ -24,7 +25,7 @@ export type AppState = {
 
   suggestedPositions: GeneralSet<Position>
 
-  useSwapSkill: boolean
+  activeSkill: Skill | undefined
   killers: SimpleKillers
 
   histories: Pieces[]
@@ -57,8 +58,8 @@ export type AppAction =
       complete: boolean
     }
   | {
-      type: 'setUseSwapSkill'
-      value: boolean
+      type: 'setActiveSkill'
+      value: Skill | undefined
     }
   | {
       type: 'setKillers'
@@ -91,7 +92,7 @@ export const initialState: AppState = {
   board: initialBoard,
   pieces: initialBoard.pieces,
   suggestedPositions: new GeneralSet(positionToInt, suggest(initialBoard)),
-  useSwapSkill: false,
+  activeSkill: undefined,
   killers: [0, 0, 0],
   histories: [initialBoard.pieces],
   historyIndex: 0,
@@ -112,10 +113,10 @@ export function reduce(state: AppState, action: AppAction): AppState {
       return setSwap(state, action.position, action.triggerPosition)
     case 'moved':
       return moved(state, action.complete)
-    case 'setUseSwapSkill':
+    case 'setActiveSkill':
       return {
         ...state,
-        useSwapSkill: action.value
+        activeSkill: action.value
       }
     case 'setKillers':
       return setKillers(state, action.value)
@@ -142,7 +143,7 @@ function setStage(state: AppState, stage: StageName): AppState {
     board,
     pieces: board.pieces,
     suggestedPositions: new GeneralSet(positionToInt, suggest(board)),
-    useSwapSkill: state.useSwapSkill,
+    activeSkill: state.activeSkill,
     killers: state.killers,
     histories: [board.pieces],
     historyIndex: 0,
@@ -188,8 +189,10 @@ function moved(state: AppState, complete: boolean): AppState {
       positionToInt,
       complete ? suggest(state.board) : []
     ),
+    swap: undefined,
     isHandlingPiece: false,
-    isPlaying: !complete
+    isPlaying: !complete,
+    activeSkill: complete ? undefined : state.activeSkill
   }
 }
 

@@ -27,11 +27,20 @@
     &.skill-option {
       flex-grow: 1;
 
+      > .body {
+        display: flex;
+        gap: 10px;
+      }
+
       .skill-item {
         width: 60px;
         height: 60px;
         border-radius: 10px;
         cursor: pointer;
+
+        &:not(.is-active):hover {
+          box-shadow: 0 0 0 4px rgba(255, 140, 0, 0.25);
+        }
 
         &.is-active {
           box-shadow: 0 0 0 4px darkorange;
