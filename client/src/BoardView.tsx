@@ -1,6 +1,6 @@
 import { Kind, range, type Position } from '@sweethomemaid/logic'
 import classNames from 'classnames'
-import { useMemo, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import './BoardView.css'
 import PieceView from './PieceView'
 import { useApp } from './app/use-app'
@@ -9,14 +9,14 @@ const PIECE_SIZE = 64
 
 export default function BoardView(): ReactNode {
   const { board, isHandlingPiece, isPlaying, useSwapSkill } = useApp()
-  const margin = useMemo(
-    () =>
-      `${(((9 - board.height) * PIECE_SIZE) / 2).toFixed(2)}px ` +
-      `${(((9 - board.width) * PIECE_SIZE) / 2).toFixed(2)}px`,
-    [board]
-  )
   return (
-    <div className="board-view" style={{ margin }}>
+    <div
+      className="board-view"
+      style={{
+        width: `${board.width * PIECE_SIZE}px`,
+        height: `${board.height * PIECE_SIZE}px`
+      }}
+    >
       {!isHandlingPiece && !isPlaying && !useSwapSkill && (
         <div className="animation-reference" />
       )}

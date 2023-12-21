@@ -61,6 +61,7 @@ export default function GoodMove(): ReactNode {
   return (
     <>
       <div className={classNames('good-move', { 'is-disabled': isPlaying })}>
+        <div className="head">指手予想</div>
         {[1, 2].map(
           step =>
             step in goodMoves && (

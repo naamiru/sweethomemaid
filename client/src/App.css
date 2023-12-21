@@ -12,10 +12,12 @@ body {
 .app-container {
   position: static;
   padding: 20px;
-  max-width: 616px;
-
   display: flex;
   flex-direction: column;
+
+  @media screen and (max-width: 1023px) {
+    max-width: 616px;
+  }
 }
 
 .app-navbar {
@@ -58,9 +60,16 @@ body {
   }
 }
 
+.stage-select {
+  width: 576px;
+  max-width: 100%;
+}
+
 .app-operations {
   display: flex;
   margin-bottom: 5px;
+  width: 576px;
+  max-width: 100%;
 
   > .history-nav {
     flex-grow: 1;
@@ -80,5 +89,34 @@ body {
         border-color: transparent;
       }
     }
+  }
+}
+
+.app-main {
+  display: flex;
+  gap: 40px;
+
+  @media screen and (max-width: 1023px) {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  > main {
+    width: 576px;
+    height: 576px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+
+    @media screen and (max-width: 768px) {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  > aside {
+    flex-grow: 1;
+    flex-shrink: 1;
   }
 }

@@ -1,13 +1,8 @@
 .good-move {
-  position: absolute;
-  top: 152px;
-  left: calc(50% + 288px + 20px);
-  right: 20px;
-
-  @media screen and (max-width: 768px) {
-    position: static;
-    width: auto;
-    margin-top: 30px;
+  > .head {
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-bottom: 8px;
   }
 
   &.is-disabled {
@@ -16,7 +11,7 @@
   }
 
   > .step {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 10px;

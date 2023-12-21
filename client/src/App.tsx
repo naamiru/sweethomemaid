@@ -28,9 +28,15 @@ function App(): ReactNode {
           <HistoryNav />
           <Capture />
         </div>
-        <BoardView />
-        <Options />
-        <GoodMove />
+        <div className="app-main">
+          <main>
+            <BoardView />
+          </main>
+          <aside>
+            <Options />
+            <GoodMove />
+          </aside>
+        </div>
         <Toaster position="bottom-center" />
       </div>
     </AppProvider>

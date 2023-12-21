@@ -1,13 +1,7 @@
 .options {
-  margin-top: 20px;
-  display: flex;
-
-  @media screen and (max-width: 768px) {
-    flex-direction: column;
-    gap: 20px;
-  }
-
   > .option {
+    margin-bottom: 20px;
+
     > .head {
       font-size: 0.75rem;
       font-weight: bold;
@@ -32,6 +26,22 @@
 
     &.skill-option {
       flex-grow: 1;
+
+      .skill-item {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        cursor: pointer;
+
+        &.is-active {
+          box-shadow: 0 0 0 4px darkorange;
+        }
+
+        > img {
+          object-fit: contain;
+          border-radius: 10px;
+        }
+      }
     }
 
     &.killer-option {
@@ -42,6 +52,13 @@
         > .field {
           margin-bottom: 0;
         }
+      }
+
+      .killer-icon {
+        width: 20px;
+        height: 20px;
+        max-width: 20px;
+        max-height: 20px;
       }
     }
   }

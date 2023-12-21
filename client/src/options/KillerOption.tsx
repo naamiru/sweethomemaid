@@ -31,7 +31,7 @@ export default function KillerOptions(): ReactNode {
         <div className="field has-addons">
           <p className="control">
             <a className="button is-static is-small">
-              <img src={bombImage} width="20" />
+              <img src={bombImage} className="killer-icon" />
             </a>
           </p>
           <p className="control">
@@ -48,7 +48,7 @@ export default function KillerOptions(): ReactNode {
         <div className="field has-addons">
           <p className="control">
             <a className="button is-static is-small">
-              <img src={rocketImage} width="20" />
+              <img src={rocketImage} className="killer-icon" />
             </a>
           </p>
           <p className="control">
@@ -65,7 +65,7 @@ export default function KillerOptions(): ReactNode {
         <div className="field has-addons">
           <p className="control">
             <a className="button is-static is-small">
-              <img src={missileImage} width="20" />
+              <img src={missileImage} className="killer-icon" />
             </a>
           </p>
           <p className="control">
