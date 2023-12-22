@@ -1174,6 +1174,15 @@ function fallWithChain(
       }
     }
   }
+  function isMostUpstream(board: Board, position: Position): boolean {
+    if (warpLinks.has(position)) return false
+    const [x, y] = position
+    return (
+      board.piece([x - 1, y - 1]).face === Kind.Out &&
+      board.piece([x, y - 1]).face === Kind.Out &&
+      board.piece([x + 1, y - 1]).face === Kind.Out
+    )
+  }
 
   // ループカウント
   let step = 0
@@ -1408,15 +1417,6 @@ function findActiveEmptyPositions(board: Board): Position[] {
     }
   }
   return positions
-}
-
-function isMostUpstream(board: Board, position: Position): boolean {
-  const [x, y] = position
-  return (
-    board.piece([x - 1, y - 1]).face === Kind.Out &&
-    board.piece([x, y - 1]).face === Kind.Out &&
-    board.piece([x + 1, y - 1]).face === Kind.Out
-  )
 }
 
 function fallAtWithChain(
