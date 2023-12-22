@@ -12,16 +12,12 @@ export const stages = [
   'xmas_9',
   'xmas_10_1',
   'xmas_10_2',
-  'masters_3_1',
-  'masters_3_2',
-  'masters_3_3',
-  'masters_4_1',
-  'masters_4_2',
-  'masters_4_3',
   'masters_5_1',
   'masters_5_2',
   'masters_5_3',
-  'teams_3_1'
+  'teams_3_1',
+  'teams_3_2',
+  'teams_3_3'
 ] as const
 
 export type StageName = (typeof stages)[number]
@@ -435,483 +431,6 @@ const configs: Record<StageName, BoardConfig> = {
     3uu u uu1
     uu 1u3 uu
     `
-  },
-  masters_3_1: {
-    colors: `
-    ayrrbybyr
-    ryyayraba
-    r.rayaa.a
-    ybayab.by
-      abbyb
-    yrryrarbb
-    baab.rray
-    byababary
-    aa.rbrabb
-    `,
-    woods: `
-    000000000
-    000000000
-    030000030
-    000000300
-      00000
-    000000000
-    000030000
-    000000000
-    003000000
-    `,
-    upstreams: `
-    uuuuuuuuu
-    uuuuuuuuu
-    uuuuuuuuu
-    uuuuuuuuu
-      uuuuu
-    u3uuuuu1u
-    uuuuuuuuu
-    uuuuuuuuu
-    uuuuuuuuu
-    `
-  },
-  masters_3_2: {
-    colors: `
-    yyrrbbrby
-    abb.raary
-    bbyyba.yb
-    ry yrbyby
-    ab bby ab
-    a.braa r.
-    brba.ayrb
-    ryyrrbraa
-    rbybyabrr
-    `,
-    woods: `
-    000000000
-    000300000
-    000000300
-    00 000000
-    00 000 00
-    030000 03
-    000030000
-    000000000
-    000000000
-    `,
-    upstreams: `
-    uuuuuuuuu
-    uuuuuuuuu
-    uuuuuuuuu
-    uu uuuuuu
-    uu uuu uu
-    uuuuuu uu
-    uuuuuuuuu
-    uuuuuuuuu
-    uuuuuuuuu
-    `,
-    warps: `
-    _________
-    _________
-    __a______
-    __ ___b__
-    __ ___ __
-    __A___ __
-    ______B__
-    _________
-    _________
-    `
-  },
-  masters_3_3: {
-    colors: `
-    byarayyra
-    ra.aayayb
-    ayayyaayb
-    byb   b.y
-    baa   ary
-    y.y
-    abryrab.y
-    abbrbyrra
-    byy.abryr
-    `,
-    woods: `
-    000000000
-    003000000
-    000000000
-    000   030
-    000   000
-    030
-    000000030
-    000000000
-    000300000
-    `,
-    upstreams: `
-    rrrrrrrrd
-    urrrrrrdd
-    uurrrrddd
-    uuu   ddd
-    uuu   ddd
-    uuu
-    uuullllll
-    uulllllll
-    ullllllll
-    `
-  },
-  masters_4_1: {
-    colors: `
-    __rbryr
-     byrbrby
-    ybbypypyb
-    rppbpybpr
-    ypybybbyy
-    yyrrpprbb
-    rrybrpryr
-     bprprbr
-      ybbpb
-    `,
-    upstreams: `
-    __uuuuu
-     3uuuuu1
-    3uuuuuuu1
-    uuuuuuuuu
-    uuuuuuuuu
-    uuuuuuuuu
-    uuuuuuuuu
-     uuuuuuu
-      uuuuu
-    `,
-    chains: `
-    __00000
-     0000000
-    003030300
-    000000000
-    003030300
-    000000000
-    003030300
-     0000000
-      00000
-    `,
-    links: [
-      [
-        [2, 2],
-        [3, 1]
-      ],
-      [
-        [1, 3],
-        [2, 2]
-      ],
-      [
-        [1, 4],
-        [1, 3]
-      ],
-      [
-        [9, 3],
-        [8, 2]
-      ]
-    ]
-  },
-  masters_4_2: {
-    colors: `
-    ryr   byp
-    bpybyrppy
-    rprprryrb
-     yrbryry
-     rpbypbr
-     pbybrrp
-    byprypbyb
-    yrybrybpb
-    brp   ybp
-    `,
-    upstreams: `
-    uuu   uuu
-    uuu1u3uuu
-    uuuuuuuuu
-     uuuuuuu
-     uuuuuuu
-     uuuuuuu
-    3uuuuuuu1
-    uuuuuuuuu
-    uuu   uuu
-    `,
-    chains: `
-    000   000
-    000000000
-    003000300
-     0030300
-     0003000
-     0030300
-    003000300
-    000000000
-    000   000
-    `,
-    fallFrom: `
-    ...   ...
-    .........
-    .........
-     .r...l.
-     ..r.l..
-     ...l...
-    ...l.l...
-    ..r...l..
-    ...   ...
-    `,
-    links: [
-      [
-        [1, 8],
-        [1, 7]
-      ],
-      [
-        [2, 8],
-        [2, 7]
-      ],
-      [
-        [2, 7],
-        [2, 6]
-      ],
-      [
-        [2, 6],
-        [2, 5]
-      ],
-      [
-        [2, 2],
-        [2, 1]
-      ],
-      [
-        [3, 6],
-        [3, 5]
-      ],
-      [
-        [3, 4],
-        [3, 3]
-      ],
-      [
-        [3, 3],
-        [3, 2]
-      ],
-      [
-        [3, 2],
-        [3, 1]
-      ],
-      [
-        [4, 7],
-        [5, 6]
-      ],
-      [
-        [4, 6],
-        [4, 5]
-      ],
-      [
-        [4, 5],
-        [4, 4]
-      ],
-      [
-        [4, 5],
-        [5, 4]
-      ],
-      [
-        [4, 5],
-        [3, 4]
-      ],
-      [
-        [4, 3],
-        [4, 2]
-      ],
-      [
-        [5, 6],
-        [5, 5]
-      ],
-      [
-        [5, 6],
-        [4, 5]
-      ],
-      [
-        [5, 5],
-        [5, 4]
-      ],
-      [
-        [5, 4],
-        [5, 3]
-      ],
-      [
-        [5, 3],
-        [5, 2]
-      ],
-      [
-        [6, 7],
-        [6, 6]
-      ],
-      [
-        [6, 7],
-        [5, 6]
-      ],
-      [
-        [6, 6],
-        [6, 5]
-      ],
-      [
-        [6, 5],
-        [7, 4]
-      ],
-      [
-        [6, 3],
-        [6, 2]
-      ],
-      [
-        [6, 2],
-        [7, 1]
-      ],
-      [
-        [7, 6],
-        [7, 5]
-      ],
-      [
-        [7, 4],
-        [8, 3]
-      ],
-      [
-        [7, 3],
-        [7, 2]
-      ],
-      [
-        [7, 2],
-        [7, 1]
-      ],
-      [
-        [8, 8],
-        [8, 7]
-      ],
-      [
-        [8, 7],
-        [8, 6]
-      ],
-      [
-        [8, 6],
-        [8, 5]
-      ],
-      [
-        [9, 8],
-        [9, 7]
-      ]
-    ]
-  },
-  masters_4_3: {
-    colors: `
-    ___bpryrr
-    __pybpyyr
-    _yybrrbpy
-    rpryrybpr
-    ryypyrpyr
-    yrpprbypy
-    bbyybybb
-    rbbrypb
-    rrppbp
-    `,
-    upstreams: `
-    ___uuuuuu
-      3uuuuuu
-     3uuuuuuu
-    3uuuuuuuu
-    uuuuuuuuu
-    uuuuuuuuu
-    uuuuuuuu
-    uuuuuuu
-    uuuuuu
-    `,
-    chains: `
-    ___000000
-      0000000
-     03030300
-    000000000
-    003030300
-    000000000
-    00303030
-    0000000
-    000000
-    `,
-    fallFrom: `
-    ___......
-      .......
-     ........
-    ..l.r.r..
-    .........
-    ..l.l.l..
-    ........
-    ..l.l.l
-    ......
-    `,
-    links: [
-      [
-        [1, 5],
-        [1, 4]
-      ],
-      [
-        [1, 6],
-        [1, 5]
-      ],
-      [
-        [1, 7],
-        [1, 6]
-      ],
-      [
-        [2, 3],
-        [3, 2]
-      ],
-      [
-        [2, 4],
-        [2, 3]
-      ],
-      [
-        [2, 5],
-        [2, 4]
-      ],
-      [
-        [2, 6],
-        [2, 5]
-      ],
-      [
-        [2, 7],
-        [2, 6]
-      ],
-      [
-        [2, 8],
-        [2, 7]
-      ],
-      [
-        [3, 8],
-        [2, 7]
-      ],
-      [
-        [3, 5],
-        [3, 4]
-      ],
-      [
-        [3, 8],
-        [4, 7]
-      ],
-      [
-        [4, 7],
-        [4, 6]
-      ],
-      [
-        [5, 7],
-        [5, 6]
-      ],
-      [
-        [5, 8],
-        [6, 7]
-      ],
-      [
-        [6, 8],
-        [6, 7]
-      ],
-      [
-        [7, 2],
-        [7, 1]
-      ],
-      [
-        [8, 2],
-        [8, 1]
-      ],
-      [
-        [9, 5],
-        [9, 4]
-      ]
-    ]
   },
   masters_5_1: {
     colors: `
@@ -1455,6 +974,182 @@ const configs: Record<StageName, BoardConfig> = {
       [
         [10, 8],
         [10, 7]
+      ]
+    ]
+  },
+  teams_3_2: {
+    width: 10,
+    height: 10,
+    colors: `
+    __brbygb
+     y      r
+    ygryrryygy
+     bb bg yg
+     gyrbgyry
+     rrg  bgg
+     rbbgbrby
+      gybrbg
+    yyb rg ryy
+    bg  ry  yg
+    `,
+    ices: `
+    __000000
+     0      0
+    0000000000
+     00 00 00
+     00222200
+     002  200
+     00222200
+      000000
+    000 00 000
+    00  00  00
+    `,
+    fallFrom: `
+    __......
+     .      .
+    ..........
+     .. .. ..
+     ..l..l..
+     ...  ...
+     ........
+      ......
+    ... .. ...
+    ..  ..  ..
+    `,
+    links: [
+      [
+        [2, 2],
+        [3, 1]
+      ],
+      [
+        [4, 3],
+        [4, 1]
+      ],
+      [
+        [5, 3],
+        [5, 1]
+      ],
+      [
+        [6, 3],
+        [6, 1]
+      ],
+      [
+        [7, 3],
+        [7, 1]
+      ],
+      [
+        [9, 2],
+        [8, 1]
+      ]
+    ]
+  },
+  teams_3_3: {
+    width: 10,
+    height: 10,
+    colors: `
+    _gbggybyg
+    grr rr rbr
+    bg bybg gg
+     rgybrygy
+    gby gb rgr
+    ygbgyyrbby
+     grbrbygy
+     yb ry rb
+     rgr  byb
+      rygbyb
+    `,
+    ices: `
+    _00000000
+    033 22 330
+    03 2222 30
+     02000020
+    000 00 000
+    0000000000
+     00000000
+     00 00 00
+     000  000
+      000000
+    `,
+    fallFrom: `
+    _........
+    ... .. ...
+    .. l..l ..
+     .l....r.
+    ... .. ...
+    ...l..l...
+     ........
+     .. .. ..
+     ..l  r..
+      ......
+    `,
+    links: [
+      [
+        [1, 2],
+        [2, 1]
+      ],
+      [
+        [2, 2],
+        [2, 1]
+      ],
+      [
+        [3, 9],
+        [3, 8]
+      ],
+      [
+        [3, 4],
+        [4, 3]
+      ],
+      [
+        [3, 2],
+        [3, 1]
+      ],
+      [
+        [4, 9],
+        [3, 8]
+      ],
+      [
+        [5, 4],
+        [5, 3]
+      ],
+      [
+        [5, 2],
+        [5, 1]
+      ],
+      [
+        [6, 4],
+        [6, 3]
+      ],
+      [
+        [6, 2],
+        [6, 1]
+      ],
+      [
+        [7, 9],
+        [8, 8]
+      ],
+      [
+        [8, 9],
+        [8, 8]
+      ],
+      [
+        [8, 4],
+        [7, 3]
+      ],
+      [
+        [8, 2],
+        [8, 1]
+      ],
+      [
+        [9, 7],
+        [9, 6]
+      ],
+      [
+        [9, 2],
+        [9, 1]
+      ],
+      [
+        [10, 2],
+        [9, 1]
       ]
     ]
   }

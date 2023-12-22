@@ -21,6 +21,8 @@ export default function StageSelect(): ReactNode {
           <select value={stage} onChange={handleChange}>
             <optgroup label="チームズフェスティバル">
               <option value="teams_3_1">チームフェス フェーズ3 wave1</option>
+              <option value="teams_3_2">チームフェス フェーズ3 wave2</option>
+              <option value="teams_3_3">チームフェス フェーズ3 wave3</option>
             </optgroup>
             <optgroup label="マスターズランキング">
               <option value="masters_5_1">
