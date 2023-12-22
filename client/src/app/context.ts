@@ -10,10 +10,10 @@ import {
 } from '@sweethomemaid/logic'
 import { createContext, type Dispatch } from 'react'
 import * as cache from '../cache'
-import { createBoard, stages, type StageName } from '../presets'
+import presets, { createBoard, stages, type StageName } from '../presets'
 
 const STAGE_CACHE_KEY = 'AppContext.stage'
-const INITIAL_STAGE = 'teams_2'
+const INITIAL_STAGE = 'teams_3_1'
 
 type Pieces = Piece[][]
 type SimpleKillers = [number, number, number]
@@ -135,6 +135,9 @@ export function reduce(state: AppState, action: AppAction): AppState {
 
 function setStage(state: AppState, stage: StageName): AppState {
   if (state.stage === stage) return state
+
+  if (!(stage in presets)) stage = INITIAL_STAGE
+
   const board = createBoard(stage)
   board.killers = simpleKillersToKillers(state.killers)
   cache.set(STAGE_CACHE_KEY, stage)

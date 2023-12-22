@@ -586,11 +586,11 @@ class LineMap {
 }
 
 export function positionToInt(position: Position): number {
-  return position[0] * 10 + position[1]
+  return position[0] * 100 + position[1]
 }
 
 function intToPosition(key: number): Position {
-  return [Math.floor(key / 10), key % 10]
+  return [Math.floor(key / 100), key % 100]
 }
 
 function createLineMap(board: Board): LineMap {

@@ -21,10 +21,7 @@ export const stages = [
   'masters_5_1',
   'masters_5_2',
   'masters_5_3',
-  'teams_1_1',
-  'teams_1_2',
-  'teams_1_3',
-  'teams_2'
+  'teams_3_1'
 ] as const
 
 export type StageName = (typeof stages)[number]
@@ -1371,245 +1368,95 @@ const configs: Record<StageName, BoardConfig> = {
       ]
     ]
   },
-  teams_1_1: {
-    width: 7,
-    height: 7,
+  teams_3_1: {
+    width: 10,
+    height: 10,
     colors: `
-    _rbgrb
-    rgrbgyg
-    ygbbrgy
-    gyyrgbb
-     rbgyg
-    rbgygrg
-     bg yg
+    __rygyyr
+    ybgrgybryr
+    gyb rb ggb
+    rbybrggrbr
+    y yygrrb y
+    y        g
+    r grgrgy g
+    gbgyggbrby
+    gbrybbyyrb
+     rgrybybr
     `,
     ices: `
-    _00000
-    0000000
-    0000000
-    0000000
-     00000
-    0000000
-     22 22
-    `,
-    upstreams: `
-    _uuuuu
-    3uuuuu1
-    uuuuuuu
-    uuuuuuu
-     uuuuu
-    3uuuuu1
-     uu uu
-    `
-  },
-  teams_1_2: {
-    width: 7,
-    height: 8,
-    colors: `
-    yyg ybr
-    bgybgyg
-    rybgrby
-     rygbr
-    gyyrbbr
-    bgbbrbg
-    brgbgry
-     yyrrg
-    `,
-    ices: `
-    000 000
-    0000000
-    0000000
-     00000
-    2200022
-    1110111
-    2222222
-     11111
-    `,
-    upstreams: `
-    uuu uuu
-    uuu1uuu
-    uuuuuuu
-     uuuuu
-    3uuuuu1
-    uuuuuuu
-    uuuuuuu
-     uuuuu
-    `
-  },
-  teams_1_3: {
-    colors: `
-    _b g g g
-    brbrggyyb
-     ybrybbg
-    ryrgrbyrr
-     ggb ryg
-    bbyrgyrry
-     gbrybgr
-    byybgryyb
-     r b y b
-    `,
-    ices: `
-    _3 3 3 3
-    333333333
-     0000000
-    000000000
-     000 000
-    000000000
-     0000000
-    333333333
-     3 3 3 3
-    `,
-    upstreams: `
-    _u u u u
-    3u1u1u1u1
-     uuuuuuu
-    3uuuuuuu1
-     uuu uuu
-    3uuu1uuu1
-     uuuuuuu
-    3uuuuuuu1
-     u u u u
+    __000000
+    0000000000
+    000 00 000
+    0000000000
+    0 000000 0
+    0        0
+    0 222222 0
+    0222222220
+    0000000000
+     00000000
     `,
     fallFrom: `
-    _. . . .
-    ..l.l.r..
-     .......
-    .........
-     ... ...
-    ....l....
-     .......
-    .........
-     . . . .
+    __......
+    ..........
+    ... .. ...
+    ...r..r...
+    . ...... .
+    .        .
+    . ...... .
+    .r......l.
+    ..........
+     ........
     `,
     links: [
       [
-        [2, 7],
-        [2, 6]
-      ],
-      [
-        [2, 6],
-        [2, 5]
-      ],
-      [
-        [2, 5],
-        [2, 4]
-      ],
-      [
-        [2, 4],
-        [2, 3]
-      ],
-      [
-        [2, 2],
-        [2, 1]
+        [1, 8],
+        [1, 7]
       ],
       [
         [3, 7],
-        [3, 6]
-      ],
-      [
-        [3, 4],
-        [3, 3]
-      ],
-      [
-        [3, 3],
-        [3, 2]
+        [3, 5]
       ],
       [
         [3, 2],
-        [4, 1]
+        [3, 1]
       ],
       [
         [4, 7],
-        [4, 6]
-      ],
-      [
-        [4, 6],
         [4, 5]
-      ],
-      [
-        [4, 3],
-        [4, 2]
-      ],
-      [
-        [4, 2],
-        [4, 1]
       ],
       [
         [5, 7],
-        [5, 6]
+        [5, 5]
       ],
       [
-        [5, 6],
-        [4, 5]
-      ],
-      [
-        [5, 6],
-        [6, 5]
-      ],
-      [
-        [5, 3],
-        [5, 2]
+        [5, 2],
+        [5, 1]
       ],
       [
         [6, 7],
-        [6, 6]
-      ],
-      [
-        [6, 6],
         [6, 5]
-      ],
-      [
-        [6, 3],
-        [6, 2]
       ],
       [
         [6, 2],
         [6, 1]
       ],
       [
-        [7, 3],
-        [7, 2]
+        [7, 7],
+        [7, 5]
       ],
       [
-        [7, 2],
-        [6, 1]
+        [8, 7],
+        [8, 5]
+      ],
+      [
+        [8, 2],
+        [8, 1]
+      ],
+      [
+        [10, 8],
+        [10, 7]
       ]
     ]
-  },
-  teams_2: {
-    colors: `
-    _ry   yg
-    yrbryrgyy
-    rygbbybbg
-     ggyrbrb
-     ybbgyyr
-    yrrygbyyg
-    grgbbygby
-     yg   gb
-      rbgby
-    `,
-    ices: `
-    _30   03
-    230020032
-    230020032
-     3002003
-     3002003
-    230020032
-    230020032
-     30   03
-      00000
-    `,
-    upstreams: `
-    _uu   uu
-    3uuuuuuu1
-    uuuuuuuuu
-     uuuuuuu
-     uuuuuuu
-    3uuuuuuu1
-    uuuuuuuuu
-     uu   uu
-      u1u3u
-    `
   }
 }
 
