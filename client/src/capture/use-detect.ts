@@ -5,6 +5,7 @@ import { InferenceSession, Tensor } from 'onnxruntime-web'
 import { useCallback } from 'react'
 import { useApp } from '../app/use-app'
 import modelUrl from '../assets/piece_classifier.onnx'
+import presets, { type StageName } from '../presets'
 
 const IMAGE_SIZE = 64
 const MEAN = [0.57665089, 0.5822121, 0.54763596]
@@ -16,14 +17,15 @@ export function useDetect(): (
   image: HTMLImageElement,
   bounds: Bounds
 ) => Promise<void> {
-  const { board, dispatch } = useApp()
+  const { board, stage, dispatch } = useApp()
   return useCallback(
     async (image, bounds) => {
       for await (const [position, piece] of detectPieces(
         image,
         bounds,
         board.width,
-        board.height
+        board.height,
+        getPieceMask(stage)
       )) {
         if (board.piece(position).face !== Kind.Out) {
           board.setPiece(position, piece)
@@ -31,7 +33,7 @@ export function useDetect(): (
       }
       dispatch({ type: 'reset' })
     },
-    [board, dispatch]
+    [board, stage, dispatch]
   )
 }
 
@@ -39,7 +41,8 @@ async function* detectPieces(
   image: HTMLImageElement,
   bounds: Bounds,
   width: number,
-  height: number
+  height: number,
+  pieceMask: boolean[]
 ): AsyncGenerator<[Position, Piece]> {
   const session = await InferenceSession.create(modelUrl, {
     executionProviders: ['webgl']
@@ -55,7 +58,7 @@ async function* detectPieces(
       feeds[session.inputNames[0]] = input
       const outputData = await session.run(feeds)
       const output = outputData[session.outputNames[0]]
-      const index = argmax(output.data as Float32Array)
+      const index = argmax(output.data as Float32Array, pieceMask)
       yield [position, PIECE_FOR_INDEX[index]]
     }
   } finally {
@@ -66,11 +69,11 @@ async function* detectPieces(
   }
 }
 
-function argmax(data: Float32Array): number {
+function argmax(data: Float32Array, pieceMask: boolean[]): number {
   let max = -Infinity
   let index = 0
   data.forEach((value, i) => {
-    if (value > max) {
+    if (pieceMask[i] && value > max) {
       max = value
       index = i
     }
@@ -198,3 +201,49 @@ const PIECE_FOR_INDEX = [
   new Piece(Kind.Yellow, 0, 2),
   new Piece(Kind.Yellow, 0, 3)
 ]
+
+function getPieceMask(stage: StageName): boolean[] {
+  const preset = presets[stage]
+
+  const kinds = new Set<Kind>([
+    Kind.Special,
+    Kind.Bomb,
+    Kind.HRocket,
+    Kind.VRocket,
+    Kind.Missile
+  ])
+
+  const colors = preset.colors ?? ''
+  for (const [token, color] of [
+    ['r', Kind.Red],
+    ['b', Kind.Blue],
+    ['g', Kind.Green],
+    ['y', Kind.Yellow],
+    ['a', Kind.Aqua],
+    ['p', Kind.Pink]
+  ] as const) {
+    if (colors.includes(token)) {
+      kinds.add(color)
+    }
+  }
+
+  for (const [prop, obstacle] of [
+    ['mice', Kind.Mouse],
+    ['woods', Kind.Wood],
+    ['presents', Kind.Present]
+  ] as const) {
+    if (prop in preset) {
+      kinds.add(obstacle)
+    }
+  }
+
+  const ice = 'ices' in preset
+  const chain = 'chains' in preset
+
+  return PIECE_FOR_INDEX.map(piece => {
+    if (!kinds.has(piece.kind)) return false
+    if (!ice && piece.ice > 0) return false
+    if (!chain && piece.chain > 0) return false
+    return true
+  })
+}
