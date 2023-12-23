@@ -4,6 +4,7 @@ import toast from 'react-hot-toast'
 import './CaptureButton.css'
 import { loadImage } from './load-image'
 import { useCapture } from './use-capture'
+import { useListenExtension } from './use-listen-extension'
 
 export default function CaptureButton(): ReactNode {
   const { dispatch } = useCapture()
@@ -28,10 +29,12 @@ export default function CaptureButton(): ReactNode {
     [dispatch]
   )
 
+  const isExtensionCapturing = useListenExtension()
+
   return (
     <div
       className={classNames('file capture-button', {
-        'is-disabled': isLoading
+        'is-disabled': isLoading || isExtensionCapturing
       })}
       aria-label={`スクリーンショットから
 盤面配置を読み取ります`}
@@ -44,7 +47,7 @@ export default function CaptureButton(): ReactNode {
           type="file"
           accept="image/*"
           onChange={handleChange}
-          disabled={isLoading}
+          disabled={isLoading || isExtensionCapturing}
         />
         <span className="file-cta">
           <span className="file-icon">

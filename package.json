@@ -1,6 +1,6 @@
 {
   "name": "sweethomemaid",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "description": "app for sweethomemaid",
   "scripts": {
     "dev": "npm -w client run dev"
@@ -17,6 +17,7 @@
   "homepage": "https://github.com/naamiru/sweethomemaid#readme",
   "workspaces": [
     "client",
-    "logic"
+    "logic",
+    "extension"
   ]
 }

@@ -1,0 +1,25 @@
+{
+  "name": "@sweethomemaid/extension",
+  "version": "1.0.0",
+  "description": "browser extension",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naamiru/sweethomemaid.git"
+  },
+  "author": "naamiru",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/naamiru/sweethomemaid/issues"
+  },
+  "homepage": "https://github.com/naamiru/sweethomemaid#readme",
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-standard": "^17.1.0",
+    "prettier": "^3.1.1"
+  }
+}

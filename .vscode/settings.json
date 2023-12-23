@@ -1,5 +1,5 @@
 {
-  "eslint.workingDirectories": ["./logic", "./client"],
+  "eslint.workingDirectories": ["./logic", "./client", "./extension"],
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
