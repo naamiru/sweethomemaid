@@ -52,10 +52,21 @@ body {
   }
 
   .social {
+    position: relative;
     color: inherit;
 
     &:hover {
       opacity: 0.8;
+    }
+
+    > .tag {
+      position: absolute;
+      top: -5px;
+      right: -12px;
+      height: 1.8em;
+      font-weight: bold;
+      font-size: 0.6rem;
+      padding: 0.5em;
     }
   }
 }

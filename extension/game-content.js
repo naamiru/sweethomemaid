@@ -1,5 +1,4 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('receive message', message)
   if (message?.type !== 'getGameArea') return false
 
   sendResponse({
