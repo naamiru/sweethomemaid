@@ -19,9 +19,9 @@ export enum Direction {
 }
 
 export enum Skill {
-  Swap,
-  CrossRockets,
-  H3Rockets
+  Swap = 1 << 0,
+  CrossRockets = 1 << 1,
+  H3Rockets = 1 << 2
 }
 
 export class Move {

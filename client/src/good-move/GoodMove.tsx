@@ -9,9 +9,11 @@ import classNames from 'classnames'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useApp } from '../app/use-app'
 import bombImage from '../assets/piece-images/b.png'
-import rocketImage from '../assets/piece-images/rh.png'
-
 import specialImage from '../assets/piece-images/n.png'
+import rocketImage from '../assets/piece-images/rh.png'
+import crossRocketsImage from '../assets/skills/himariko_bath.png'
+import swapImage from '../assets/skills/iroha_bunny.png'
+import h3RocketsImage from '../assets/skills/nia_bath.png'
 import './GoodMove.css'
 
 const CONDITION_NAMES: Array<[string, ReactNode]> = [
@@ -33,9 +35,17 @@ const CONDITION_NAMES: Array<[string, ReactNode]> = [
 ]
 
 export default function GoodMove(): ReactNode {
+  const [skills, setSkills] = useState(0)
+  function toggleSkill(skill: Skill): void {
+    if ((skills & skill) === 0) {
+      setSkills(skills | skill)
+    } else {
+      setSkills(skills & ~skill)
+    }
+  }
+
   const [goodMoves, setGoodMoves] = useState<GoodMoves>({})
-  const { board, histories, historyIndex, isPlaying, activeSkill } = useApp()
-  const useSwapSkill = activeSkill === Skill.Swap
+  const { board, histories, historyIndex, isPlaying } = useApp()
   useEffect(() => {
     setGoodMoves({})
     const worker = new Worker(new URL('./worker.ts', import.meta.url), {
@@ -44,12 +54,15 @@ export default function GoodMove(): ReactNode {
     worker.onmessage = event => {
       setGoodMoves(event.data)
     }
-    worker.postMessage({ board: serialize(board), useSwapSkill })
+    worker.postMessage({
+      board: serialize(board),
+      skills
+    })
 
     return () => {
       worker.terminate()
     }
-  }, [board, histories, historyIndex, useSwapSkill])
+  }, [board, histories, historyIndex, skills])
 
   const [selectedMoves, setSelectedMoves] = useState<Move[]>([])
   function selectMoves(step: number, condition: string): void {
@@ -63,7 +76,29 @@ export default function GoodMove(): ReactNode {
   return (
     <>
       <div className={classNames('good-move', { 'is-disabled': isPlaying })}>
-        <div className="head">指手予想</div>
+        <div className="head">
+          <div className="text">先読み</div>
+          <div className="skills">
+            {(
+              [
+                [Skill.Swap, swapImage],
+                [Skill.H3Rockets, h3RocketsImage],
+                [Skill.CrossRockets, crossRocketsImage]
+              ] as const
+            ).map(([skill, image]) => (
+              <img
+                src={image}
+                className={classNames({
+                  'is-disabled': (skills & skill) === 0
+                })}
+                onClick={() => {
+                  toggleSkill(skill)
+                }}
+                key={skill}
+              />
+            ))}
+          </div>
+        </div>
         {[1, 2].map(
           step =>
             step in goodMoves && (
@@ -98,6 +133,11 @@ export default function GoodMove(): ReactNode {
       {selectedMoves.length > 0 && <GoodMoveOverlay moves={selectedMoves} />}
     </>
   )
+}
+
+const SkillIconName: Record<Skill.CrossRockets | Skill.H3Rockets, string> = {
+  [Skill.CrossRockets]: 'cross-rockets',
+  [Skill.H3Rockets]: 'h3-rockets'
 }
 
 const DirectionIconName: Record<Direction, string> = {
@@ -137,7 +177,10 @@ function GoodMoveOverlay({ moves }: { moves: Move[] }): ReactNode {
     return moves.map(move => ({
       x: (move.position[0] - 0.5) * unit,
       y: (move.position[1] - 0.5) * unit,
-      icon: DirectionIconName[move.direction],
+      icon:
+        move.skill === Skill.CrossRockets || move.skill === Skill.H3Rockets
+          ? SkillIconName[move.skill]
+          : DirectionIconName[move.direction],
       direction: DirectionName[move.direction],
       swapSkill: move.skill === Skill.Swap
     }))
