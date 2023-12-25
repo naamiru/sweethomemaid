@@ -70,7 +70,8 @@ export class Piece {
   constructor(
     public readonly face: Face,
     public readonly ice = 0,
-    public readonly chain = 0
+    public readonly chain = 0,
+    public readonly jelly = 0
   ) {}
 
   get kind(): Kind {
@@ -98,6 +99,7 @@ export type Killers = {
   wood?: Killer
   present?: Killer
   chain?: Killer
+  jelly?: Killer
 }
 
 export type Position = [number, number]

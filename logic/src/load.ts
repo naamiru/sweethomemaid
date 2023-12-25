@@ -10,6 +10,7 @@ export type BoardConfig = {
   woods?: string
   ices?: string
   chains?: string
+  jellies?: string
   presents?: string
   upstreams?: string
   warps?: string
@@ -24,6 +25,7 @@ export function load(config: BoardConfig): Board {
   if (config.woods !== undefined) updateWood(board, config.woods)
   if (config.ices !== undefined) updateIce(board, config.ices)
   if (config.chains !== undefined) updateChain(board, config.chains)
+  if (config.jellies !== undefined) updateJelly(board, config.jellies)
   if (config.presents !== undefined) updatePresent(board, config.presents)
   if (config.upstreams !== undefined) updateUpstream(board, config.upstreams)
   if (config.warps !== undefined) updateWarp(board, config.warps)
@@ -53,7 +55,7 @@ function updateColor(board: Board, expr: string): void {
     }
     if (face !== undefined) {
       const piece = board.piece(pos)
-      board.setPiece(pos, new Piece(face, piece.ice, piece.chain))
+      board.setPiece(pos, new Piece(face, piece.ice, piece.chain, piece.jelly))
     }
   }
 }
@@ -63,7 +65,12 @@ function updateMouse(board: Board, expr: string): void {
     const piece = board.piece(pos)
     board.setPiece(
       pos,
-      new Piece({ kind: Kind.Mouse, count }, piece.ice, piece.chain)
+      new Piece(
+        { kind: Kind.Mouse, count },
+        piece.ice,
+        piece.chain,
+        piece.jelly
+      )
     )
   }
 }
@@ -73,7 +80,7 @@ function updateWood(board: Board, expr: string): void {
     const piece = board.piece(pos)
     board.setPiece(
       pos,
-      new Piece({ kind: Kind.Wood, count }, piece.ice, piece.chain)
+      new Piece({ kind: Kind.Wood, count }, piece.ice, piece.chain, piece.jelly)
     )
   }
 }
@@ -81,14 +88,21 @@ function updateWood(board: Board, expr: string): void {
 function updateIce(board: Board, expr: string): void {
   for (const [pos, count] of positiveDigitToken(expr)) {
     const piece = board.piece(pos)
-    board.setPiece(pos, new Piece(piece.face, count, piece.chain))
+    board.setPiece(pos, new Piece(piece.face, count, piece.chain, piece.jelly))
   }
 }
 
 function updateChain(board: Board, expr: string): void {
   for (const [pos, count] of positiveDigitToken(expr)) {
     const piece = board.piece(pos)
-    board.setPiece(pos, new Piece(piece.face, piece.ice, count))
+    board.setPiece(pos, new Piece(piece.face, piece.ice, count, piece.jelly))
+  }
+}
+
+function updateJelly(board: Board, expr: string): void {
+  for (const [pos, count] of positiveDigitToken(expr)) {
+    const piece = board.piece(pos)
+    board.setPiece(pos, new Piece(piece.face, piece.ice, piece.chain, count))
   }
 }
 
@@ -97,7 +111,12 @@ function updatePresent(board: Board, expr: string): void {
     const piece = board.piece(pos)
     board.setPiece(
       pos,
-      new Piece({ kind: Kind.Present, count }, piece.ice, piece.chain)
+      new Piece(
+        { kind: Kind.Present, count },
+        piece.ice,
+        piece.chain,
+        piece.jelly
+      )
     )
   }
 }
@@ -126,7 +145,10 @@ function updateUpstream(board: Board, expr: string): void {
       board.setUpstream(pos, [pos[0] + diff[0], pos[1] + diff[1]])
       const piece = board.piece(pos)
       if (piece.face === Kind.Out) {
-        board.setPiece(pos, new Piece(Kind.Unknown, piece.ice, piece.chain))
+        board.setPiece(
+          pos,
+          new Piece(Kind.Unknown, piece.ice, piece.chain, piece.jelly)
+        )
       }
     }
   }

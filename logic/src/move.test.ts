@@ -29,6 +29,7 @@ function createBoard(
     mouse?: string
     ice?: string
     chain?: string
+    jelly?: string
     killers?: Killers
   } = {}
 ): Board {
@@ -65,6 +66,10 @@ function createBoard(
 
   if (options.chain !== undefined) {
     updateChain(board, options.chain)
+  }
+
+  if (options.jelly !== undefined) {
+    updateJelly(board, options.jelly)
   }
 
   if (options.killers !== undefined) {
@@ -142,7 +147,12 @@ function updateMouse(board: Board, expr: string): void {
     const piece = board.piece(pos)
     board.setPiece(
       pos,
-      new Piece({ kind: Kind.Mouse, count }, piece.ice, piece.chain)
+      new Piece(
+        { kind: Kind.Mouse, count },
+        piece.ice,
+        piece.chain,
+        piece.jelly
+      )
     )
   }
 }
@@ -150,14 +160,21 @@ function updateMouse(board: Board, expr: string): void {
 function updateIce(board: Board, expr: string): void {
   for (const [pos, count] of digitToken(expr)) {
     const piece = board.piece(pos)
-    board.setPiece(pos, new Piece(piece.face, count, piece.chain))
+    board.setPiece(pos, new Piece(piece.face, count, piece.chain, piece.jelly))
   }
 }
 
 function updateChain(board: Board, expr: string): void {
   for (const [pos, count] of digitToken(expr)) {
     const piece = board.piece(pos)
-    board.setPiece(pos, new Piece(piece.face, piece.ice, count))
+    board.setPiece(pos, new Piece(piece.face, piece.ice, count, piece.jelly))
+  }
+}
+
+function updateJelly(board: Board, expr: string): void {
+  for (const [pos, count] of digitToken(expr)) {
+    const piece = board.piece(pos)
+    board.setPiece(pos, new Piece(piece.face, piece.ice, piece.chain, count))
   }
 }
 
@@ -1368,8 +1385,8 @@ describe('fallWithChain', () => {
 })
 
 describe('applyMove', () => {
-  function moved(initial: string, move: Move): Board {
-    const board = createBoard(initial)
+  function moved(initial: Board | string, move: Move): Board {
+    const board = initial instanceof Board ? initial : createBoard(initial)
     applyMove(board, move)
     return board
   }
@@ -2037,6 +2054,52 @@ describe('applyMove', () => {
       }),
       new Move([1, 1], Direction.Zero, Skill.H3Rockets),
       createBoard('x--', { ice: '001' })
+    )
+  })
+
+  test('ゼリーは動かせない 移動元', () => {
+    expect(() =>
+      moved(
+        createBoard('rbrr', { jelly: '1000' }),
+        new Move([1, 1], Direction.Right)
+      )
+    ).toThrowError(InvalidMove)
+  })
+
+  test('ゼリーは動かせない 移動先', () => {
+    expect(() =>
+      moved(
+        createBoard('rbrr', { jelly: '0100' }),
+        new Move([1, 1], Direction.Right)
+      )
+    ).toThrowError(InvalidMove)
+  })
+
+  test('ゼリーはマッチしない', () => {
+    expect(() =>
+      moved(
+        createBoard('rbrr', { jelly: '0010' }),
+        new Move([1, 1], Direction.Right)
+      )
+    ).toThrowError(InvalidMove)
+  })
+
+  test('ゼリーをブースターで消す', () => {
+    expectMove(
+      createBoard('Hrrr', { jelly: '0012' }),
+      new Move([1, 1], Direction.Zero),
+      createBoard('xxrr', { jelly: '0001' })
+    )
+  })
+
+  test('ゼリーをブースターで消す キラー1', () => {
+    expectMove(
+      createBoard('Hrrrr', {
+        jelly: '00123',
+        killers: { jelly: { rocket: 1 } }
+      }),
+      new Move([1, 1], Direction.Zero),
+      createBoard('xxrrr', { jelly: '00001' })
     )
   })
 })

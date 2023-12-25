@@ -363,6 +363,7 @@ function isFixedPiece(piece: Piece): boolean {
     piece.face === Kind.Empty ||
     piece.face === Kind.Unknown ||
     piece.chain > 0 ||
+    piece.jelly > 0 ||
     piece.kind === Kind.Present
   )
 }
@@ -636,13 +637,14 @@ function findLines(board: Board): Line[] {
     let sx = 1 // 左端位置
     while (sx < board.width - 1) {
       const piece = board.piece([sx, y])
-      if (!piece.isColor()) {
+      if (!isMatchablePiece(piece)) {
         sx += 1
         continue
       }
       // 右端位置を盤面外まで走査
       for (const x of range(sx + 1, board.width + 2)) {
-        if (board.piece([x, y]).face !== piece.face) {
+        const p = board.piece([x, y])
+        if (!isMatchablePiece(p) || p.face !== piece.face) {
           // [sx:x, y] が同一色
           if (x - sx >= 3) {
             lines.push(new Line(Axis.H, [sx, y], x - sx))
@@ -659,13 +661,14 @@ function findLines(board: Board): Line[] {
     let sy = 1 // 上端位置
     while (sy < board.height - 1) {
       const piece = board.piece([x, sy])
-      if (!piece.isColor()) {
+      if (!isMatchablePiece(piece)) {
         sy += 1
         continue
       }
       // 右端位置を盤面外まで走査
       for (const y of range(sy + 1, board.height + 2)) {
-        if (board.piece([x, y]).face !== piece.face) {
+        const p = board.piece([x, y])
+        if (!isMatchablePiece(p) || p.face !== piece.face) {
           // [x, sy:y] が同一色
           if (y - sy >= 3) {
             lines.push(new Line(Axis.V, [x, sy], y - sy))
@@ -678,6 +681,10 @@ function findLines(board: Board): Line[] {
   }
 
   return lines
+}
+
+function isMatchablePiece(piece: Piece): boolean {
+  return piece.isColor() && piece.jelly === 0
 }
 
 /** 同色 2x2 を探して左上の座標を返す。重なりなし。 */
@@ -696,8 +703,11 @@ function findSquares(board: Board, mask: GeneralSet<Position>): Position[] {
       // 同一色チェック
       const piece = board.piece([x, y])
       if (
-        piece.isColor() &&
-        targets.slice(1).every(pos => board.piece(pos).face === piece.face)
+        isMatchablePiece(piece) &&
+        targets.slice(1).every(pos => {
+          const p = board.piece(pos)
+          return isMatchablePiece(p) && p.face === piece.face
+        })
       ) {
         positions.push([x, y])
         for (const pos of targets) mask.add(pos)
@@ -763,6 +773,8 @@ function applyMatches(
   for (const position of adjacents) {
     const piece = board.piece(position)
     if (piece.kind === Kind.Present) {
+      board.setPiece(position, matchedPiece(board, piece))
+    } else if (piece.jelly > 0) {
       board.setPiece(position, matchedPiece(board, piece))
     }
   }
@@ -1023,11 +1035,29 @@ function matchedPiece(
 ): Piece {
   if (piece.ice > 0) {
     const count = 1 + board.killer('ice', booster)
-    return new Piece(piece.face, Math.max(piece.ice - count, 0))
+    return new Piece(
+      piece.face,
+      Math.max(piece.ice - count, 0),
+      piece.chain,
+      piece.jelly
+    )
   } else if (piece.chain > 0) {
     const count = 1 + board.killer('chain', booster)
     // 鎖が完全に消えるのは1マス落下時
-    return new Piece(piece.face, piece.ice, Math.max(piece.chain - count, 0.5))
+    return new Piece(
+      piece.face,
+      piece.ice,
+      Math.max(piece.chain - count, 0.5),
+      piece.jelly
+    )
+  } else if (piece.jelly > 0) {
+    const count = 1 + board.killer('jelly', booster)
+    return new Piece(
+      piece.face,
+      piece.ice,
+      piece.chain,
+      Math.max(piece.jelly - count, 0)
+    )
   }
 
   const face = piece.face
@@ -1157,6 +1187,7 @@ function fallWithChain(
       piece.face !== Kind.Out &&
       piece.face !== Kind.Empty &&
       piece.chain === 0 &&
+      piece.jelly === 0 &&
       piece.kind !== Kind.Present &&
       (stopPiece === undefined || stopPiece !== piece)
     )
