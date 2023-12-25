@@ -143,6 +143,9 @@ function* inputTensors(
 
 const PIECE_FOR_INDEX = [
   new Piece(Kind.Aqua, 0),
+  new Piece(Kind.Aqua, 0, 0, 1),
+  new Piece(Kind.Aqua, 0, 0, 2),
+  new Piece(Kind.Aqua, 0, 0, 3),
   new Piece(Kind.Bomb),
   new Piece(Kind.Blue, 0),
   new Piece(Kind.Blue, 1),
@@ -154,6 +157,9 @@ const PIECE_FOR_INDEX = [
   new Piece(Kind.Blue, 0, 1),
   new Piece(Kind.Blue, 0, 2),
   new Piece(Kind.Blue, 0, 3),
+  new Piece(Kind.Blue, 0, 0, 1),
+  new Piece(Kind.Blue, 0, 0, 2),
+  new Piece(Kind.Blue, 0, 0, 3),
   new Piece(Kind.Green, 0),
   new Piece(Kind.Green, 1),
   new Piece(Kind.Green, 2),
@@ -161,6 +167,9 @@ const PIECE_FOR_INDEX = [
   new Piece(Kind.Green, 4),
   new Piece(Kind.Green, 5),
   new Piece(Kind.Green, 6),
+  new Piece(Kind.Green, 0, 0, 1),
+  new Piece(Kind.Green, 0, 0, 2),
+  new Piece(Kind.Green, 0, 0, 3),
   new Piece(Kind.Missile),
   new Piece({ kind: Kind.Mouse, count: 1 }),
   new Piece({ kind: Kind.Mouse, count: 2 }),
@@ -170,6 +179,9 @@ const PIECE_FOR_INDEX = [
   new Piece(Kind.Pink, 0, 1),
   new Piece(Kind.Pink, 0, 2),
   new Piece(Kind.Pink, 0, 3),
+  new Piece(Kind.Pink, 0, 0, 1),
+  new Piece(Kind.Pink, 0, 0, 2),
+  new Piece(Kind.Pink, 0, 0, 3),
   new Piece({ kind: Kind.Present, count: 1 }),
   new Piece({ kind: Kind.Present, count: 2 }),
   new Piece({ kind: Kind.Present, count: 3 }),
@@ -239,11 +251,13 @@ function getPieceMask(stage: StageName): boolean[] {
 
   const ice = 'ices' in preset
   const chain = 'chains' in preset
+  const jelly = 'jellies' in preset
 
   return PIECE_FOR_INDEX.map(piece => {
     if (!kinds.has(piece.kind)) return false
     if (!ice && piece.ice > 0) return false
     if (!chain && piece.chain > 0) return false
+    if (!jelly && piece.jelly > 0) return false
     return true
   })
 }
