@@ -285,5 +285,9 @@ function pieceClasses(piece: Piece): string[] {
     classes.push('is-chain-' + String(piece.chain))
   }
 
+  if (piece.jelly > 0) {
+    classes.push('is-jelly-' + String(piece.jelly))
+  }
+
   return classes
 }

@@ -106,6 +106,15 @@
       &.is-chain-3 {
         background-image: url('./assets/piece-images/b_chain3.png');
       }
+      &.is-jelly-1 {
+        background-image: url('./assets/piece-images/b_jelly1.png');
+      }
+      &.is-jelly-2 {
+        background-image: url('./assets/piece-images/b_jelly2.png');
+      }
+      &.is-jelly-3 {
+        background-image: url('./assets/piece-images/b_jelly3.png');
+      }
     }
     &.is-green {
       background-image: url('./assets/piece-images/g0.png');
@@ -126,6 +135,15 @@
       }
       &.is-ice-6 {
         background-image: url('./assets/piece-images/g6.png');
+      }
+      &.is-jelly-1 {
+        background-image: url('./assets/piece-images/g_jelly1.png');
+      }
+      &.is-jelly-2 {
+        background-image: url('./assets/piece-images/g_jelly2.png');
+      }
+      &.is-jelly-3 {
+        background-image: url('./assets/piece-images/g_jelly3.png');
       }
     }
     &.is-yellow {
@@ -178,6 +196,15 @@
       &.is-ice-6 {
         background-image: url('./assets/piece-images/a6.png');
       }
+      &.is-jelly-1 {
+        background-image: url('./assets/piece-images/a_jelly1.png');
+      }
+      &.is-jelly-2 {
+        background-image: url('./assets/piece-images/a_jelly2.png');
+      }
+      &.is-jelly-3 {
+        background-image: url('./assets/piece-images/a_jelly3.png');
+      }
     }
     &.is-pink {
       background-image: url('./assets/piece-images/p0.png');
@@ -207,6 +234,15 @@
       }
       &.is-chain-3 {
         background-image: url('./assets/piece-images/p_chain3.png');
+      }
+      &.is-jelly-1 {
+        background-image: url('./assets/piece-images/p_jelly1.png');
+      }
+      &.is-jelly-2 {
+        background-image: url('./assets/piece-images/p_jelly2.png');
+      }
+      &.is-jelly-3 {
+        background-image: url('./assets/piece-images/p_jelly3.png');
       }
     }
     &.is-wood-1 {

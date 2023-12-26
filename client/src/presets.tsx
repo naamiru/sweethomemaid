@@ -15,6 +15,7 @@ export const stages = [
   'masters_5_1',
   'masters_5_2',
   'masters_5_3',
+  'masters_6_1',
   'teams_3_1',
   'teams_3_2',
   'teams_3_3'
@@ -1152,6 +1153,31 @@ const configs: Record<StageName, BoardConfig> = {
         [9, 1]
       ]
     ]
+  },
+  masters_6_1: {
+    colors: `
+    pbpgbgapg
+    gbgbbbbab
+    aapb bpbb
+    pgp H gpp
+    bbb   bbb
+    pba H pba
+    bggp bpgp
+    abpabpgba
+    bgapgpbbp
+    `,
+    jellies: `
+    300000003
+    000333000
+    0003 3000
+    300 0 003
+    330   033
+    300 0 003
+    0003 3000
+    000333000
+    300000003
+    `,
+    links: []
   }
 }
 

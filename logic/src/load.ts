@@ -50,6 +50,16 @@ function updateColor(board: Board, expr: string): void {
       face = Kind.Aqua
     } else if (token === 'p') {
       face = Kind.Pink
+    } else if (token === 'S') {
+      face = Kind.Special
+    } else if (token === 'B') {
+      face = Kind.Bomb
+    } else if (token === 'H') {
+      face = Kind.HRocket
+    } else if (token === 'V') {
+      face = Kind.VRocket
+    } else if (token === 'M') {
+      face = Kind.Missile
     } else if (token === '.') {
       face = Kind.Unknown
     }
