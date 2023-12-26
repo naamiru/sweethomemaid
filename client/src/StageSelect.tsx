@@ -19,35 +19,16 @@ export default function StageSelect(): ReactNode {
       <div className="control is-expanded">
         <div className="select is-fullwidth">
           <select value={stage} onChange={handleChange}>
-            <optgroup label="チームズフェスティバル">
-              <option value="teams_3_1">チームフェス フェーズ3 wave1</option>
-              <option value="teams_3_2">チームフェス フェーズ3 wave2</option>
-              <option value="teams_3_3">チームフェス フェーズ3 wave3</option>
-            </optgroup>
             <optgroup label="マスターズランキング">
-              <option value="masters_6_1">マスターズ ゼリー</option>
-              <option value="masters_5_1">
-                マスターズ プレゼント箱（回型）
+              <option value="masters_6_1">
+                マスターズ ゼリー（中央下が緑）
               </option>
-              <option value="masters_5_2">
-                マスターズ プレゼント箱（C型）
+              <option value="masters_6_2">
+                マスターズ ゼリー（中央下が水色）
               </option>
-              <option value="masters_5_3">
-                マスターズ プレゼント箱（目型）
+              <option value="masters_6_3">
+                マスターズ ゼリー（中央下が青）
               </option>
-            </optgroup>
-            <optgroup label="クリスマスメイキング">
-              <option value="xmas_1">クリスマス 1</option>
-              <option value="xmas_2_1">クリスマス 2 wave1</option>
-              <option value="xmas_2_2">クリスマス 2 wave2</option>
-              <option value="xmas_4_1">クリスマス 4 wave1</option>
-              <option value="xmas_4_2">クリスマス 4 wave2</option>
-              <option value="xmas_5">クリスマス 5</option>
-              <option value="xmas_7">クリスマス 7</option>
-              <option value="xmas_8">クリスマス 8</option>
-              <option value="xmas_9">クリスマス 9</option>
-              <option value="xmas_10_1">クリスマス 10 wave1</option>
-              <option value="xmas_10_2">クリスマス 10 wave2</option>
             </optgroup>
           </select>
         </div>

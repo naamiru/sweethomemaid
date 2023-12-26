@@ -160,6 +160,7 @@ const PIECE_FOR_INDEX = [
   new Piece(Kind.Blue, 0, 0, 1),
   new Piece(Kind.Blue, 0, 0, 2),
   new Piece(Kind.Blue, 0, 0, 3),
+  new Piece(Kind.Empty),
   new Piece(Kind.Green, 0),
   new Piece(Kind.Green, 1),
   new Piece(Kind.Green, 2),
@@ -222,7 +223,8 @@ function getPieceMask(stage: StageName): boolean[] {
     Kind.Bomb,
     Kind.HRocket,
     Kind.VRocket,
-    Kind.Missile
+    Kind.Missile,
+    Kind.Empty
   ])
 
   const colors = preset.colors ?? ''
