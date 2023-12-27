@@ -365,7 +365,8 @@ function isFixedPiece(piece: Piece): boolean {
     piece.face === Kind.Unknown ||
     piece.chain > 0 ||
     piece.jelly > 0 ||
-    piece.kind === Kind.Present
+    piece.kind === Kind.Present ||
+    piece.kind === Kind.Mikan
   )
 }
 
@@ -777,8 +778,28 @@ function applyMatches(
       board.setPiece(position, matchedPiece(board, piece))
     } else if (piece.jelly > 0) {
       board.setPiece(position, matchedPiece(board, piece))
+    } else if (piece.face instanceof Object && piece.face.kind === Kind.Mikan) {
+      for (const pos of mikanPositions(position, piece.face.position)) {
+        board.setPiece(pos, matchedPiece(board, board.piece(pos)))
+      }
     }
   }
+}
+
+function mikanPositions(
+  position: Position,
+  mikanPosition: [0 | 1, 0 | 1]
+): Position[] {
+  const origin: Position = [
+    position[0] - mikanPosition[0],
+    position[1] - mikanPosition[1]
+  ]
+  return [
+    origin,
+    [origin[0], origin[1] + 1],
+    [origin[0] + 1, origin[1]],
+    [origin[0] + 1, origin[1] + 1]
+  ]
 }
 
 type BoosterCombo = Booster | [Booster, Booster] | [Kind.Special, Color]
@@ -986,14 +1007,28 @@ function applyBoosterEffects(
   }
   for (const [booster, positions] of effects.entries()) {
     for (const pos of positions) {
-      board.setPiece(
-        pos,
-        matchedPiece(
-          board,
-          board.piece(pos),
-          booster === Kind.Empty ? undefined : booster
+      const piece = board.piece(pos)
+      if (piece.face instanceof Object && piece.face.kind === Kind.Mikan) {
+        for (const p of mikanPositions(pos, piece.face.position)) {
+          board.setPiece(
+            p,
+            matchedPiece(
+              board,
+              board.piece(p),
+              booster === Kind.Empty ? undefined : booster
+            )
+          )
+        }
+      } else {
+        board.setPiece(
+          pos,
+          matchedPiece(
+            board,
+            piece,
+            booster === Kind.Empty ? undefined : booster
+          )
         )
-      )
+      }
     }
   }
 }
@@ -1079,6 +1114,19 @@ function matchedPiece(
       } else {
         return new Piece(Kind.Empty)
       }
+    }
+  }
+
+  if (face instanceof Object && face.kind === Kind.Mikan) {
+    const count = 1 + board.killer('mikan', booster)
+    if (count < face.count) {
+      return new Piece({
+        kind: Kind.Mikan,
+        count: face.count - count,
+        position: face.position
+      })
+    } else {
+      return new Piece(Kind.Empty)
     }
   }
 
@@ -1194,6 +1242,7 @@ function fallWithChain(
       piece.chain === 0 &&
       piece.jelly === 0 &&
       piece.kind !== Kind.Present &&
+      piece.kind !== Kind.Mikan &&
       (stopPiece === undefined || stopPiece !== piece)
     )
   }
@@ -1423,7 +1472,8 @@ function findMovableGroundedPositions(
       if (
         piece.face === Kind.Out ||
         piece.chain > 0 ||
-        piece.kind === Kind.Present
+        piece.kind === Kind.Present ||
+        piece.kind === Kind.Mikan
       ) {
         isGrounded = true
       } else if (piece.face === Kind.Empty) {

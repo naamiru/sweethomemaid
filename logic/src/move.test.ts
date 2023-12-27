@@ -30,6 +30,7 @@ function createBoard(
     ice?: string
     chain?: string
     jelly?: string
+    mikan?: string
     killers?: Killers
   } = {}
 ): Board {
@@ -70,6 +71,10 @@ function createBoard(
 
   if (options.jelly !== undefined) {
     updateJelly(board, options.jelly)
+  }
+
+  if (options.mikan !== undefined) {
+    updateMikan(board, options.mikan)
   }
 
   if (options.killers !== undefined) {
@@ -175,6 +180,32 @@ function updateJelly(board: Board, expr: string): void {
   for (const [pos, count] of digitToken(expr)) {
     const piece = board.piece(pos)
     board.setPiece(pos, new Piece(piece.face, piece.ice, piece.chain, count))
+  }
+}
+
+function updateMikan(board: Board, expr: string): void {
+  for (const [pos, count] of digitToken(expr)) {
+    for (const mikanPosition of [
+      [0, 0],
+      [0, 1],
+      [1, 0],
+      [1, 1]
+    ] as Array<[0 | 1, 0 | 1]>) {
+      const position: Position = [
+        pos[0] + mikanPosition[0],
+        pos[1] + mikanPosition[1]
+      ]
+      const piece = board.piece(position)
+      board.setPiece(
+        position,
+        new Piece(
+          { kind: Kind.Mikan, count, position: mikanPosition },
+          piece.ice,
+          piece.chain,
+          piece.jelly
+        )
+      )
+    }
   }
 }
 

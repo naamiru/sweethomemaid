@@ -269,16 +269,23 @@ function pieceClasses(piece: Piece): string[] {
         }[piece.face]
     )
   } else if (piece.face instanceof Object) {
-    classes.push(
-      'is-' +
-        {
-          [Kind.Mouse]: 'mouse',
-          [Kind.Wood]: 'wood',
-          [Kind.Present]: 'present'
-        }[piece.face.kind] +
-        '-' +
-        String(piece.face.count)
-    )
+    if (piece.face.kind === Kind.Mikan) {
+      if (piece.face.position[0] === 0 && piece.face.position[1] === 0) {
+        classes.push('is-mikan')
+        classes.push('is-mikan-' + String(Math.min(piece.face.count, 20)))
+      }
+    } else {
+      classes.push(
+        'is-' +
+          {
+            [Kind.Mouse]: 'mouse',
+            [Kind.Wood]: 'wood',
+            [Kind.Present]: 'present'
+          }[piece.face.kind] +
+          '-' +
+          String(piece.face.count)
+      )
+    }
   }
 
   if (piece.ice > 0) {

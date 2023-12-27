@@ -12,6 +12,7 @@ export type BoardConfig = {
   chains?: string
   jellies?: string
   presents?: string
+  mikans?: string
   upstreams?: string
   warps?: string
   links?: Array<[Position, Position]>
@@ -27,6 +28,7 @@ export function load(config: BoardConfig): Board {
   if (config.chains !== undefined) updateChain(board, config.chains)
   if (config.jellies !== undefined) updateJelly(board, config.jellies)
   if (config.presents !== undefined) updatePresent(board, config.presents)
+  if (config.mikans !== undefined) updateMikan(board, config.mikans)
   if (config.upstreams !== undefined) updateUpstream(board, config.upstreams)
   if (config.warps !== undefined) updateWarp(board, config.warps)
   if (config.links !== undefined) updateLink(board, config.links)
@@ -61,7 +63,7 @@ function updateColor(board: Board, expr: string): void {
     } else if (token === 'M') {
       face = Kind.Missile
     } else if (token === '.') {
-      face = Kind.Unknown
+      face = Kind.Empty
     }
     if (face !== undefined) {
       const piece = board.piece(pos)
@@ -128,6 +130,32 @@ function updatePresent(board: Board, expr: string): void {
         piece.jelly
       )
     )
+  }
+}
+
+function updateMikan(board: Board, expr: string): void {
+  for (const [pos, count] of positiveDigitToken(expr)) {
+    for (const mikanPosition of [
+      [0, 0],
+      [0, 1],
+      [1, 0],
+      [1, 1]
+    ] as Array<[0 | 1, 0 | 1]>) {
+      const position: Position = [
+        pos[0] + mikanPosition[0],
+        pos[1] + mikanPosition[1]
+      ]
+      const piece = board.piece(position)
+      board.setPiece(
+        position,
+        new Piece(
+          { kind: Kind.Mikan, count, position: mikanPosition },
+          piece.ice,
+          piece.chain,
+          piece.jelly
+        )
+      )
+    }
   }
 }
 
@@ -223,7 +251,7 @@ function* positiveDigitToken(
 ): Generator<[Position, number], void, void> {
   for (const [pos, token] of tokens(expr)) {
     if (/^[a-f\d]+$/.test(token)) {
-      const value = parseInt(token, 16)
+      const value = parseInt(token, 36)
       if (value > 0) yield [pos, value]
     }
   }

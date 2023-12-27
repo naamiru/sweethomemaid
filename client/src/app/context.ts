@@ -216,7 +216,8 @@ function simpleKillersToKillers(killers: SimpleKillers): Killers {
     mouse: killer,
     wood: killer,
     present: killer,
-    jelly: killer
+    jelly: killer,
+    mikan: killer
   }
 }
 

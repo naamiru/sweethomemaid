@@ -21,7 +21,8 @@ export enum Kind {
 
   Mouse,
   Wood,
-  Present
+  Present,
+  Mikan
 }
 
 const boosters = [
@@ -47,9 +48,12 @@ export type Color = (typeof colors)[number]
 
 const obstacles = [Kind.Mouse, Kind.Wood, Kind.Present] as const
 
-export type Obstacle = (typeof obstacles)[number]
+type Obstacle = (typeof obstacles)[number]
 
-export type Face = Exclude<Kind, Obstacle> | { kind: Obstacle; count: number }
+export type Face =
+  | Exclude<Kind, Obstacle>
+  | { kind: Obstacle; count: number }
+  | { kind: Kind.Mikan; count: number; position: [0 | 1, 0 | 1] } // position: [x, y]
 
 export function getKind(face: Face): Kind {
   if (face instanceof Object) {
@@ -100,6 +104,7 @@ export type Killers = {
   present?: Killer
   chain?: Killer
   jelly?: Killer
+  mikan?: Killer
 }
 
 export type Position = [number, number]

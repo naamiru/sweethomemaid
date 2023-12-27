@@ -283,6 +283,53 @@
     &.is-present-15 {
       background-image: url('./assets/piece-images/present15.png');
     }
+
+    &.is-mikan {
+      width: 200%;
+      height: 200%;
+    }
+    &.is-mikan-1 {
+      background-image: url('./assets/piece-images/mikan1.png');
+    }
+    &.is-mikan-2 {
+      background-image: url('./assets/piece-images/mikan2.png');
+    }
+    &.is-mikan-3 {
+      background-image: url('./assets/piece-images/mikan3.png');
+    }
+    &.is-mikan-4 {
+      background-image: url('./assets/piece-images/mikan4.png');
+    }
+    &.is-mikan-5 {
+      background-image: url('./assets/piece-images/mikan5.png');
+    }
+    &.is-mikan-6 {
+      background-image: url('./assets/piece-images/mikan6.png');
+    }
+    &.is-mikan-7 {
+      background-image: url('./assets/piece-images/mikan7.png');
+    }
+    &.is-mikan-8 {
+      background-image: url('./assets/piece-images/mikan8.png');
+    }
+    &.is-mikan-9 {
+      background-image: url('./assets/piece-images/mikan9.png');
+    }
+    &.is-mikan-10,
+    &.is-mikan-11,
+    &.is-mikan-12,
+    &.is-mikan-13,
+    &.is-mikan-14,
+    &.is-mikan-15,
+    &.is-mikan-16,
+    &.is-mikan-17,
+    &.is-mikan-18,
+    &.is-mikan-19 {
+      background-image: url('./assets/piece-images/mikan10.png');
+    }
+    &.is-mikan-20 {
+      background-image: url('./assets/piece-images/mikan20.png');
+    }
   }
 }
 

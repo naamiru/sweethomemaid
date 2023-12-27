@@ -1,6 +1,11 @@
 import { load, type Board, type BoardConfig } from '@sweethomemaid/logic'
 
-export const stages = ['masters_6_1', 'masters_6_2', 'masters_6_3'] as const
+export const stages = [
+  'masters_6_1',
+  'masters_6_2',
+  'masters_6_3',
+  'newyear_1_1'
+] as const
 
 export type StageName = (typeof stages)[number]
 
@@ -458,6 +463,31 @@ const configs: Record<StageName, BoardConfig> = {
         [8, 2]
       ]
     ]
+  },
+  newyear_1_1: {
+    colors: `
+    bra   bpa
+    apapararr
+    rbprrbapb
+     brbpapa
+      ..r..
+      .. ..
+     ... ...
+    .........
+    .........
+    `,
+    mikans: `
+    ...   ...
+    .........
+    .........
+     .......
+      5..5.
+      .. ..
+     ... ...
+    a......a.
+    .........
+    `,
+    links: []
   }
 }
 
