@@ -246,7 +246,7 @@ function* tokens(expr: string): Generator<[Position, string], void, void> {
   }
 }
 
-function* positiveDigitToken(
+export function* positiveDigitToken(
   expr: string
 ): Generator<[Position, number], void, void> {
   for (const [pos, token] of tokens(expr)) {

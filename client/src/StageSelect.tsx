@@ -30,8 +30,8 @@ export default function StageSelect(): ReactNode {
                 マスターズ ゼリー（中央下が青）
               </option>
             </optgroup>
-            <optgroup label="年始">
-              <option value="newyear_1_1">年始1 wave1</option>
+            <optgroup label="ズボラ姫たちの年はじめ">
+              <option value="newyear_1_1">年はじめ1 wave1</option>
             </optgroup>
           </select>
         </div>
