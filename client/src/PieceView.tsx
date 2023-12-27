@@ -228,7 +228,11 @@ export default function PieceView({
       {...doubleTapBind}
       ref={el}
     >
-      <animated.div className="piece" {...bind()} style={{ x, y }}>
+      <animated.div
+        className={classNames('piece', { 'is-out': piece.face === Kind.Out })}
+        {...bind()}
+        style={{ x, y }}
+      >
         <div
           className={classNames('piece-image', classes, {
             'is-suggested': isSuggested

@@ -14,7 +14,14 @@
     position: relative;
     width: 100%;
     padding-bottom: 100%;
-    touch-action: none;
+
+    &.is-out {
+      pointer-events: none;
+    }
+
+    &:not(.is-out) {
+      touch-action: none;
+    }
   }
 
   .piece-image {
