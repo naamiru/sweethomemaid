@@ -36,7 +36,11 @@ export default function KillerOptions(): ReactNode {
           </p>
           <p className="control">
             <span className="select is-small">
-              <select value={killers[0]} onChange={changeHandlers[0]}>
+              <select
+                name="bomb-killer"
+                value={killers[0]}
+                onChange={changeHandlers[0]}
+              >
                 <option value="0">0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -53,7 +57,11 @@ export default function KillerOptions(): ReactNode {
           </p>
           <p className="control">
             <span className="select is-small">
-              <select value={killers[1]} onChange={changeHandlers[1]}>
+              <select
+                name="rocket-killer"
+                value={killers[1]}
+                onChange={changeHandlers[1]}
+              >
                 <option value="0">0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -70,7 +78,11 @@ export default function KillerOptions(): ReactNode {
           </p>
           <p className="control">
             <span className="select is-small">
-              <select value={killers[2]} onChange={changeHandlers[2]}>
+              <select
+                name="missile-killer"
+                value={killers[2]}
+                onChange={changeHandlers[2]}
+              >
                 <option value="0">0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>

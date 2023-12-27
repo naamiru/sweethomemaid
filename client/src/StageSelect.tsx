@@ -18,7 +18,7 @@ export default function StageSelect(): ReactNode {
       </div>
       <div className="control is-expanded">
         <div className="select is-fullwidth">
-          <select value={stage} onChange={handleChange}>
+          <select name="stage" value={stage} onChange={handleChange}>
             <optgroup label="マスターズランキング">
               <option value="masters_6_1">
                 マスターズ ゼリー（中央下が緑）
