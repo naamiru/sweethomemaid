@@ -250,7 +250,7 @@ export function* positiveDigitToken(
   expr: string
 ): Generator<[Position, number], void, void> {
   for (const [pos, token] of tokens(expr)) {
-    if (/^[a-f\d]+$/.test(token)) {
+    if (/^[a-z\d]+$/.test(token)) {
       const value = parseInt(token, 36)
       if (value > 0) yield [pos, value]
     }

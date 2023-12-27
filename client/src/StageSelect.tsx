@@ -32,6 +32,7 @@ export default function StageSelect(): ReactNode {
             </optgroup>
             <optgroup label="ズボラ姫たちの年はじめ">
               <option value="newyear_1_1">年はじめ1 wave1</option>
+              <option value="newyear_1_2">年はじめ1 wave2</option>
             </optgroup>
           </select>
         </div>
