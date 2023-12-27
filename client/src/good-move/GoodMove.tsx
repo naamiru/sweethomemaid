@@ -12,6 +12,7 @@ import bombImage from '../assets/piece-images/b.png'
 import specialImage from '../assets/piece-images/n.png'
 import rocketImage from '../assets/piece-images/rh.png'
 import crossRocketsImage from '../assets/skills/himariko_bath.png'
+import hRocketImage from '../assets/skills/himariko_newyear.png'
 import swapImage from '../assets/skills/iroha_bunny.png'
 import h3RocketsImage from '../assets/skills/nia_bath.png'
 import './GoodMove.css'
@@ -53,6 +54,7 @@ export default function GoodMove(): ReactNode {
     })
     worker.onmessage = event => {
       setGoodMoves(event.data)
+      setSelectedMoves(event.data[2]?.hasSpecial ?? [])
     }
     worker.postMessage({
       board: serialize(board),
@@ -83,7 +85,8 @@ export default function GoodMove(): ReactNode {
               [
                 [Skill.Swap, swapImage],
                 [Skill.H3Rockets, h3RocketsImage],
-                [Skill.CrossRockets, crossRocketsImage]
+                [Skill.CrossRockets, crossRocketsImage],
+                [Skill.HRocket, hRocketImage]
               ] as const
             ).map(([skill, image]) => (
               <img
@@ -135,9 +138,13 @@ export default function GoodMove(): ReactNode {
   )
 }
 
-const SkillIconName: Record<Skill.CrossRockets | Skill.H3Rockets, string> = {
+const SkillIconName: Record<
+  Skill.CrossRockets | Skill.H3Rockets | Skill.HRocket,
+  string
+> = {
   [Skill.CrossRockets]: 'cross-rockets',
-  [Skill.H3Rockets]: 'h3-rockets'
+  [Skill.H3Rockets]: 'h3-rockets',
+  [Skill.HRocket]: 'h-rocket'
 }
 
 const DirectionIconName: Record<Direction, string> = {
@@ -178,7 +185,9 @@ function GoodMoveOverlay({ moves }: { moves: Move[] }): ReactNode {
       x: (move.position[0] - 0.5) * unit,
       y: (move.position[1] - 0.5) * unit,
       icon:
-        move.skill === Skill.CrossRockets || move.skill === Skill.H3Rockets
+        move.skill === Skill.CrossRockets ||
+        move.skill === Skill.H3Rockets ||
+        move.skill === Skill.HRocket
           ? SkillIconName[move.skill]
           : DirectionIconName[move.direction],
       direction: DirectionName[move.direction],

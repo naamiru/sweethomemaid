@@ -21,7 +21,8 @@ export enum Direction {
 export enum Skill {
   Swap = 1 << 0,
   CrossRockets = 1 << 1,
-  H3Rockets = 1 << 2
+  H3Rockets = 1 << 2,
+  HRocket = 1 << 3
 }
 
 export class Move {
@@ -1000,7 +1001,7 @@ function applyBoosterEffects(
 function skillEffects(
   board: Board,
   position: Position,
-  skill: Skill.CrossRockets | Skill.H3Rockets
+  skill: Skill.CrossRockets | Skill.H3Rockets | Skill.HRocket
 ): Map<Booster | Kind.Empty, Position[]> {
   const positions = new GeneralSet(positionToInt)
   function add(pos: Position): void {
@@ -1022,6 +1023,10 @@ function skillEffects(
       for (let x = 1; x <= board.width; x++) {
         add([x, y])
       }
+    }
+  } else if (skill === Skill.HRocket) {
+    for (let x = 1; x <= board.width; x++) {
+      add([x, position[1]])
     }
   }
 

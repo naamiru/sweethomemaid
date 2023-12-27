@@ -93,7 +93,8 @@
   }
 
   .fa-cross-rockets::before,
-  .fa-h3-rockets::before {
+  .fa-h3-rockets::before,
+  .fa-h-rocket::before {
     content: '';
     display: inline-block;
     width: calc(var(--unit) / 2);
@@ -109,5 +110,8 @@
   }
   .fa-h3-rockets::before {
     background-image: url('../assets/skills/nia_bath.png');
+  }
+  .fa-h-rocket::before {
+    background-image: url('../assets/skills/himariko_newyear.png');
   }
 }
