@@ -1856,6 +1856,19 @@ files = [
 diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
+name = "pyscreeze"
+version = "0.1.30"
+description = "A simple, cross-platform screenshot module for Python 2 and 3."
+optional = false
+python-versions = "*"
+files = [
+    {file = "PyScreeze-0.1.30.tar.gz", hash = "sha256:74098ad048e76a6231dcfa6243343af94459b8c829f9ccb7a44a5d3b147a67d1"},
+]
+
+[package.dependencies]
+Pillow = {version = ">=9.3.0", markers = "python_version == \"3.11\""}
+
+[[package]]
 name = "python-dateutil"
 version = "2.8.2"
 description = "Extensions to the standard Python datetime module"
@@ -2661,4 +2674,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.6"
-content-hash = "6e1117a962e3a32dccc2190cbd873704b053c38e1cda979dacb4d6720dd66514"
+content-hash = "2f22e54ddd7b320529832f4b7dad569c8bd88d77e520aba180cd878393d7f40a"
