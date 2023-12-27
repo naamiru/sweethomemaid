@@ -54,7 +54,6 @@ export default function GoodMove(): ReactNode {
     })
     worker.onmessage = event => {
       setGoodMoves(event.data)
-      setSelectedMoves(event.data[2]?.hasSpecial ?? [])
     }
     worker.postMessage({
       board: serialize(board),
