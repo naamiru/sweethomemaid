@@ -6,6 +6,7 @@ export const stages = [
   'masters_6_3',
   'newyear_1_1',
   'newyear_1_2',
+  'newyear_2',
   'newyear_3',
   'newyear_4_1',
   'newyear_4_2'
@@ -559,6 +560,59 @@ const configs: Record<StageName, BoardConfig> = {
       [
         [8, 2],
         [8, 1]
+      ]
+    ]
+  },
+  newyear_2: {
+    colors: `
+    .....ppba
+    .....aprp
+    .....pbar
+    .....rrbp
+
+    .........
+    .........
+    .........
+    .........
+    `,
+    mikans: `
+    a..5.....
+    .........
+    a..5.....
+    .........
+
+    ...k...k.
+    .........
+    ...k...k.
+    .........
+    `,
+    upstream: `
+    rrrrrrrrr
+    rrrrrrrrr
+    rrrrrrrrr
+    rrrrrrrrr
+
+    lllllllll
+    lllllllll
+    lllllllll
+    lllllllll
+    `,
+    links: [
+      [
+        [1, 6],
+        [1, 1]
+      ],
+      [
+        [1, 7],
+        [1, 2]
+      ],
+      [
+        [1, 8],
+        [1, 3]
+      ],
+      [
+        [1, 9],
+        [1, 4]
       ]
     ]
   },
