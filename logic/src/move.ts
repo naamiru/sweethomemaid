@@ -1322,11 +1322,11 @@ export function fall(
         followLink(pos, false)
       }
 
-      // 移動でできた空マスの内、上が空マスでないものを次の対象とする
+      // 移動でできた空マスの内、上流が空マスでないものを次の対象とする
       targetPositions = newEmptyPositions.filter(
         pos =>
           board.piece(pos).face === Kind.Empty &&
-          board.piece([pos[0], pos[1] - 1]).face !== Kind.Empty
+          board.piece(getUpstream(board, pos)).face !== Kind.Empty
       )
 
       delay += 1

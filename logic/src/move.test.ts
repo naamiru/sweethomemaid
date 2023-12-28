@@ -2265,4 +2265,47 @@ describe('applyMove', () => {
       createBoard('xxrrr', { jelly: '00001' })
     )
   })
+
+  test('ミサイル作成 下落下', () => {
+    expectMove(
+      `
+      yrg
+      gry
+      ryg
+      gry
+      `,
+      new Move([1, 3], Direction.Right),
+      `
+      yxg
+      gxy
+      yxg
+      gHy
+      `
+    )
+  })
+
+  test('ミサイル作成 右落下', () => {
+    expectMove(
+      createBoard(
+        `
+        gygy
+        rryr
+        ygrg
+        `,
+        {
+          upstreams: `
+          llll
+          llll
+          llll
+          `
+        }
+      ),
+      new Move([3, 3], Direction.Up),
+      `
+      gygy
+      xxxV
+      ygyg
+      `
+    )
+  })
 })
