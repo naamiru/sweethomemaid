@@ -276,7 +276,7 @@ function pieceClasses(piece: Piece): string[] {
     if (piece.face.kind === Kind.Mikan) {
       if (piece.face.position[0] === 0 && piece.face.position[1] === 0) {
         classes.push('is-mikan')
-        classes.push('is-mikan-' + String(Math.min(piece.face.count, 20)))
+        classes.push('is-mikan-' + String(Math.min(piece.face.count, 30)))
       }
     } else {
       classes.push(

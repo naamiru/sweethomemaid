@@ -5,7 +5,8 @@ export const stages = [
   'masters_6_2',
   'masters_6_3',
   'newyear_1_1',
-  'newyear_1_2'
+  'newyear_1_2',
+  'newyear_3'
 ] as const
 
 export type StageName = (typeof stages)[number]
@@ -556,6 +557,47 @@ const configs: Record<StageName, BoardConfig> = {
       [
         [8, 2],
         [8, 1]
+      ]
+    ]
+  },
+  newyear_3: {
+    colors: `
+    .. bbp ..
+    .. raa ..
+       pbp
+    parpraaba
+    aabb rbpp
+    ppbrpbarr
+       paa
+    .. pbp ..
+    .. brb ..
+    `,
+    mikans: `
+    k. ... k.
+    .. ... ..
+       ...
+    .........
+    .... ....
+    .........
+       ...
+    u. ... u.
+    .. ... ..
+    `,
+    fallFrom: `
+    .. ... ..
+    .. ... ..
+       ...
+    .........
+    .... ....
+    ....l....
+       ...
+    .. ... ..
+    .. ... ..
+    `,
+    links: [
+      [
+        [8, 5],
+        [8, 4]
       ]
     ]
   }
