@@ -1,12 +1,5 @@
-import { type Board, type Position } from './board'
-import {
-  BoardMove,
-  Direction,
-  Move,
-  canMove,
-  findMatches,
-  positionToInt
-} from './move'
+import { Direction, type Board, type Position } from './board'
+import { BoardMove, Move, canMove, findMatches, positionToInt } from './move'
 import { GeneralSet } from './utils'
 
 /**

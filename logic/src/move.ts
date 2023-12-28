@@ -1,5 +1,6 @@
 import PriorityQueue from 'ts-priority-queue'
 import {
+  Direction,
   Kind,
   Piece,
   isColor,
@@ -9,14 +10,6 @@ import {
   type Position
 } from './board'
 import { GeneralMap, GeneralSet, range } from './utils'
-
-export enum Direction {
-  Up,
-  Down,
-  Left,
-  Right,
-  Zero
-}
 
 export enum Skill {
   Swap = 1 << 0,
@@ -1134,7 +1127,7 @@ function matchedPiece(
 }
 
 /**
- * 落下処理。下向き重力のみ対応
+ * 落下処理
  * */
 export function fall(
   board: Board,
@@ -1167,12 +1160,15 @@ export function fall(
   }
   function isMostUpstream(board: Board, position: Position): boolean {
     if (warpLinks.has(position)) return false
-    const [x, y] = position
-    return (
-      board.piece([x - 1, y - 1]).face === Kind.Out &&
-      board.piece([x, y - 1]).face === Kind.Out &&
-      board.piece([x + 1, y - 1]).face === Kind.Out
-    )
+
+    const upstream = getUpstream(board, position)
+    if (board.piece(upstream).face !== Kind.Out) return false
+
+    for (const adjacent of getUpstremAdjacents(board, position)) {
+      if (board.piece(adjacent).face !== Kind.Out) return false
+    }
+
+    return true
   }
 
   // ループカウント
@@ -1208,7 +1204,7 @@ export function fall(
         piece: Piece,
         from: Position,
         to: Position,
-        skilAngledLink = false
+        skipAngledLink = false
       ): void {
         if (movingPieces.has(piece)) return
 
@@ -1219,16 +1215,25 @@ export function fall(
         } else {
           newEmptyPositions.push(from)
         }
+
         movingPieces.add(piece)
         if (!moveDelays.has(piece)) moveDelays.set(piece, delay)
-        if (from[0] !== to[0] || from[0] !== to[0]) {
+
+        const upstream = board.upstream(from)
+        if (
+          ((upstream === Direction.Down || upstream === Direction.Up) &&
+            from[0] !== to[0]) ||
+          ((upstream === Direction.Right || upstream === Direction.Left) &&
+            from[1] !== to[1])
+        ) {
           angleMovedPieces.add(piece)
         }
+
         board.setPiece(to, piece)
 
         if (!isFromOut) {
           board.setPiece(from, new Piece(Kind.Empty))
-          followLink(from, skilAngledLink)
+          followLink(from, skipAngledLink)
         }
       }
 
@@ -1236,13 +1241,13 @@ export function fall(
         if (board.piece(pos).face !== Kind.Empty) return
 
         if (isMostUpstream(board, pos)) {
-          fallPiece(new Piece(Kind.Unknown), [pos[0], pos[1] - 1], pos)
+          fallPiece(new Piece(Kind.Unknown), getUpstream(board, pos), pos)
           return
         }
 
         let upstreams = board.getLinkedUpstreams(pos)
         // 上流が落下不可ピースの時のみ斜め移動リンクが機能する
-        const upPiece = board.piece([pos[0], pos[1] - 1])
+        const upPiece = board.piece(getUpstream(board, pos))
         if (isFallablePiece(upPiece) || upPiece.face === Kind.Empty) {
           upstreams = upstreams.filter(upstream => upstream[0] === pos[0])
         } else {
@@ -1267,7 +1272,7 @@ export function fall(
       targetPositions = targetPositions.filter(pos => {
         let upstream = warpLinks.get(pos)
         if (upstream === undefined) {
-          upstream = [pos[0], pos[1] - 1]
+          upstream = getUpstream(board, pos)
         }
         const piece: Piece = board.piece(upstream)
         if (isMostUpstream(board, pos) || isFallablePiece(piece)) {
@@ -1284,11 +1289,7 @@ export function fall(
           piece: Piece
           from: Position
           priority: number
-        }> = [
-          [-1, -1],
-          [1, -1]
-        ].map(([dx, dy]) => {
-          const from: Position = [pos[0] + dx, pos[1] + dy]
+        }> = getUpstremAdjacents(board, pos).map(from => {
           const piece = board.piece(from)
           let priority = -1
           if (isFallablePiece(piece) && groundedPositions.has(from)) {
@@ -1370,45 +1371,87 @@ function findMovableGroundedPositions(
   board: Board,
   isFallablePiece: (piece: Piece) => boolean
 ): Position[] {
-  const positions: Position[] = []
-  for (let x = 1; x <= board.width; x++) {
-    let isGrounded = true
-    for (let y = board.height; y >= 1; y--) {
-      const piece = board.piece([x, y])
-      if (
-        piece.face === Kind.Out ||
-        piece.chain > 0 ||
-        piece.kind === Kind.Present ||
-        piece.kind === Kind.Mikan
-      ) {
-        isGrounded = true
-      } else if (piece.face === Kind.Empty) {
-        isGrounded = false
-      } else {
-        if (isGrounded && isFallablePiece(piece)) {
-          positions.push([x, y])
-        }
-      }
+  // fallable な piece のうち、fallable または empty な piece の upstream でないものは接地している。
+  // それらの upstream を fallable な間たどる。
+
+  const upstreams = new GeneralSet(positionToInt)
+  for (const pos of board.allPositions()) {
+    const piece = board.piece(pos)
+    if (isFallablePiece(piece) || piece.face === Kind.Empty) {
+      upstreams.add(getUpstream(board, pos))
     }
   }
-  return positions
+
+  const positions = new GeneralSet(positionToInt)
+  function traverse(position: Position): void {
+    if (positions.has(position)) return
+    const piece = board.piece(position)
+    if (!isFallablePiece(piece)) return
+    positions.add(position)
+    traverse(getUpstream(board, position))
+  }
+
+  for (const pos of board.allPositions()) {
+    if (!upstreams.has(pos)) {
+      traverse(pos)
+    }
+  }
+
+  return [...positions]
 }
 
 /** 上流が空マスでない空マス。落下処理の対象になる */
 function findActiveEmptyPositions(board: Board): Position[] {
   const positions: Position[] = []
-  for (let x = 1; x <= board.width; x++) {
-    let isEmpty = false
-    for (let y = 1; y <= board.height; y++) {
-      if (board.piece([x, y]).face === Kind.Empty) {
-        if (!isEmpty) {
-          positions.push([x, y])
-        }
-        isEmpty = true
-      }
-    }
+  for (const pos of board.allPositions()) {
+    if (board.piece(pos).face !== Kind.Empty) continue
+    const upstream = getUpstream(board, pos)
+    if (board.piece(upstream).face === Kind.Empty) continue
+    positions.push(pos)
   }
   return positions
+}
+
+function getUpstream(board: Board, position: Position): Position {
+  switch (board.upstream(position)) {
+    case Direction.Up:
+      return [position[0], position[1] - 1]
+    case Direction.Down:
+      return [position[0], position[1] + 1]
+    case Direction.Left:
+      return [position[0] - 1, position[1]]
+    case Direction.Right:
+      return [position[0] + 1, position[1]]
+    default:
+      throw new Error('upstream must not be zero')
+  }
+}
+
+function getUpstremAdjacents(board: Board, position: Position): Position[] {
+  switch (board.upstream(position)) {
+    case Direction.Up:
+      return [
+        [position[0] - 1, position[1] - 1],
+        [position[0] + 1, position[1] - 1]
+      ]
+    case Direction.Down:
+      return [
+        [position[0] + 1, position[1] + 1],
+        [position[0] - 1, position[1] + 1]
+      ]
+    case Direction.Left:
+      return [
+        [position[0] - 1, position[1] + 1],
+        [position[0] - 1, position[1] - 1]
+      ]
+    case Direction.Right:
+      return [
+        [position[0] + 1, position[1] - 1],
+        [position[0] + 1, position[1] + 1]
+      ]
+    default:
+      throw new Error('upstream must not be zero')
+  }
 }
 
 function fallAt(

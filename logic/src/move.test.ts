@@ -2,6 +2,7 @@ import dedent from 'ts-dedent'
 import { describe, expect, test } from 'vitest'
 import {
   Board,
+  Direction,
   Kind,
   Piece,
   type Face,
@@ -9,7 +10,6 @@ import {
   type Position
 } from './board'
 import {
-  Direction,
   InvalidMove,
   Move,
   Skill,
@@ -31,6 +31,7 @@ function createBoard(
     jelly?: string
     mikan?: string
     killers?: Killers
+    upstreams?: string
   } = {}
 ): Board {
   const tokens = dedent(expr)
@@ -44,37 +45,15 @@ function createBoard(
     }
   }
 
-  if (options.link !== undefined) {
-    updateLink(board, options.link)
-  }
-
-  if (options.fallFrom !== undefined) {
-    updateFallFrom(board, options.fallFrom)
-  }
-
-  if (options.mouse !== undefined) {
-    updateMouse(board, options.mouse)
-  }
-
-  if (options.ice !== undefined) {
-    updateIce(board, options.ice)
-  }
-
-  if (options.chain !== undefined) {
-    updateChain(board, options.chain)
-  }
-
-  if (options.jelly !== undefined) {
-    updateJelly(board, options.jelly)
-  }
-
-  if (options.mikan !== undefined) {
-    updateMikan(board, options.mikan)
-  }
-
-  if (options.killers !== undefined) {
-    board.killers = options.killers
-  }
+  if (options.link !== undefined) updateLink(board, options.link)
+  if (options.fallFrom !== undefined) updateFallFrom(board, options.fallFrom)
+  if (options.mouse !== undefined) updateMouse(board, options.mouse)
+  if (options.ice !== undefined) updateIce(board, options.ice)
+  if (options.chain !== undefined) updateChain(board, options.chain)
+  if (options.jelly !== undefined) updateJelly(board, options.jelly)
+  if (options.mikan !== undefined) updateMikan(board, options.mikan)
+  if (options.killers !== undefined) board.killers = options.killers
+  if (options.upstreams !== undefined) updateUpstream(board, options.upstreams)
 
   return board
 }
@@ -174,6 +153,20 @@ function updateMikan(board: Board, expr: string): void {
           piece.jelly
         )
       )
+    }
+  }
+}
+
+function updateUpstream(board: Board, expr: string): void {
+  for (const [[x, y], token] of tokens(expr)) {
+    if (token === 'u') {
+      board.upstreams[x][y] = Direction.Up
+    } else if (token === 'd') {
+      board.upstreams[x][y] = Direction.Down
+    } else if (token === 'l') {
+      board.upstreams[x][y] = Direction.Left
+    } else if (token === 'r') {
+      board.upstreams[x][y] = Direction.Right
     }
   }
 }
@@ -822,7 +815,7 @@ describe('findMatch', () => {
   })
 })
 
-describe('fallWithChain', () => {
+describe('fall', () => {
   function expectFall(initial: Board, expected: Board): void {
     if (initial.links === undefined)
       initial.links = new GeneralMap(positionToInt)
@@ -1275,6 +1268,279 @@ describe('fallWithChain', () => {
         xx
         rb
         yg
+        `
+      )
+    )
+  })
+
+  test('上への落下', () => {
+    expectFall(
+      createBoard(
+        `
+        ..
+        yg
+         r
+        `,
+        {
+          upstreams: `
+          dd
+          dd
+          dd
+          `
+        }
+      ),
+      createBoard(
+        `
+        yg
+        xr
+         x
+        `
+      )
+    )
+  })
+
+  test('右への落下', () => {
+    expectFall(
+      createBoard(
+        `
+        rg.
+         y.
+        `,
+        {
+          upstreams: `
+          lll
+          lll
+          `
+        }
+      ),
+      createBoard(
+        `
+        xrg
+         xy
+        `
+      )
+    )
+  })
+
+  test('左への落下', () => {
+    expectFall(
+      createBoard(
+        `
+        .gr
+        .y
+        `,
+        {
+          upstreams: `
+          rrr
+          rrr
+          `
+        }
+      ),
+      createBoard(
+        `
+        grx
+        yx
+        `
+      )
+    )
+  })
+
+  test('上に落下後右に落下', () => {
+    expectFall(
+      createBoard(
+        `
+        br.
+        g
+        `,
+        {
+          upstreams: `
+          dll
+          d
+          `
+        }
+      ),
+      createBoard(
+        `
+        gbr
+        x
+        `
+      )
+    )
+  })
+
+  test('上落下時の左右優先順位 右', () => {
+    expectFall(
+      createBoard(
+        `
+        _.
+        r b
+        `,
+        {
+          upstreams: `
+          ddd
+          ddd
+          `,
+          fallFrom: `
+          _r
+          . .
+          `
+        }
+      ),
+      createBoard(
+        `
+        _r
+        x b
+        `
+      )
+    )
+  })
+
+  test('上落下時の左右優先順位 左', () => {
+    expectFall(
+      createBoard(
+        `
+        _._
+        r b
+        `,
+        {
+          upstreams: `
+          ddd
+          ddd
+          `,
+          fallFrom: `
+          _l_
+          . .
+          `
+        }
+      ),
+      createBoard(
+        `
+        _b_
+        r x
+        `
+      )
+    )
+  })
+
+  test('右落下時の左右優先順位 右', () => {
+    expectFall(
+      createBoard(
+        `
+        r_
+         .
+        b
+        `,
+        {
+          upstreams: `
+          ll
+          ll
+          ll
+          `,
+          fallFrom: `
+          .
+           r
+          .
+          `
+        }
+      ),
+      createBoard(
+        `
+        x_
+         r
+        b
+        `
+      )
+    )
+  })
+
+  test('右落下時の左右優先順位 左', () => {
+    expectFall(
+      createBoard(
+        `
+        r_
+         .
+        b
+        `,
+        {
+          upstreams: `
+          ll
+          ll
+          ll
+          `,
+          fallFrom: `
+          .
+           l
+          .
+          `
+        }
+      ),
+      createBoard(
+        `
+        r_
+         b
+        x
+        `
+      )
+    )
+  })
+
+  test('左落下時の左右優先順位 右', () => {
+    expectFall(
+      createBoard(
+        `
+        _r
+        .
+         b
+        `,
+        {
+          upstreams: `
+          rr
+          rr
+          rr
+          `,
+          fallFrom: `
+          _.
+          r
+           .
+          `
+        }
+      ),
+      createBoard(
+        `
+        _r
+        b
+         x
+        `
+      )
+    )
+  })
+
+  test('左落下時の左右優先順位 左', () => {
+    expectFall(
+      createBoard(
+        `
+        _r
+        .
+         b
+        `,
+        {
+          upstreams: `
+          rr
+          rr
+          rr
+          `,
+          fallFrom: `
+          _.
+          l
+           .
+          `
+        }
+      ),
+      createBoard(
+        `
+        _x
+        r
+         b
         `
       )
     )

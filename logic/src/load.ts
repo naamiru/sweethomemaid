@@ -1,5 +1,12 @@
 import dedent from 'ts-dedent'
-import { Board, Kind, Piece, type Face, type Position } from './board'
+import {
+  Board,
+  Direction,
+  Kind,
+  Piece,
+  type Face,
+  type Position
+} from './board'
 import { positionToInt } from './move'
 import { GeneralMap, GeneralSet } from './utils'
 export type BoardConfig = {
@@ -15,6 +22,7 @@ export type BoardConfig = {
   mikans?: string
   links?: Array<[Position, Position]>
   fallFrom?: string
+  upstream?: string
 }
 
 export function load(config: BoardConfig): Board {
@@ -29,6 +37,7 @@ export function load(config: BoardConfig): Board {
   if (config.mikans !== undefined) updateMikan(board, config.mikans)
   if (config.links !== undefined) updateLink(board, config.links)
   if (config.fallFrom !== undefined) updateFallFrom(board, config.fallFrom)
+  if (config.upstream !== undefined) updateUpstream(board, config.upstream)
 
   return board
 }
@@ -175,6 +184,20 @@ function updateFallFrom(board: Board, expr: string): void {
     }
   }
   board.fallFromLeftPositions = fallFromLeftPositions
+}
+
+function updateUpstream(board: Board, expr: string): void {
+  for (const [[x, y], token] of tokens(expr)) {
+    if (token === 'u') {
+      board.upstreams[x][y] = Direction.Up
+    } else if (token === 'd') {
+      board.upstreams[x][y] = Direction.Down
+    } else if (token === 'l') {
+      board.upstreams[x][y] = Direction.Left
+    } else if (token === 'r') {
+      board.upstreams[x][y] = Direction.Right
+    }
+  }
 }
 
 function* tokens(expr: string): Generator<[Position, string], void, void> {

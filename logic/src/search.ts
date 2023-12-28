@@ -1,13 +1,5 @@
-import { Kind, type Board, type Piece } from './board'
-import {
-  BoardMove,
-  Direction,
-  InvalidMove,
-  Move,
-  Skill,
-  applyMove,
-  canMove
-} from './move'
+import { Direction, Kind, type Board, type Piece } from './board'
+import { BoardMove, InvalidMove, Move, Skill, applyMove, canMove } from './move'
 
 type Condition = (board: Board) => boolean
 type Path = Move[]

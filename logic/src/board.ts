@@ -109,9 +109,18 @@ export type Killers = {
 
 export type Position = [number, number]
 
+export enum Direction {
+  Up,
+  Down,
+  Left,
+  Right,
+  Zero
+}
+
 export class Board {
   constructor(
     public pieces: Piece[][],
+    public upstreams: Direction[][],
     public killers: Killers,
 
     // ピースがリンクして落下する位置。
@@ -128,6 +137,9 @@ export class Board {
     return new Board(
       Array.from({ length: width + 2 }, () =>
         Array.from({ length: height + 2 }, () => new Piece(Kind.Out))
+      ),
+      Array.from({ length: width + 2 }, () =>
+        Array.from({ length: height + 2 }, () => Direction.Up)
       ),
       {}
     )
@@ -174,6 +186,10 @@ export class Board {
     return 0
   }
 
+  upstream(position: Position): Direction {
+    return this.upstreams[position[0]][position[1]]
+  }
+
   getLinkedUpstreams(position: Position): Position[] {
     if (this.links === undefined) return []
     return this.links.get(position) ?? []
@@ -187,6 +203,7 @@ export class Board {
   copy(): Board {
     return new Board(
       this.pieces,
+      this.upstreams,
       this.killers,
       this.links,
       this.fallFromLeftPositions
