@@ -23,7 +23,6 @@ import { GeneralMap, GeneralSet } from './utils'
 function createBoard(
   expr: string,
   options: {
-    upstream?: string
     link?: Array<[Position, Position]>
     fallFrom?: string
     mouse?: string
@@ -43,10 +42,6 @@ function createBoard(
     for (const [x, token] of line.entries()) {
       board.setPiece([x + 1, y + 1], new Piece(parseFace(token, x + 1, y + 1)))
     }
-  }
-
-  if (options.upstream !== undefined) {
-    updateUpstream(board, options.upstream)
   }
 
   if (options.link !== undefined) {
@@ -99,32 +94,6 @@ function parseFace(token: string, x: number, y: number): Face {
   if (token === 'S') return Kind.Special
   if (token === 'x') return Kind.Unknown
   return Kind.Out
-}
-
-function updateUpstream(board: Board, expr: string): void {
-  for (const [[x, y], token] of tokens(expr)) {
-    let diff: [number, number] | undefined
-    if (token === '1') {
-      diff = [-1, -1]
-    } else if (token === '2' || token === 'u') {
-      diff = [0, -1]
-    } else if (token === '3') {
-      diff = [1, -1]
-    } else if (token === '4' || token === 'l') {
-      diff = [-1, 0]
-    } else if (token === '6' || token === 'r') {
-      diff = [1, 0]
-    } else if (token === '7') {
-      diff = [-1, 1]
-    } else if (token === '8' || token === 'd') {
-      diff = [0, 1]
-    } else if (token === '9') {
-      diff = [1, 1]
-    }
-    if (diff !== undefined) {
-      board.setUpstream([x, y], [x + diff[0], y + diff[1]])
-    }
-  }
 }
 
 function updateLink(board: Board, pairs: Array<[Position, Position]>): void {
@@ -848,109 +817,6 @@ describe('findMatch', () => {
       -..-
       -.M-
       -.+-
-      `
-    )
-  })
-})
-
-describe('fall', () => {
-  function expectFall(
-    initial: string,
-    upstream: string,
-    expected: string
-  ): void {
-    const board = createBoard(initial, { upstream })
-    fall(board)
-    const expectedBoard = createBoard(expected)
-    expect(board.pieces).toEqual(expectedBoard.pieces)
-  }
-
-  test('空位置に不明なピースが落下', () => {
-    expectFall(
-      `
-      -.-
-      ---
-      `,
-      '',
-      `
-      -x-
-      ---
-      `
-    )
-  })
-
-  test('空位置に上流のピースが落下', () => {
-    expectFall(
-      `
-      -+-
-      -.-
-      ---
-      `,
-      '',
-      `
-      -x-
-      -+-
-      ---
-      `
-    )
-  })
-
-  test('カスタムフロー', () => {
-    expectFall(
-      `
-      --.-
-      r.r-
-      ----
-      `,
-      `
-      lldd
-      llld
-      llll
-      `,
-      `
-      --r-
-      xxr-
-      ----
-      `
-    )
-  })
-
-  test('直線的な落下が優先 左寄り', () => {
-    expectFall(
-      `
-      -b--
-      -r--
-      -..-
-      `,
-      `
-      uuuu
-      uuuu
-      uu1u
-      `,
-      `
-      -x--
-      -x--
-      -rb-
-      `
-    )
-  })
-
-  test('直線的な落下が優先 右寄り', () => {
-    expectFall(
-      `
-      --b-
-      --r-
-      -..-
-      `,
-      `
-      uuuu
-      uuuu
-      u3uu
-      `,
-      `
-      --x-
-      --x-
-      -br-
       `
     )
   })

@@ -8,7 +8,7 @@ import {
   type Color,
   type Position
 } from './board'
-import { GeneralMap, GeneralSet, partition, range } from './utils'
+import { GeneralMap, GeneralSet, range } from './utils'
 
 export enum Direction {
   Up,
@@ -1133,104 +1133,10 @@ function matchedPiece(
   return new Piece(Kind.Empty)
 }
 
-export function fall(board: Board): boolean {
-  if (board.isChainEnabled()) {
-    return fallWithChain(board)
-  }
-
-  let falled = false
-  while (true) {
-    const pos = findEmpty(board)
-    if (pos === undefined) break
-    falled = true
-    fallAt(board, pos)
-  }
-  return falled
-}
-
-function fallAt(
-  board: Board,
-  position: Position,
-  stop: Position | undefined = undefined
-): void {
-  if (board.isChainEnabled()) {
-    fallAtWithChain(board, position, stop)
-    return
-  }
-
-  if (position === stop) return
-
-  const upstreamPosition = board.upstream(position)
-  const upstreamPiece = board.piece(upstreamPosition)
-
-  if (upstreamPiece.face === Kind.Out) {
-    board.setPiece(position, new Piece(Kind.Unknown))
-    return
-  }
-
-  board.setPiece(position, upstreamPiece)
-  fallAt(board, upstreamPosition, stop)
-}
-
-function findEmpty(board: Board): Position | undefined {
-  for (const pos of getFallablePositions(board)) {
-    if (board.piece(pos).face === Kind.Empty) {
-      return pos
-    }
-  }
-  return undefined
-}
-
-function getFallablePositions(board: Board): Position[] {
-  if (board.fallablePositions !== undefined) {
-    return board.fallablePositions
-  }
-
-  // 下流マスを計算
-  const downstreams: Position[][][] = Array.from(
-    { length: board.width + 2 },
-    () => Array.from({ length: board.height + 2 }, () => [])
-  )
-  for (const pos of board.allPositions()) {
-    if (board.piece(pos).face === Kind.Out) continue
-    const up = board.upstream(pos)
-    if (board.piece(up).face === Kind.Out) continue
-    downstreams[up[0]][up[1]].push(pos)
-  }
-
-  const positions = new GeneralSet(positionToInt)
-
-  function register(root: Position): void {
-    if (positions.has(root)) return
-    positions.add(root)
-
-    // 直線的な下流 -> 斜めな下流 の順で深さ優先で下流を登録
-    const [straights, angles] = partition(
-      downstreams[root[0]][root[1]],
-      pos => pos[0] === root[0] || pos[1] === root[1]
-    )
-    for (const pos of straights) register(pos)
-    for (const pos of angles) register(pos)
-  }
-
-  // 最上流マスから順次処理
-  for (const pos of board.allPositions()) {
-    if (
-      board.piece(pos).face !== Kind.Out &&
-      board.piece(board.upstream(pos)).face === Kind.Out
-    ) {
-      register(pos)
-    }
-  }
-
-  board.fallablePositions = [...positions]
-  return board.fallablePositions
-}
-
 /**
- * 鎖に対応できる暫定的な落下処理。下向き重力のみ対応
+ * 落下処理。下向き重力のみ対応
  * */
-function fallWithChain(
+export function fall(
   board: Board,
   stop: Position | undefined = undefined
 ): boolean {
@@ -1505,12 +1411,12 @@ function findActiveEmptyPositions(board: Board): Position[] {
   return positions
 }
 
-function fallAtWithChain(
+function fallAt(
   board: Board,
   position: Position,
   stop: Position | undefined = undefined
 ): void {
   if (position === stop) return
   board.setPiece(position, new Piece(Kind.Empty))
-  fallWithChain(board, stop)
+  fall(board, stop)
 }

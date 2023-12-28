@@ -112,22 +112,15 @@ export type Position = [number, number]
 export class Board {
   constructor(
     public pieces: Piece[][],
-    public upstreams: Position[][],
     public killers: Killers,
-
-    // 落下処理を行う順に並べた位置。
-    // move.ts でのみ使うが、キャッシュのため Board インスタンスに持たせる
-    public fallablePositions: Position[] | undefined = undefined,
 
     // ピースがリンクして落下する位置。
     // 下流 -> [上流]
     // 前にある位置を優先
-    // 鎖用落下処理で使用
     public links: GeneralMap<Position, Position[]> | undefined = undefined,
 
     // 優先度が同じ場合に右上、左上のどちらから落下してくるか
     // 左上から落下する位置を保持する。
-    // 鎖用落下処理で使用
     public fallFromLeftPositions: GeneralSet<Position> | undefined = undefined
   ) {}
 
@@ -135,9 +128,6 @@ export class Board {
     return new Board(
       Array.from({ length: width + 2 }, () =>
         Array.from({ length: height + 2 }, () => new Piece(Kind.Out))
-      ),
-      Array.from({ length: width + 2 }, (_, x) =>
-        Array.from({ length: height + 2 }, (_, y) => [x, y - 1])
       ),
       {}
     )
@@ -164,14 +154,6 @@ export class Board {
     ]
   }
 
-  upstream(position: Position): Position {
-    return this.upstreams[position[0]][position[1]]
-  }
-
-  setUpstream(position: Position, upstream: Position): void {
-    this.upstreams[position[0]][position[1]] = upstream
-  }
-
   *allPositions(): Generator<Position, void, void> {
     for (let x = 1; x <= this.width; x++) {
       for (let y = 1; y <= this.height; y++) {
@@ -192,10 +174,6 @@ export class Board {
     return 0
   }
 
-  isChainEnabled(): boolean {
-    return this.links !== undefined
-  }
-
   getLinkedUpstreams(position: Position): Position[] {
     if (this.links === undefined) return []
     return this.links.get(position) ?? []
@@ -209,9 +187,7 @@ export class Board {
   copy(): Board {
     return new Board(
       this.pieces,
-      this.upstreams,
       this.killers,
-      this.fallablePositions,
       this.links,
       this.fallFromLeftPositions
     )

@@ -13,8 +13,6 @@ export type BoardConfig = {
   jellies?: string
   presents?: string
   mikans?: string
-  upstreams?: string
-  warps?: string
   links?: Array<[Position, Position]>
   fallFrom?: string
 }
@@ -29,8 +27,6 @@ export function load(config: BoardConfig): Board {
   if (config.jellies !== undefined) updateJelly(board, config.jellies)
   if (config.presents !== undefined) updatePresent(board, config.presents)
   if (config.mikans !== undefined) updateMikan(board, config.mikans)
-  if (config.upstreams !== undefined) updateUpstream(board, config.upstreams)
-  if (config.warps !== undefined) updateWarp(board, config.warps)
   if (config.links !== undefined) updateLink(board, config.links)
   if (config.fallFrom !== undefined) updateFallFrom(board, config.fallFrom)
 
@@ -158,65 +154,6 @@ function updateMikan(board: Board, expr: string): void {
         )
       )
     }
-  }
-}
-
-function updateUpstream(board: Board, expr: string): void {
-  for (const [pos, token] of tokens(expr)) {
-    let diff: [number, number] | undefined
-    if (token === '1') {
-      diff = [-1, -1]
-    } else if (token === '2' || token === 'u') {
-      diff = [0, -1]
-    } else if (token === '3') {
-      diff = [1, -1]
-    } else if (token === '4' || token === 'l') {
-      diff = [-1, 0]
-    } else if (token === '6' || token === 'r') {
-      diff = [1, 0]
-    } else if (token === '7') {
-      diff = [-1, 1]
-    } else if (token === '8' || token === 'd') {
-      diff = [0, 1]
-    } else if (token === '9') {
-      diff = [1, 1]
-    }
-    if (diff !== undefined) {
-      board.setUpstream(pos, [pos[0] + diff[0], pos[1] + diff[1]])
-      const piece = board.piece(pos)
-      if (piece.face === Kind.Out) {
-        board.setPiece(
-          pos,
-          new Piece(Kind.Unknown, piece.ice, piece.chain, piece.jelly)
-        )
-      }
-    }
-  }
-}
-
-function updateWarp(board: Board, expr: string): void {
-  const warps = new Map<string, Array<[number, number]>>()
-  for (const [pos, token] of tokens(expr)) {
-    if (!/^[a-z]$/i.test(token)) continue
-    const key = token.toLowerCase()
-    let positions = warps.get(key)
-    if (positions === undefined) {
-      positions = []
-      warps.set(key, positions)
-    }
-    if (token === key) {
-      // token は小文字 -> ワープ元
-      positions.unshift(pos)
-    } else {
-      // token は大文字 -> ワープ先
-      positions.push(pos)
-    }
-  }
-
-  for (const positions of warps.values()) {
-    if (positions.length !== 2) continue
-    const [from, to] = positions
-    board.setUpstream(to, from)
   }
 }
 

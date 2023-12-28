@@ -6,18 +6,14 @@ type PieceData = { face: Face; ice: number; chain: number; jelly: number }
 
 export function serialize(board: Board): {
   piece: PieceData[][]
-  upstreams: Position[][]
   killers: Killers
-  fallablePositions: Position[] | undefined
-  links: Array<[Position, Position[]]> | undefined
+  links: Array<[Position, Position[]]>
   fallFromLeftPositions: Position[]
 } {
   return {
     piece: board.pieces.map(col => col.map(serializePiece)),
-    upstreams: board.upstreams,
     killers: board.killers,
-    fallablePositions: board.fallablePositions,
-    links: board.links === undefined ? undefined : [...board.links.entries()],
+    links: board.links === undefined ? [] : [...board.links.entries()],
     fallFromLeftPositions: [...(board.fallFromLeftPositions ?? [])]
   }
 }
@@ -38,17 +34,13 @@ function serializePiece(piece: Piece): {
 
 export function deserialize({
   piece,
-  upstreams,
   killers,
-  fallablePositions,
   links,
   fallFromLeftPositions
 }: {
   piece: PieceData[][]
-  upstreams: Position[][]
   killers: Killers
-  fallablePositions: Position[] | undefined
-  links: Array<[Position, Position[]]> | undefined
+  links: Array<[Position, Position[]]>
   fallFromLeftPositions: Position[]
 }): Board {
   return new Board(
@@ -57,10 +49,8 @@ export function deserialize({
         ({ face, ice, chain, jelly }) => new Piece(face, ice, chain, jelly)
       )
     ),
-    upstreams,
     killers,
-    fallablePositions,
-    links === undefined ? undefined : new GeneralMap(positionToInt, links),
+    new GeneralMap(positionToInt, links),
     new GeneralSet(positionToInt, fallFromLeftPositions)
   )
 }
