@@ -326,25 +326,29 @@
     &.is-mikan-11,
     &.is-mikan-12,
     &.is-mikan-13,
-    &.is-mikan-14,
+    &.is-mikan-14 {
+      background-image: url('./assets/piece-images/mikan10.png');
+    }
     &.is-mikan-15,
     &.is-mikan-16,
     &.is-mikan-17,
     &.is-mikan-18,
     &.is-mikan-19 {
-      background-image: url('./assets/piece-images/mikan10.png');
+      background-image: url('./assets/piece-images/mikan15.png');
     }
     &.is-mikan-20,
     &.is-mikan-21,
     &.is-mikan-22,
     &.is-mikan-23,
-    &.is-mikan-24,
+    &.is-mikan-24 {
+      background-image: url('./assets/piece-images/mikan20.png');
+    }
     &.is-mikan-25,
     &.is-mikan-26,
     &.is-mikan-27,
     &.is-mikan-28,
     &.is-mikan-29 {
-      background-image: url('./assets/piece-images/mikan20.png');
+      background-image: url('./assets/piece-images/mikan25.png');
     }
     &.is-mikan-30 {
       background-image: url('./assets/piece-images/mikan30.png');

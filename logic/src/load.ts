@@ -64,6 +64,8 @@ function updateColor(board: Board, expr: string): void {
       face = Kind.Missile
     } else if (token === '.') {
       face = Kind.Empty
+    } else if (token === '?') {
+      face = Kind.Unknown
     }
     if (face !== undefined) {
       const piece = board.piece(pos)
