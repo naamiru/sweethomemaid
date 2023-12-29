@@ -184,7 +184,8 @@ export default function PieceView({
     if (
       activeSkill !== Skill.CrossRockets &&
       activeSkill !== Skill.H3Rockets &&
-      activeSkill !== Skill.HRocket
+      activeSkill !== Skill.HRocket &&
+      activeSkill !== Skill.DelColor
     )
       return
     const move = new Move(position, Direction.Zero, activeSkill)

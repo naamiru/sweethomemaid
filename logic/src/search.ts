@@ -1,4 +1,11 @@
-import { Direction, Kind, type Board, type Piece } from './board'
+import {
+  Direction,
+  Kind,
+  isColor,
+  type Board,
+  type Color,
+  type Piece
+} from './board'
 import { BoardMove, InvalidMove, Move, Skill, applyMove, canMove } from './move'
 
 type Condition = (board: Board) => boolean
@@ -192,6 +199,21 @@ function allMoves(board: Board, skills: Skills): Array<[Move, Skills]> {
           moves.push([move, removeSkill(skills, Skill.HRocket)])
           break
         }
+      }
+    }
+  }
+
+  if (hasSkill(skills, Skill.DelColor)) {
+    const appeared = new Set<Color>()
+    for (let y = 1; y <= board.height; y++) {
+      for (let x = 1; x <= board.width; x++) {
+        const color = board.piece([x, y]).face
+        if (!isColor(color) || appeared.has(color)) continue
+        appeared.add(color)
+        moves.push([
+          new Move([x, y], Direction.Zero, Skill.DelColor),
+          removeSkill(skills, Skill.DelColor)
+        ])
       }
     }
   }

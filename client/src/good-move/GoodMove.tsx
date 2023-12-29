@@ -15,6 +15,8 @@ import crossRocketsImage from '../assets/skills/himariko_bath.png'
 import hRocketImage from '../assets/skills/himariko_newyear.png'
 import swapImage from '../assets/skills/iroha_bunny.png'
 import h3RocketsImage from '../assets/skills/nia_bath.png'
+import delColorImage from '../assets/skills/tsumugi_bunny.png'
+
 import './GoodMove.css'
 
 const CONDITION_NAMES: Array<[string, ReactNode]> = [
@@ -83,6 +85,7 @@ export default function GoodMove(): ReactNode {
             {(
               [
                 [Skill.Swap, swapImage],
+                [Skill.DelColor, delColorImage],
                 [Skill.H3Rockets, h3RocketsImage],
                 [Skill.CrossRockets, crossRocketsImage],
                 [Skill.HRocket, hRocketImage]
@@ -138,9 +141,10 @@ export default function GoodMove(): ReactNode {
 }
 
 const SkillIconName: Record<
-  Skill.CrossRockets | Skill.H3Rockets | Skill.HRocket,
+  Skill.DelColor | Skill.CrossRockets | Skill.H3Rockets | Skill.HRocket,
   string
 > = {
+  [Skill.DelColor]: 'del-color',
   [Skill.CrossRockets]: 'cross-rockets',
   [Skill.H3Rockets]: 'h3-rockets',
   [Skill.HRocket]: 'h-rocket'
@@ -184,6 +188,7 @@ function GoodMoveOverlay({ moves }: { moves: Move[] }): ReactNode {
       x: (move.position[0] - 0.5) * unit,
       y: (move.position[1] - 0.5) * unit,
       icon:
+        move.skill === Skill.DelColor ||
         move.skill === Skill.CrossRockets ||
         move.skill === Skill.H3Rockets ||
         move.skill === Skill.HRocket

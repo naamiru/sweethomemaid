@@ -6,12 +6,14 @@ import crossRocketsImage from '../assets/skills/himariko_bath.png'
 import hRocketImage from '../assets/skills/himariko_newyear.png'
 import swapImage from '../assets/skills/iroha_bunny.png'
 import h3RocketsImage from '../assets/skills/nia_bath.png'
+import delColorImage from '../assets/skills/tsumugi_bunny.png'
 
 const SKILL_IMAGES = {
   [Skill.Swap]: swapImage,
   [Skill.CrossRockets]: crossRocketsImage,
   [Skill.H3Rockets]: h3RocketsImage,
-  [Skill.HRocket]: hRocketImage
+  [Skill.HRocket]: hRocketImage,
+  [Skill.DelColor]: delColorImage
 }
 
 export default function SkillOption(): ReactNode {
@@ -20,6 +22,7 @@ export default function SkillOption(): ReactNode {
       <div className="head">スキル</div>
       <div className="body">
         <SkillItem skill={Skill.Swap} />
+        <SkillItem skill={Skill.DelColor} />
         <SkillItem skill={Skill.H3Rockets} />
         <SkillItem skill={Skill.CrossRockets} />
         <SkillItem skill={Skill.HRocket} />

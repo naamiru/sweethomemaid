@@ -92,6 +92,7 @@
     }
   }
 
+  .fa-del-color::before,
   .fa-cross-rockets::before,
   .fa-h3-rockets::before,
   .fa-h-rocket::before {
@@ -104,6 +105,9 @@
     background-size: cover;
     border-radius: 5px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  }
+  .fa-del-color::before {
+    background-image: url('../assets/skills/tsumugi_bunny.png');
   }
   .fa-cross-rockets::before {
     background-image: url('../assets/skills/himariko_bath.png');

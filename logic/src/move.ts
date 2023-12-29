@@ -15,7 +15,8 @@ export enum Skill {
   Swap = 1 << 0,
   CrossRockets = 1 << 1,
   H3Rockets = 1 << 2,
-  HRocket = 1 << 3
+  HRocket = 1 << 3,
+  DelColor = 1 << 4
 }
 
 export class Move {
@@ -73,7 +74,7 @@ export function* moveScenes(
   let skips: GeneralSet<Position> | undefined
 
   if (move.skill !== undefined && move.skill !== Skill.Swap) {
-    if (board.piece(move.position).face === Kind.Out) {
+    if (!canMove(board, move)) {
       throw new InvalidMove()
     }
     applyBoosterEffects(
@@ -166,8 +167,16 @@ export function* moveScenes(
 export function canMove(board: Board, move: Move): boolean {
   const mv = new BoardMove(board, move)
 
-  if (move.skill !== undefined && move.skill !== Skill.Swap) {
+  if (
+    move.skill === Skill.CrossRockets ||
+    move.skill === Skill.H3Rockets ||
+    move.skill === Skill.HRocket
+  ) {
     return board.piece(move.position).face !== Kind.Out
+  }
+
+  if (move.skill === Skill.DelColor) {
+    return board.piece(move.position).isColor()
   }
 
   if (mv.pieces().some(isFixedPiece)) {
@@ -1029,7 +1038,7 @@ function applyBoosterEffects(
 function skillEffects(
   board: Board,
   position: Position,
-  skill: Skill.CrossRockets | Skill.H3Rockets | Skill.HRocket
+  skill: Skill.CrossRockets | Skill.H3Rockets | Skill.HRocket | Skill.DelColor
 ): Map<Booster | Kind.Empty, Position[]> {
   const positions = new GeneralSet(positionToInt)
   function add(pos: Position): void {
@@ -1038,6 +1047,8 @@ function skillEffects(
       positions.add(pos)
     }
   }
+
+  let boosterAs: Booster | Kind.Empty = Kind.HRocket
 
   if (skill === Skill.CrossRockets) {
     for (let x = 1; x <= board.width; x++) {
@@ -1056,9 +1067,17 @@ function skillEffects(
     for (let x = 1; x <= board.width; x++) {
       add([x, position[1]])
     }
+  } else if (skill === Skill.DelColor) {
+    boosterAs = Kind.Empty
+    const color = board.piece(position).face
+    for (const pos of board.allPositions()) {
+      if (board.piece(pos).face === color) {
+        add(pos)
+      }
+    }
   }
 
-  return new Map([[Kind.HRocket, [...positions]]])
+  return new Map([[boosterAs, [...positions]]])
 }
 
 function matchedPiece(
