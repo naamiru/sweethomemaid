@@ -4,7 +4,7 @@ import {
   Board,
   Direction,
   Kind,
-  Piece,
+  createPiece,
   type Face,
   type Killers,
   type Position
@@ -41,7 +41,10 @@ function createBoard(
   const board = Board.create(tokens[0].length, tokens.length)
   for (const [y, line] of tokens.entries()) {
     for (const [x, token] of line.entries()) {
-      board.setPiece([x + 1, y + 1], new Piece(parseFace(token, x + 1, y + 1)))
+      board.setPiece(
+        [x + 1, y + 1],
+        createPiece(parseFace(token, x + 1, y + 1))
+      )
     }
   }
 
@@ -100,7 +103,7 @@ function updateMouse(board: Board, expr: string): void {
     const piece = board.piece(pos)
     board.setPiece(
       pos,
-      new Piece(
+      createPiece(
         { kind: Kind.Mouse, count },
         piece.ice,
         piece.chain,
@@ -113,21 +116,24 @@ function updateMouse(board: Board, expr: string): void {
 function updateIce(board: Board, expr: string): void {
   for (const [pos, count] of digitToken(expr)) {
     const piece = board.piece(pos)
-    board.setPiece(pos, new Piece(piece.face, count, piece.chain, piece.jelly))
+    board.setPiece(
+      pos,
+      createPiece(piece.face, count, piece.chain, piece.jelly)
+    )
   }
 }
 
 function updateChain(board: Board, expr: string): void {
   for (const [pos, count] of digitToken(expr)) {
     const piece = board.piece(pos)
-    board.setPiece(pos, new Piece(piece.face, piece.ice, count, piece.jelly))
+    board.setPiece(pos, createPiece(piece.face, piece.ice, count, piece.jelly))
   }
 }
 
 function updateJelly(board: Board, expr: string): void {
   for (const [pos, count] of digitToken(expr)) {
     const piece = board.piece(pos)
-    board.setPiece(pos, new Piece(piece.face, piece.ice, piece.chain, count))
+    board.setPiece(pos, createPiece(piece.face, piece.ice, piece.chain, count))
   }
 }
 
@@ -146,7 +152,7 @@ function updateMikan(board: Board, expr: string): void {
       const piece = board.piece(position)
       board.setPiece(
         position,
-        new Piece(
+        createPiece(
           { kind: Kind.Mikan, count, position: mikanPosition },
           piece.ice,
           piece.chain,
@@ -193,10 +199,10 @@ describe('findMatch', () => {
     const board = createBoard(initial)
     for (const match of findMatches(board)) {
       for (const position of match.positions) {
-        board.setPiece(position, new Piece(Kind.Empty))
+        board.setPiece(position, createPiece(Kind.Empty))
       }
       if (match.booster !== undefined) {
-        board.setPiece(match.booster.position, new Piece(match.booster.kind))
+        board.setPiece(match.booster.position, createPiece(match.booster.kind))
       }
     }
     const expectedBoard = createBoard(expected)
@@ -1326,7 +1332,7 @@ describe('fall', () => {
       `
     )
     const piece = board.piece([2, 2])
-    board.setPiece([2, 2], new Piece(piece.face, 0, 0.5))
+    board.setPiece([2, 2], createPiece(piece.face, 0, 0.5))
 
     expectFall(
       board,

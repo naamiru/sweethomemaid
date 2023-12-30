@@ -1,25 +1,24 @@
 import {
   Board,
-  Piece,
   type Direction,
-  type Face,
   type Killers,
+  type Piece,
   type Position
 } from './board'
 import { positionToInt } from './move'
 import { GeneralMap, GeneralSet } from './utils'
 
-type PieceData = { face: Face; ice: number; chain: number; jelly: number }
-
-export function serialize(board: Board): {
-  piece: PieceData[][]
+type BoardData = {
+  pieces: Piece[][]
   upstreams: Direction[][]
   killers: Killers
   links: Array<[Position, Position[]]>
   fallFromLeftPositions: Position[]
-} {
+}
+
+export function serialize(board: Board): BoardData {
   return {
-    piece: board.pieces.map(col => col.map(serializePiece)),
+    pieces: board.pieces,
     upstreams: board.upstreams,
     killers: board.killers,
     links: board.links === undefined ? [] : [...board.links.entries()],
@@ -27,39 +26,15 @@ export function serialize(board: Board): {
   }
 }
 
-function serializePiece(piece: Piece): {
-  face: Face
-  ice: number
-  chain: number
-  jelly: number
-} {
-  return {
-    face: piece.face,
-    ice: piece.ice,
-    chain: piece.chain,
-    jelly: piece.jelly
-  }
-}
-
 export function deserialize({
-  piece,
+  pieces,
   upstreams,
   killers,
   links,
   fallFromLeftPositions
-}: {
-  piece: PieceData[][]
-  upstreams: Direction[][]
-  killers: Killers
-  links: Array<[Position, Position[]]>
-  fallFromLeftPositions: Position[]
-}): Board {
+}: BoardData): Board {
   return new Board(
-    piece.map(col =>
-      col.map(
-        ({ face, ice, chain, jelly }) => new Piece(face, ice, chain, jelly)
-      )
-    ),
+    pieces,
     upstreams,
     killers,
     new GeneralMap(positionToInt, links),

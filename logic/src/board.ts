@@ -70,24 +70,19 @@ export function isColor(face: Face): face is Color {
   return colors.includes(face as Color)
 }
 
-export class Piece {
-  constructor(
-    public readonly face: Face,
-    public readonly ice = 0,
-    public readonly chain = 0,
-    public readonly jelly = 0
-  ) {}
+export type Piece = {
+  face: Face
+  ice: number
+  chain: number
+  jelly: number
+}
 
-  get kind(): Kind {
-    return getKind(this.face)
-  }
-
-  isBooster(): boolean {
-    return isBooster(this.face)
-  }
-
-  isColor(): boolean {
-    return isColor(this.face)
+export function createPiece(face: Face, ice = 0, chain = 0, jelly = 0): Piece {
+  return {
+    face,
+    ice,
+    chain,
+    jelly
   }
 }
 
@@ -136,7 +131,12 @@ export class Board {
   static create(width: number, height: number): Board {
     return new Board(
       Array.from({ length: width + 2 }, () =>
-        Array.from({ length: height + 2 }, () => new Piece(Kind.Out))
+        Array.from({ length: height + 2 }, () => ({
+          face: Kind.Out,
+          ice: 0,
+          chain: 0,
+          jelly: 0
+        }))
       ),
       Array.from({ length: width + 2 }, () =>
         Array.from({ length: height + 2 }, () => Direction.Up)

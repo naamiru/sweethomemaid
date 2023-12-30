@@ -1,4 +1,4 @@
-import { Direction, type Board, type Position } from './board'
+import { Direction, isColor, type Board, type Position } from './board'
 import { BoardMove, Move, canMove, findMatches, positionToInt } from './move'
 import { GeneralSet } from './utils'
 
@@ -33,7 +33,7 @@ export function suggest(board: Board): Position[] {
 function findSuggestedPositions(board: Board, move: Move): Position[] {
   const positions = new BoardMove(board, move).positions()
   if (
-    positions.some(pos => !board.piece(pos).isColor()) ||
+    positions.some(pos => !isColor(board.piece(pos).face)) ||
     !canMove(board, move)
   )
     return []

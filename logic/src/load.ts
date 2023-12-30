@@ -3,7 +3,7 @@ import {
   Board,
   Direction,
   Kind,
-  Piece,
+  createPiece,
   type Face,
   type Position
 } from './board'
@@ -74,7 +74,10 @@ function updateColor(board: Board, expr: string): void {
     }
     if (face !== undefined) {
       const piece = board.piece(pos)
-      board.setPiece(pos, new Piece(face, piece.ice, piece.chain, piece.jelly))
+      board.setPiece(
+        pos,
+        createPiece(face, piece.ice, piece.chain, piece.jelly)
+      )
     }
   }
 }
@@ -84,7 +87,7 @@ function updateMouse(board: Board, expr: string): void {
     const piece = board.piece(pos)
     board.setPiece(
       pos,
-      new Piece(
+      createPiece(
         { kind: Kind.Mouse, count },
         piece.ice,
         piece.chain,
@@ -99,7 +102,12 @@ function updateWood(board: Board, expr: string): void {
     const piece = board.piece(pos)
     board.setPiece(
       pos,
-      new Piece({ kind: Kind.Wood, count }, piece.ice, piece.chain, piece.jelly)
+      createPiece(
+        { kind: Kind.Wood, count },
+        piece.ice,
+        piece.chain,
+        piece.jelly
+      )
     )
   }
 }
@@ -107,21 +115,24 @@ function updateWood(board: Board, expr: string): void {
 function updateIce(board: Board, expr: string): void {
   for (const [pos, count] of positiveDigitToken(expr)) {
     const piece = board.piece(pos)
-    board.setPiece(pos, new Piece(piece.face, count, piece.chain, piece.jelly))
+    board.setPiece(
+      pos,
+      createPiece(piece.face, count, piece.chain, piece.jelly)
+    )
   }
 }
 
 function updateChain(board: Board, expr: string): void {
   for (const [pos, count] of positiveDigitToken(expr)) {
     const piece = board.piece(pos)
-    board.setPiece(pos, new Piece(piece.face, piece.ice, count, piece.jelly))
+    board.setPiece(pos, createPiece(piece.face, piece.ice, count, piece.jelly))
   }
 }
 
 function updateJelly(board: Board, expr: string): void {
   for (const [pos, count] of positiveDigitToken(expr)) {
     const piece = board.piece(pos)
-    board.setPiece(pos, new Piece(piece.face, piece.ice, piece.chain, count))
+    board.setPiece(pos, createPiece(piece.face, piece.ice, piece.chain, count))
   }
 }
 
@@ -130,7 +141,7 @@ function updatePresent(board: Board, expr: string): void {
     const piece = board.piece(pos)
     board.setPiece(
       pos,
-      new Piece(
+      createPiece(
         { kind: Kind.Present, count },
         piece.ice,
         piece.chain,
@@ -155,7 +166,7 @@ function updateMikan(board: Board, expr: string): void {
       const piece = board.piece(position)
       board.setPiece(
         position,
-        new Piece(
+        createPiece(
           { kind: Kind.Mikan, count, position: mikanPosition },
           piece.ice,
           piece.chain,
