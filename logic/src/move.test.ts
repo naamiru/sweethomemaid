@@ -1217,6 +1217,73 @@ describe('fall', () => {
     )
   })
 
+  test('下にあるピースが落ちている途中の斜めへの落下', () => {
+    expectFall(
+      createBoard(
+        `
+        _g
+        .r
+        ..
+        `
+      ),
+      createBoard(
+        `
+        _x
+        xx
+        gr
+        `
+      )
+    )
+  })
+
+  test('リンクによって下にあるピースが落ちている途中の斜めへの落下をしない', () => {
+    expectFall(
+      createBoard(
+        `
+        _g
+        .r
+        ..
+        `,
+        {
+          link: [
+            [
+              [2, 2],
+              [2, 1]
+            ]
+          ]
+        }
+      ),
+      createBoard(
+        `
+        _x
+        xg
+        xr
+        `
+      )
+    )
+  })
+
+  test('下落下中は斜めに落下しない', () => {
+    expectFall(
+      createBoard(
+        `
+        _b
+        _r
+        ..
+        ..
+        `
+      ),
+      createBoard(
+        `
+        _x
+        _x
+        xb
+        xr
+        `
+      )
+    )
+  })
+
   test('鎖は落下しない', () => {
     expectFall(
       createBoard(
