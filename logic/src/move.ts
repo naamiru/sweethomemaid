@@ -1199,6 +1199,8 @@ export function fall(
   const moveDelays = new Map<Piece, number>()
   // 前回のループで斜め移動したピース。落下の優先度が下がる
   let lastAngleMovedPieces = new Set<Piece>()
+  // 前回のループで移動したピース。接地してなければ斜め移動しない
+  let lastMovedPieces = new Set<Piece>()
 
   do {
     // 上流が空マスでない空マスを落下処理の対象とする
@@ -1314,7 +1316,11 @@ export function fall(
         }> = getUpstremAdjacents(board, pos).map(from => {
           const piece = board.piece(from)
           let priority = -1
-          if (isFallablePiece(piece) && groundedPositions.has(from)) {
+          if (
+            isFallablePiece(piece) &&
+            !movingPieces.has(piece) &&
+            (!lastMovedPieces.has(piece) || groundedPositions.has(from))
+          ) {
             priority =
               (lastAngleMovedPieces.has(piece) ? 0 : 2) + // 斜め移動を2time分として計算（本当？）
               100 -
@@ -1374,8 +1380,9 @@ export function fall(
       }
     }
 
-    // 落下したピースがなければ終了
-    if (movingPieces.size === 0) return step !== 0
+    // 2回続けて落下したピースがなければ終了
+    // 1回落下しなくても、その後に斜め落下することがある
+    if (movingPieces.size === 0 && lastMovedPieces.size === 0) return step !== 0
 
     step += 1
 
@@ -1385,6 +1392,8 @@ export function fall(
     for (const piece of [...moveDelays.keys()]) {
       if (!movingPieces.has(piece)) moveDelays.delete(piece)
     }
+    // 前回移動したピース更新
+    lastMovedPieces = movingPieces
   } while (true)
 }
 
