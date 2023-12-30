@@ -2,11 +2,14 @@ import PriorityQueue from 'ts-priority-queue'
 import {
   Direction,
   Kind,
-  Piece,
+  createPiece,
+  getKind,
+  isBooster,
   isColor,
   type Board,
   type Booster,
   type Color,
+  type Piece,
   type Position
 } from './board'
 import { GeneralMap, GeneralSet, range } from './utils'
@@ -90,7 +93,7 @@ export function* moveScenes(
 
     if (move.direction === Direction.Zero) {
       const [piece] = mv.pieces()
-      if (!piece.isBooster() || piece.face === Kind.Special) {
+      if (!isBooster(piece.face) || piece.face === Kind.Special) {
         throw new InvalidMove()
       }
     }
@@ -135,9 +138,9 @@ export function* moveScenes(
       if (comboTriggerPiece !== undefined) {
         boosterPosition = mv.positions()[1]
         const [p1, p2] = [comboTriggerPiece, board.piece(boosterPosition)]
-        if (p1.isBooster() && p2.isBooster()) {
+        if (isBooster(p1.face) && isBooster(p2.face)) {
           booster = [p1.face as Booster, p2.face as Booster]
-        } else if (p1.isColor()) {
+        } else if (isColor(p1.face)) {
           booster = [Kind.Special, p1.face as Color]
         } else {
           booster = [Kind.Special, p2.face as Color]
@@ -176,7 +179,7 @@ export function canMove(board: Board, move: Move): boolean {
   }
 
   if (move.skill === Skill.DelColor) {
-    return board.piece(move.position).isColor()
+    return isColor(board.piece(move.position).face)
   }
 
   if (mv.pieces().some(isFixedPiece)) {
@@ -185,7 +188,7 @@ export function canMove(board: Board, move: Move): boolean {
 
   if (move.direction === Direction.Zero) {
     const [piece] = mv.pieces()
-    return piece.isBooster() && piece.face !== Kind.Special
+    return isBooster(piece.face) && piece.face !== Kind.Special
   }
 
   if (mv.swapSkill) {
@@ -314,14 +317,14 @@ export class BoardMove {
 
   boosterCount(): number {
     return this.uniquePositions().filter(pos =>
-      this.board.piece(pos).isBooster()
+      isBooster(this.board.piece(pos).face)
     ).length
   }
 
   booster(): [Position, Booster] | undefined {
     for (const pos of this.positions()) {
       const piece = this.board.piece(pos)
-      if (piece.isBooster()) return [pos, piece.face as Booster]
+      if (isBooster(piece.face)) return [pos, piece.face as Booster]
     }
     return undefined
   }
@@ -329,7 +332,7 @@ export class BoardMove {
   color(): Color | undefined {
     for (const pos of this.positions()) {
       const piece = this.board.piece(pos)
-      if (piece.isColor()) return piece.face as Color
+      if (isColor(piece.face)) return piece.face as Color
     }
     return undefined
   }
@@ -338,10 +341,10 @@ export class BoardMove {
     if (this.swapSkill) return false
     if (this.move.direction === Direction.Zero) return false
     const [p1, p2] = this.pieces()
-    if (p1.isBooster() && p2.isBooster()) return true
+    if (isBooster(p1.face) && isBooster(p2.face)) return true
     if (
-      (p1.face === Kind.Special && p2.isColor()) ||
-      (p1.isColor() && p2.face === Kind.Special)
+      (p1.face === Kind.Special && isColor(p2.face)) ||
+      (isColor(p1.face) && p2.face === Kind.Special)
     )
       return true
     return false
@@ -367,8 +370,8 @@ function isFixedPiece(piece: Piece): boolean {
     piece.face === Kind.Unknown ||
     piece.chain > 0 ||
     piece.jelly > 0 ||
-    piece.kind === Kind.Present ||
-    piece.kind === Kind.Mikan
+    getKind(piece.face) === Kind.Present ||
+    getKind(piece.face) === Kind.Mikan
   )
 }
 
@@ -688,7 +691,7 @@ function findLines(board: Board): Line[] {
 }
 
 function isMatchablePiece(piece: Piece): boolean {
-  return piece.isColor() && piece.jelly === 0
+  return isColor(piece.face) && piece.jelly === 0
 }
 
 /** 同色 2x2 を探して左上の座標を返す。重なりなし。 */
@@ -770,13 +773,13 @@ function applyMatches(
       match.booster !== undefined &&
       board.piece(match.booster.position).face === Kind.Empty
     ) {
-      board.setPiece(match.booster.position, new Piece(match.booster.kind))
+      board.setPiece(match.booster.position, createPiece(match.booster.kind))
     }
   }
 
   for (const position of adjacents) {
     const piece = board.piece(position)
-    if (piece.kind === Kind.Present) {
+    if (getKind(piece.face) === Kind.Present) {
       board.setPiece(position, matchedPiece(board, piece))
     } else if (piece.jelly > 0) {
       board.setPiece(position, matchedPiece(board, piece))
@@ -835,7 +838,7 @@ function boosterEffects(
       appeared.add(pos)
       positions.push(pos)
       const piece = board.piece(pos)
-      if (piece.isBooster()) {
+      if (isBooster(piece.face)) {
         boosters.push([pos, piece.face as Booster])
       }
     }
@@ -1005,7 +1008,7 @@ function applyBoosterEffects(
   effects: Map<Booster | Kind.Empty, Position[]>
 ): void {
   if (position !== undefined) {
-    board.setPiece(position, new Piece(Kind.Empty))
+    board.setPiece(position, createPiece(Kind.Empty))
   }
   for (const [booster, positions] of effects.entries()) {
     for (const pos of positions) {
@@ -1087,7 +1090,7 @@ function matchedPiece(
 ): Piece {
   if (piece.ice > 0) {
     const count = 1 + board.killer('ice', booster)
-    return new Piece(
+    return createPiece(
       piece.face,
       Math.max(piece.ice - count, 0),
       piece.chain,
@@ -1096,7 +1099,7 @@ function matchedPiece(
   } else if (piece.chain > 0) {
     const count = 1 + board.killer('chain', booster)
     // 鎖が完全に消えるのは1マス落下時
-    return new Piece(
+    return createPiece(
       piece.face,
       piece.ice,
       Math.max(piece.chain - count, 0.5),
@@ -1104,7 +1107,7 @@ function matchedPiece(
     )
   } else if (piece.jelly > 0) {
     const count = 1 + board.killer('jelly', booster)
-    return new Piece(
+    return createPiece(
       piece.face,
       piece.ice,
       piece.chain,
@@ -1122,9 +1125,9 @@ function matchedPiece(
     if (face instanceof Object && face.kind === kind) {
       const count = 1 + board.killer(killerName, booster)
       if (count < face.count) {
-        return new Piece({ kind, count: face.count - count })
+        return createPiece({ kind, count: face.count - count })
       } else {
-        return new Piece(Kind.Empty)
+        return createPiece(Kind.Empty)
       }
     }
   }
@@ -1132,17 +1135,17 @@ function matchedPiece(
   if (face instanceof Object && face.kind === Kind.Mikan) {
     const count = 1 + board.killer('mikan', booster)
     if (count < face.count) {
-      return new Piece({
+      return createPiece({
         kind: Kind.Mikan,
         count: face.count - count,
         position: face.position
       })
     } else {
-      return new Piece(Kind.Empty)
+      return createPiece(Kind.Empty)
     }
   }
 
-  return new Piece(Kind.Empty)
+  return createPiece(Kind.Empty)
 }
 
 /**
@@ -1159,8 +1162,8 @@ export function fall(
       piece.face !== Kind.Empty &&
       piece.chain === 0 &&
       piece.jelly === 0 &&
-      piece.kind !== Kind.Present &&
-      piece.kind !== Kind.Mikan &&
+      getKind(piece.face) !== Kind.Present &&
+      getKind(piece.face) !== Kind.Mikan &&
       (stopPiece === undefined || stopPiece !== piece)
     )
   }
@@ -1230,7 +1233,7 @@ export function fall(
         const isFromOut = board.piece(from).face === Kind.Out
 
         if (isFromOut) {
-          piece = new Piece(Kind.Unknown)
+          piece = createPiece(Kind.Unknown)
         } else {
           newEmptyPositions.push(from)
         }
@@ -1251,7 +1254,7 @@ export function fall(
         board.setPiece(to, piece)
 
         if (!isFromOut) {
-          board.setPiece(from, new Piece(Kind.Empty))
+          board.setPiece(from, createPiece(Kind.Empty))
           followLink(from, skipAngledLink)
         }
       }
@@ -1260,7 +1263,7 @@ export function fall(
         if (board.piece(pos).face !== Kind.Empty) return
 
         if (isMostUpstream(board, pos)) {
-          fallPiece(new Piece(Kind.Unknown), getUpstream(board, pos), pos)
+          fallPiece(createPiece(Kind.Unknown), getUpstream(board, pos), pos)
           return
         }
 
@@ -1357,7 +1360,7 @@ export function fall(
         const piece = board.piece(pos)
         if (piece.chain === 0 || piece.chain >= 1) continue
         // 鎖が (0, 1) の範囲であれば消す
-        const newPiece = new Piece(piece.face, piece.ice)
+        const newPiece = createPiece(piece.face, piece.ice)
         for (const set of [movingPieces, angleMovedPieces]) {
           if (set.has(piece)) {
             set.delete(piece)
@@ -1479,6 +1482,6 @@ function fallAt(
   stop: Position | undefined = undefined
 ): void {
   if (position === stop) return
-  board.setPiece(position, new Piece(Kind.Empty))
+  board.setPiece(position, createPiece(Kind.Empty))
   fall(board, stop)
 }

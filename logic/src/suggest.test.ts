@@ -1,6 +1,6 @@
 import dedent from 'ts-dedent'
 import { describe, expect, test } from 'vitest'
-import { Board, Kind, Piece, type Face } from './board'
+import { Board, Kind, createPiece, type Face } from './board'
 import { suggest } from './suggest'
 
 function createBoard(expr: string): Board {
@@ -11,7 +11,10 @@ function createBoard(expr: string): Board {
   const board = Board.create(tokens[0].length, tokens.length)
   for (const [y, line] of tokens.entries()) {
     for (const [x, token] of line.entries()) {
-      board.setPiece([x + 1, y + 1], new Piece(parseFace(token, x + 1, y + 1)))
+      board.setPiece(
+        [x + 1, y + 1],
+        createPiece(parseFace(token, x + 1, y + 1))
+      )
     }
   }
 

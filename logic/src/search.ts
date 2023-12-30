@@ -1,6 +1,7 @@
 import {
   Direction,
   Kind,
+  isBooster,
   isColor,
   type Board,
   type Color,
@@ -102,7 +103,7 @@ export function* search<T extends Record<string, Condition>>(
           applyMove(board, move)
         } catch (error) {
           if (error instanceof InvalidMove) {
-            if (canSwap && pair.every(p => p.isColor())) {
+            if (canSwap && pair.every(p => isColor(p.face))) {
               states.push([
                 pieces,
                 removeSkill(skills, Skill.Swap),
@@ -115,7 +116,7 @@ export function* search<T extends Record<string, Condition>>(
           throw error
         }
 
-        if (canSwap && pair.some(p => p.isBooster())) {
+        if (canSwap && pair.some(p => isBooster(p.face))) {
           states.push([
             pieces,
             removeSkill(skills, Skill.Swap),
@@ -232,7 +233,7 @@ export function hasSpecialCombo(board: Board): boolean {
   for (const pos of board.allPositions()) {
     if (board.piece(pos).face !== Kind.Special) continue
     for (const [dx, dy] of ADJACENTS) {
-      if (board.piece([pos[0] + dx, pos[1] + dy]).isBooster()) {
+      if (isBooster(board.piece([pos[0] + dx, pos[1] + dy]).face)) {
         return true
       }
     }
@@ -251,7 +252,7 @@ export function hasBombCombo(board: Board): boolean {
   for (const pos of board.allPositions()) {
     if (board.piece(pos).face !== Kind.Bomb) continue
     for (const [dx, dy] of ADJACENTS) {
-      if (board.piece([pos[0] + dx, pos[1] + dy]).isBooster()) {
+      if (isBooster(board.piece([pos[0] + dx, pos[1] + dy]).face)) {
         return true
       }
     }
