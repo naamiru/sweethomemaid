@@ -18,12 +18,8 @@ function App(): ReactNode {
             <h1 className="title is-5">スイートホームメイド</h1>
             <h2 className="title is-5">パズルシミュレーター</h2>
           </div>
-          <a
-            className="social"
-            href="https://github.com/naamiru/sweethomemaid?tab=readme-ov-file#chrome-%E6%8B%A1%E5%BC%B5%E6%A9%9F%E8%83%BD%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%9F%E7%9B%A4%E9%9D%A2%E8%AA%AD%E3%81%BF%E5%8F%96%E3%82%8A"
-          >
+          <a className="social" href="https://github.com/naamiru/sweethomemaid">
             <i className="fa-brands fa-github fa-2xl"></i>
-            <span className="tag is-danger">new</span>
           </a>
         </nav>
 
