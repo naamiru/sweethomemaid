@@ -1382,7 +1382,18 @@ export function fall(
 
     // 2回続けて落下したピースがなければ終了
     // 1回落下しなくても、その後に斜め落下することがある
-    if (movingPieces.size === 0 && lastMovedPieces.size === 0) return step !== 0
+    if (movingPieces.size === 0 && lastMovedPieces.size === 0) {
+      const falls = findFillableEmpty(board, isFallablePiece)
+      if (falls === undefined) return step !== 0
+      // 最上段ではない空きマスへの斜め落下処理がある場合は終了しない
+      const [from, to] = falls
+      const piece = board.piece(from)
+      board.setPiece(to, piece)
+      board.setPiece(from, createPiece(Kind.Empty))
+      movingPieces.add(piece)
+      angleMovedPieces.add(piece)
+      moveDelays.set(piece, 0)
+    }
 
     step += 1
 
@@ -1482,6 +1493,37 @@ function getUpstremAdjacents(board: Board, position: Position): Position[] {
       ]
     default:
       throw new Error('upstream must not be zero')
+  }
+}
+
+/** 最上段ではない空きマスへの落下を探す */
+function findFillableEmpty(
+  board: Board,
+  isFallablePiece: (piece: Piece) => boolean
+): [Position, Position] | undefined {
+  function filledFrom(position: Position): Position | undefined {
+    if (board.piece(position).face !== Kind.Empty) return undefined
+    const froms = getUpstremAdjacents(board, position)
+    const fallable = froms.map(pos => isFallablePiece(board.piece(pos)))
+    if (!fallable[0] && !fallable[1]) return undefined
+    if (fallable[0] && !fallable[1]) return froms[0]
+    if (!fallable[0] && fallable[1]) return froms[1]
+    return board.isFallFromLeft(position) ? froms[0] : froms[1]
+  }
+
+  for (const pos of board.allPositions()) {
+    let from = filledFrom(pos)
+    if (from === undefined) continue
+
+    // より上流の空きマスを選択
+    let target = pos
+    do {
+      const upstream = getUpstream(board, pos)
+      const upstreamFrom = filledFrom(upstream)
+      if (upstreamFrom === undefined) return [from, target]
+      target = upstream
+      from = upstreamFrom
+    } while (true)
   }
 }
 

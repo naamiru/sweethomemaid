@@ -68,6 +68,8 @@ function parseFace(token: string, x: number, y: number): Face {
   if (token === 'b') return Kind.Blue
   if (token === 'g') return Kind.Green
   if (token === 'y') return Kind.Yellow
+  if (token === 'a') return Kind.Aqua
+  if (token === 'p') return Kind.Pink
   if (token === '.') return Kind.Empty
   if (token === 'M') return Kind.Missile
   if (token === 'H') return Kind.HRocket
@@ -1615,6 +1617,39 @@ describe('fall', () => {
         r
          b
         `
+      )
+    )
+  })
+
+  test('最上段ではない空きマスへの落下', () => {
+    expectFall(
+      createBoard(
+        `
+        bb
+        r.
+        r.
+        `,
+        {
+          chain: `
+          11
+          00
+          00
+          `
+        }
+      ),
+      createBoard(
+        `
+        bb
+        ..
+        rr
+        `,
+        {
+          chain: `
+          11
+          00
+          00
+          `
+        }
       )
     )
   })
