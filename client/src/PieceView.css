@@ -261,6 +261,15 @@
     &.is-wood-3 {
       background-image: url('./assets/piece-images/wood3.png');
     }
+    &.is-button-1 {
+      background-image: url('./assets/piece-images/button1.png');
+    }
+    &.is-button-2 {
+      background-image: url('./assets/piece-images/button2.png');
+    }
+    &.is-button-3 {
+      background-image: url('./assets/piece-images/button3.png');
+    }
     &.is-present-1 {
       background-image: url('./assets/piece-images/present1.png');
     }

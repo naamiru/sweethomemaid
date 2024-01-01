@@ -9,7 +9,7 @@
 
     > .skills {
       display: flex;
-      gap: 10px;
+      gap: 8px;
 
       > img {
         width: 30px;

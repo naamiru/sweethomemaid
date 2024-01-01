@@ -20,6 +20,7 @@ export type BoardConfig = {
   jellies?: string
   presents?: string
   mikans?: string
+  buttons?: string
   links?: Array<[Position, Position]>
   fallFrom?: string
   upstream?: string
@@ -35,6 +36,7 @@ export function load(config: BoardConfig): Board {
   if (config.jellies !== undefined) updateJelly(board, config.jellies)
   if (config.presents !== undefined) updatePresent(board, config.presents)
   if (config.mikans !== undefined) updateMikan(board, config.mikans)
+  if (config.buttons !== undefined) updateButton(board, config.buttons)
   if (config.links !== undefined) updateLink(board, config.links)
   if (config.fallFrom !== undefined) updateFallFrom(board, config.fallFrom)
   if (config.upstream !== undefined) updateUpstream(board, config.upstream)
@@ -174,6 +176,21 @@ function updateMikan(board: Board, expr: string): void {
         )
       )
     }
+  }
+}
+
+function updateButton(board: Board, expr: string): void {
+  for (const [pos, count] of positiveDigitToken(expr)) {
+    const piece = board.piece(pos)
+    board.setPiece(
+      pos,
+      createPiece(
+        { kind: Kind.Button, count },
+        piece.ice,
+        piece.chain,
+        piece.jelly
+      )
+    )
   }
 }
 

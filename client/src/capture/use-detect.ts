@@ -244,6 +244,9 @@ const PIECE_FOR_INDEX = [
   createPiece(Kind.Blue, 0, 0, 1),
   createPiece(Kind.Blue, 0, 0, 2),
   createPiece(Kind.Blue, 0, 0, 3),
+  createPiece({ kind: Kind.Button, count: 1 }),
+  createPiece({ kind: Kind.Button, count: 2 }),
+  createPiece({ kind: Kind.Button, count: 3 }),
   createPiece(Kind.Empty),
   createPiece(Kind.Green, 0),
   createPiece(Kind.Green, 1),
@@ -328,7 +331,8 @@ function getPieceMask(stage: StageName): boolean[] {
   for (const [prop, obstacle] of [
     ['mice', Kind.Mouse],
     ['woods', Kind.Wood],
-    ['presents', Kind.Present]
+    ['presents', Kind.Present],
+    ['buttons', Kind.Button]
   ] as const) {
     if (prop in preset) {
       kinds.add(obstacle)

@@ -371,7 +371,8 @@ function isFixedPiece(piece: Piece): boolean {
     piece.chain > 0 ||
     piece.jelly > 0 ||
     getKind(piece.face) === Kind.Present ||
-    getKind(piece.face) === Kind.Mikan
+    getKind(piece.face) === Kind.Mikan ||
+    getKind(piece.face) === Kind.Button
   )
 }
 
@@ -1120,7 +1121,8 @@ function matchedPiece(
   for (const [killerName, kind] of [
     ['mouse', Kind.Mouse],
     ['wood', Kind.Wood],
-    ['present', Kind.Present]
+    ['present', Kind.Present],
+    ['button', Kind.Button]
   ] as const) {
     if (face instanceof Object && face.kind === kind) {
       const count = 1 + board.killer(killerName, booster)
@@ -1164,6 +1166,7 @@ export function fall(
       piece.jelly === 0 &&
       getKind(piece.face) !== Kind.Present &&
       getKind(piece.face) !== Kind.Mikan &&
+      getKind(piece.face) !== Kind.Button &&
       (stopPiece === undefined || stopPiece !== piece)
     )
   }

@@ -48,7 +48,7 @@
 
         > img {
           object-fit: contain;
-          border-radius: 10px;
+          border-radius: 8px;
         }
       }
     }

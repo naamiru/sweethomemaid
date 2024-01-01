@@ -20,14 +20,11 @@ export default function StageSelect(): ReactNode {
         <div className="select is-fullwidth">
           <select name="stage" value={stage} onChange={handleChange}>
             <optgroup label="マスターズランキング">
-              <option value="masters_6_1">
-                マスターズ ゼリー（中央下が緑）
+              <option value="masters_7_1">
+                マスターズ ボタン（中央上が紫）
               </option>
-              <option value="masters_6_2">
-                マスターズ ゼリー（中央下が水色）
-              </option>
-              <option value="masters_6_3">
-                マスターズ ゼリー（中央下が青）
+              <option value="masters_7_2">
+                マスターズ ボタン（中央上が水色）
               </option>
             </optgroup>
             <optgroup label="ズボラ姫たちの年はじめ">
