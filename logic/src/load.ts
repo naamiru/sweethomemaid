@@ -22,6 +22,7 @@ export type BoardConfig = {
   mikans?: string
   buttons?: string
   links?: Array<[Position, Position]>
+  warps?: string
   fallFrom?: string
   upstream?: string
 }
@@ -38,6 +39,7 @@ export function load(config: BoardConfig): Board {
   if (config.mikans !== undefined) updateMikan(board, config.mikans)
   if (config.buttons !== undefined) updateButton(board, config.buttons)
   if (config.links !== undefined) updateLink(board, config.links)
+  if (config.warps !== undefined) updateWarp(board, config.warps)
   if (config.fallFrom !== undefined) updateFallFrom(board, config.fallFrom)
   if (config.upstream !== undefined) updateUpstream(board, config.upstream)
 
@@ -200,6 +202,37 @@ function updateLink(board: Board, pairs: Array<[Position, Position]>): void {
     const upstreams = links.get(from) ?? []
     upstreams.push(to)
     links.set(from, upstreams)
+  }
+  board.links = links
+}
+
+function updateWarp(board: Board, expr: string): void {
+  const warps = new Map<string, Array<[number, number]>>()
+  for (const [pos, token] of tokens(expr)) {
+    if (!/^[a-z]$/i.test(token)) continue
+    const key = token.toLowerCase()
+    let positions = warps.get(key)
+    if (positions === undefined) {
+      positions = []
+      warps.set(key, positions)
+    }
+    if (token === key) {
+      // token は小文字 -> ワープ元
+      positions.unshift(pos)
+    } else {
+      // token は大文字 -> ワープ先
+      positions.push(pos)
+    }
+  }
+
+  const links =
+    board.links ?? new GeneralMap<Position, Position[], number>(positionToInt)
+  for (const positions of warps.values()) {
+    if (positions.length !== 2) continue
+    const [from, to] = positions
+    const upstreams = links.get(to) ?? []
+    upstreams.push(from)
+    links.set(to, upstreams)
   }
   board.links = links
 }

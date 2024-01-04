@@ -1,8 +1,8 @@
 import {
+  Board,
   GeneralSet,
   positionToInt,
   suggest,
-  type Board,
   type Killers,
   type Piece,
   type Position,
@@ -10,10 +10,15 @@ import {
 } from '@sweethomemaid/logic'
 import { createContext, type Dispatch } from 'react'
 import * as cache from '../cache'
-import { createBoard, stages, type StageName } from '../presets'
+import {
+  currentStages,
+  stages,
+  type CurrentStageName,
+  type StageName
+} from '../stages'
 
 const STAGE_CACHE_KEY = 'AppContext.stage'
-const INITIAL_STAGE = 'newyear_1_1'
+const INITIAL_STAGE: CurrentStageName = currentStages[0]
 
 type Pieces = Piece[][]
 type SimpleKillers = [number, number, number]
@@ -43,6 +48,7 @@ export type AppAction =
   | {
       type: 'setStage'
       stage: StageName
+      board: Board
     }
   | {
       type: 'setIsHandlingPiece'
@@ -86,7 +92,7 @@ const initialStage =
   cachedStage !== undefined && stages.includes(cachedStage)
     ? cachedStage
     : INITIAL_STAGE
-const initialBoard = createBoard(initialStage)
+const initialBoard = Board.create(9, 9)
 export const initialState: AppState = {
   stage: initialStage,
   board: initialBoard,
@@ -103,7 +109,7 @@ export const initialState: AppState = {
 export function reduce(state: AppState, action: AppAction): AppState {
   switch (action.type) {
     case 'setStage':
-      return setStage(state, action.stage)
+      return setStage(state, action.stage, action.board)
     case 'setIsHandlingPiece':
       return {
         ...state,
@@ -133,12 +139,7 @@ export function reduce(state: AppState, action: AppAction): AppState {
   }
 }
 
-function setStage(state: AppState, stage: StageName): AppState {
-  if (state.stage === stage) return state
-
-  if (!stages.includes(stage)) stage = INITIAL_STAGE
-
-  const board = createBoard(stage)
+function setStage(state: AppState, stage: StageName, board: Board): AppState {
   board.killers = simpleKillersToKillers(state.killers)
   cache.set(STAGE_CACHE_KEY, stage)
   return {

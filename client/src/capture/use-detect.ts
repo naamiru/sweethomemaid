@@ -3,6 +3,7 @@ import {
   createPiece,
   getKind,
   positiveDigitToken,
+  type BoardConfig,
   type Piece,
   type Position
 } from '@sweethomemaid/logic'
@@ -14,7 +15,7 @@ import { useApp } from '../app/use-app'
 import mikanClassifierUrl from '../assets/mikan_classifier.onnx'
 import pieceClassifierUrl from '../assets/piece_classifier.onnx'
 
-import presets, { type StageName } from '../presets'
+import { getStageConfig } from '../stages'
 
 const IMAGE_SIZE = 64
 const MEAN = [0.57665089, 0.5822121, 0.54763596]
@@ -29,26 +30,27 @@ export function useDetect(): (
   const { board, stage, dispatch } = useApp()
   return useCallback(
     async (image, bounds) => {
+      const config = await getStageConfig(stage)
+
       for await (const [position, piece] of detectPieces(
         image,
         bounds,
         board.width,
         board.height,
-        getPieceMask(stage)
+        getPieceMask(config)
       )) {
         if (board.piece(position).face !== Kind.Out) {
           board.setPiece(position, piece)
         }
       }
 
-      const preset = presets[stage]
-      if (preset.mikans !== undefined) {
+      if (config.mikans !== undefined) {
         for await (const [position, count] of detectMikans(
           image,
           bounds,
           board.width,
           board.height,
-          preset.mikans
+          config.mikans
         )) {
           for (const diff of [
             [0, 0],
@@ -302,9 +304,7 @@ const PIECE_FOR_INDEX = [
   createPiece(Kind.Yellow, 0, 3)
 ]
 
-function getPieceMask(stage: StageName): boolean[] {
-  const preset = presets[stage]
-
+function getPieceMask(config: BoardConfig): boolean[] {
   const kinds = new Set<Kind>([
     Kind.Special,
     Kind.Bomb,
@@ -314,7 +314,7 @@ function getPieceMask(stage: StageName): boolean[] {
     Kind.Empty
   ])
 
-  const colors = preset.colors ?? ''
+  const colors = config.colors ?? ''
   for (const [token, color] of [
     ['r', Kind.Red],
     ['b', Kind.Blue],
@@ -334,14 +334,14 @@ function getPieceMask(stage: StageName): boolean[] {
     ['presents', Kind.Present],
     ['buttons', Kind.Button]
   ] as const) {
-    if (prop in preset) {
+    if (prop in config) {
       kinds.add(obstacle)
     }
   }
 
-  const ice = 'ices' in preset
-  const chain = 'chains' in preset
-  const jelly = 'jellies' in preset
+  const ice = 'ices' in config
+  const chain = 'chains' in config
+  const jelly = 'jellies' in config
 
   return PIECE_FOR_INDEX.map(piece => {
     if (!kinds.has(getKind(piece.face))) return false
