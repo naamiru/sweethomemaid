@@ -7,11 +7,13 @@ import {
 import { useApp } from './use-app'
 
 export function usePlayMove(): (move: Move) => Promise<void> {
-  const { board, dispatch } = useApp()
+  const { board, suppliedPieces, isPieceSupplied, dispatch } = useApp()
+  const options = isPieceSupplied ? { suppliedPieces } : {}
+
   return async (move: Move) => {
     try {
       let needInterval = false
-      for (const scene of moveScenes(board, move)) {
+      for (const scene of moveScenes(board, move, options)) {
         if (needInterval) {
           await new Promise(resolve =>
             setTimeout(resolve, scene === MoveScene.Match ? 300 : 200)

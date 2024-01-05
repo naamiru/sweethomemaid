@@ -2416,4 +2416,12 @@ describe('applyMove', () => {
       `
     )
   })
+
+  test('供給ピース指定', () => {
+    const board = createBoard('Br')
+    const move = new Move([1, 1], Direction.Zero)
+    applyMove(board, move, { suppliedPieces: [createPiece(Kind.Blue)] })
+    const expectedBoard = createBoard('bb')
+    expect(board.pieces).toEqual(expectedBoard.pieces)
+  })
 })

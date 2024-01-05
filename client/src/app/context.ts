@@ -27,11 +27,13 @@ export type AppState = {
   stage: StageName
   board: Board
   pieces: Pieces
+  suppliedPieces: Piece[]
 
   suggestedPositions: GeneralSet<Position>
 
   activeSkill: Skill | undefined
   killers: SimpleKillers
+  isPieceSupplied: boolean
 
   histories: Pieces[]
   historyIndex: number
@@ -49,6 +51,7 @@ export type AppAction =
       type: 'setStage'
       stage: StageName
       board: Board
+      suppliedPieces: Piece[]
     }
   | {
       type: 'setIsHandlingPiece'
@@ -70,6 +73,10 @@ export type AppAction =
   | {
       type: 'setKillers'
       value: SimpleKillers
+    }
+  | {
+      type: 'setIsPieceSupplied'
+      value: boolean
     }
   | {
       type: 'historyBack'
@@ -97,9 +104,11 @@ export const initialState: AppState = {
   stage: initialStage,
   board: initialBoard,
   pieces: initialBoard.pieces,
+  suppliedPieces: [],
   suggestedPositions: new GeneralSet(positionToInt, suggest(initialBoard)),
   activeSkill: undefined,
   killers: [0, 0, 0],
+  isPieceSupplied: false,
   histories: [initialBoard.pieces],
   historyIndex: 0,
   isHandlingPiece: false,
@@ -109,7 +118,7 @@ export const initialState: AppState = {
 export function reduce(state: AppState, action: AppAction): AppState {
   switch (action.type) {
     case 'setStage':
-      return setStage(state, action.stage, action.board)
+      return setStage(state, action.stage, action.board, action.suppliedPieces)
     case 'setIsHandlingPiece':
       return {
         ...state,
@@ -126,6 +135,11 @@ export function reduce(state: AppState, action: AppAction): AppState {
       }
     case 'setKillers':
       return setKillers(state, action.value)
+    case 'setIsPieceSupplied':
+      return {
+        ...state,
+        isPieceSupplied: action.value
+      }
     case 'historyBack':
       return historyTo(state, state.historyIndex - 1)
     case 'historyBackFirst':
@@ -139,16 +153,23 @@ export function reduce(state: AppState, action: AppAction): AppState {
   }
 }
 
-function setStage(state: AppState, stage: StageName, board: Board): AppState {
+function setStage(
+  state: AppState,
+  stage: StageName,
+  board: Board,
+  suppliedPieces: Piece[]
+): AppState {
   board.killers = simpleKillersToKillers(state.killers)
   cache.set(STAGE_CACHE_KEY, stage)
   return {
     stage,
     board,
     pieces: board.pieces,
+    suppliedPieces,
     suggestedPositions: new GeneralSet(positionToInt, suggest(board)),
     activeSkill: state.activeSkill,
     killers: state.killers,
+    isPieceSupplied: state.isPieceSupplied,
     histories: [board.pieces],
     historyIndex: 0,
     isHandlingPiece: false,

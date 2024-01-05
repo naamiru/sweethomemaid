@@ -61,15 +61,20 @@ export enum MoveScene {
   Fall
 }
 
-export function applyMove(board: Board, move: Move): void {
+export function applyMove(
+  board: Board,
+  move: Move,
+  options: { suppliedPieces?: Piece[] } = {}
+): void {
   // eslint-disable-next-line no-empty, @typescript-eslint/no-unused-vars
-  for (const _ of moveScenes(board, move)) {
+  for (const _ of moveScenes(board, move, options)) {
   }
 }
 
 export function* moveScenes(
   board: Board,
-  move: Move
+  move: Move,
+  options: { suppliedPieces?: Piece[] } = {}
 ): Generator<MoveScene, void, void> {
   const mv = new BoardMove(board, move)
 
@@ -104,7 +109,7 @@ export function* moveScenes(
     if (mv.isCombo()) {
       comboTriggerPiece = board.piece(move.position)
       // ブースターコンボの起点は除去して落下で埋める
-      fallAt(board, move.position, mv.positions()[1])
+      fallAt(board, move.position, { ...options, stop: mv.positions()[1] })
     } else {
       mv.swap()
     }
@@ -161,7 +166,7 @@ export function* moveScenes(
     applyMatches(board, matches, skips)
     skips = undefined
     if (matches.length > 0) yield MoveScene.Match
-    const falled = fall(board)
+    const falled = fall(board, options)
     if (falled) yield MoveScene.Fall
     matches = findMatches(board)
   } while (matches.length > 0)
@@ -1155,9 +1160,13 @@ function matchedPiece(
  * */
 export function fall(
   board: Board,
-  stop: Position | undefined = undefined
+  options: {
+    stop?: Position
+    suppliedPieces?: Piece[]
+  } = {}
 ): boolean {
-  const stopPiece = stop !== undefined ? board.piece(stop) : undefined
+  const stopPiece =
+    options.stop !== undefined ? board.piece(options.stop) : undefined
   function isFallablePiece(piece: Piece): boolean {
     return (
       piece.face !== Kind.Out &&
@@ -1238,7 +1247,7 @@ export function fall(
         const isFromOut = board.piece(from).face === Kind.Out
 
         if (isFromOut) {
-          piece = createPiece(Kind.Unknown)
+          piece = suppliedPiece(options.suppliedPieces)
         } else {
           newEmptyPositions.push(from)
         }
@@ -1268,7 +1277,11 @@ export function fall(
         if (board.piece(pos).face !== Kind.Empty) return
 
         if (isMostUpstream(board, pos)) {
-          fallPiece(createPiece(Kind.Unknown), getUpstream(board, pos), pos)
+          fallPiece(
+            suppliedPiece(options.suppliedPieces),
+            getUpstream(board, pos),
+            pos
+          )
           return
         }
 
@@ -1530,12 +1543,21 @@ function findFillableEmpty(
   }
 }
 
+function suppliedPiece(pieces: Piece[] | undefined = undefined): Piece {
+  if (pieces === undefined || pieces.length === 0)
+    return createPiece(Kind.Unknown)
+  return pieces[Math.floor(Math.random() * pieces.length)]
+}
+
 function fallAt(
   board: Board,
   position: Position,
-  stop: Position | undefined = undefined
+  options: {
+    stop?: Position
+    suppliedPieces?: Piece[]
+  } = {}
 ): void {
-  if (position === stop) return
+  if (position === options.stop) return
   board.setPiece(position, createPiece(Kind.Empty))
-  fall(board, stop)
+  fall(board, options)
 }

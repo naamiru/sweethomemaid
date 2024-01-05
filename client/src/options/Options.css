@@ -14,16 +14,6 @@
       }
     }
 
-    > .body {
-      .checkbox {
-        font-size: 0.9rem;
-
-        input {
-          margin-right: 6px;
-        }
-      }
-    }
-
     &.skill-option {
       flex-grow: 1;
 
@@ -68,6 +58,21 @@
         height: 20px;
         max-width: 20px;
         max-height: 20px;
+      }
+    }
+
+    &.drop-option {
+      .checkbox {
+        display: inline-flex;
+        align-items: center;
+
+        input {
+          margin-right: 6px;
+        }
+
+        .text {
+          font-size: 0.85rem;
+        }
       }
     }
   }
