@@ -101,7 +101,8 @@ async function* detectPieces(
     pieceMask
   )) {
     const position: Position = [Math.floor(i / height) + 1, (i % height) + 1]
-    yield [position, PIECE_FOR_INDEX[index]]
+    const piece = JSON.parse(JSON.stringify(PIECE_FOR_INDEX[index]))
+    yield [position, piece]
     i++
   }
 }
