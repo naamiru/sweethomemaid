@@ -110,9 +110,15 @@ export default function StageSelect(): ReactNode {
                   <option value="newyear_4_2">年はじめ4 wave2</option>
                   <option value="newyear_5_1">年はじめ5 wave1</option>
                   <option value="newyear_5_2">年はじめ5 wave2</option>
+                  <option value="newyear_6_1">年はじめ6 wave1</option>
+                  <option value="newyear_6_2">年はじめ6 wave2</option>
                   <option value="newyear_7">年はじめ7</option>
                   <option value="newyear_8_1">年はじめ8 wave1</option>
                   <option value="newyear_8_2">年はじめ8 wave2</option>
+                  {/* 落下処理が無限ループする
+                  <option value="newyear_9_1">年はじめ9 wave1</option>
+                  <option value="newyear_9_2">年はじめ9 wave2</option>
+                  */}
                 </optgroup>
               </>
             ) : (
