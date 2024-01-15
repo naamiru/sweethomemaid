@@ -2412,9 +2412,9 @@ describe('applyMove', () => {
 
   test('蜘蛛の巣をブースターで消す', () => {
     expectMove(
-      createBoard('Hrrr', { web: '0012' }),
+      createBoard('Hrbr', { web: '0012' }),
       new Move([1, 1], Direction.Zero),
-      createBoard('xxxx', { web: '0001' })
+      createBoard('xxbr', { web: '0001' })
     )
   })
 
@@ -2425,7 +2425,7 @@ describe('applyMove', () => {
         killers: { web: { rocket: 1 } }
       }),
       new Move([1, 1], Direction.Zero),
-      createBoard('xxxxx', { web: '00001' })
+      createBoard('xxbrb', { web: '00001' })
     )
   })
 

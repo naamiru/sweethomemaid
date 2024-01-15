@@ -1026,19 +1026,19 @@ function applyBoosterEffects(
     const booster = key === Kind.Empty ? undefined : key
     for (const pos of positions) {
       const piece = board.piece(pos)
-      if (piece.face instanceof Object && piece.face.kind === Kind.Mikan) {
+      const cell = board.cell(pos)
+      if (cell.web > 0) {
+        const count = 1 + board.killer('web', booster)
+        board.setCell(pos, { ...cell, web: Math.max(cell.web - count, 0) })
+      } else if (
+        piece.face instanceof Object &&
+        piece.face.kind === Kind.Mikan
+      ) {
         for (const p of mikanPositions(pos, piece.face.position)) {
           board.setPiece(p, matchedPiece(board, board.piece(p), booster))
         }
       } else {
         board.setPiece(pos, matchedPiece(board, piece, booster))
-      }
-
-      // 蜘蛛の巣を消す
-      const cell = board.cell(pos)
-      if (cell.web > 0) {
-        const count = 1 + board.killer('web', booster)
-        board.setCell(pos, { ...cell, web: Math.max(cell.web - count, 0) })
       }
     }
   }
