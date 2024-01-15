@@ -126,6 +126,8 @@ export enum Direction {
   Zero
 }
 
+export type BoardState = [Piece[][], Cell[][]]
+
 export class Board {
   constructor(
     public pieces: Piece[][],
@@ -235,5 +237,14 @@ export class Board {
       this.links,
       this.fallFromLeftPositions
     )
+  }
+
+  get state(): BoardState {
+    return [this.pieces, this.cells]
+  }
+
+  set state(value: BoardState) {
+    this.pieces = value[0]
+    this.cells = value[1]
   }
 }

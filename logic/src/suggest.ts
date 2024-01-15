@@ -38,7 +38,7 @@ function findSuggestedPositions(board: Board, move: Move): Position[] {
   )
     return []
 
-  const pieces = board.pieces
+  const state = board.state
   try {
     // swap pieces
     const p = board.piece(positions[0])
@@ -60,6 +60,6 @@ function findSuggestedPositions(board: Board, move: Move): Position[] {
 
     return [...suggests]
   } finally {
-    board.pieces = pieces
+    board.state = state
   }
 }

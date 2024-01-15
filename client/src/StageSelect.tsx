@@ -91,14 +91,14 @@ export default function StageSelect(): ReactNode {
             {stageType === 'current' ? (
               <>
                 <optgroup label="マスターズランキング">
-                  <option value="masters_8_1">
-                    マスターズ みかん箱（右上が緑）
+                  <option value="masters_9_2">
+                    マスターズ 蜘蛛の巣（中央が緑）
                   </option>
-                  <option value="masters_8_2">
-                    マスターズ みかん箱（右上が水）
+                  <option value="masters_9_3">
+                    マスターズ 蜘蛛の巣（中央が赤）
                   </option>
-                  <option value="masters_8_3">
-                    マスターズ みかん箱（右上が黄）
+                  <option value="masters_9_1">
+                    マスターズ 蜘蛛の巣（中央が紫）
                   </option>
                 </optgroup>
                 <optgroup label="ズボラ姫たちの年はじめ">
@@ -123,6 +123,17 @@ export default function StageSelect(): ReactNode {
               </>
             ) : (
               <>
+                <optgroup label="第8回マスターズランキング みかん箱">
+                  <option value="masters_8_1">
+                    マスターズ みかん箱（右上が緑）
+                  </option>
+                  <option value="masters_8_2">
+                    マスターズ みかん箱（右上が水）
+                  </option>
+                  <option value="masters_8_3">
+                    マスターズ みかん箱（右上が黄）
+                  </option>
+                </optgroup>
                 <optgroup label="第7回マスターズランキング ボタン">
                   <option value="masters_7_1">
                     マスターズ ボタン（中央上が紫）

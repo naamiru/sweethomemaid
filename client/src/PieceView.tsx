@@ -8,6 +8,7 @@ import {
   isBooster,
   isColor,
   isCombo,
+  type Cell,
   type Piece,
   type Position
 } from '@sweethomemaid/logic'
@@ -34,6 +35,7 @@ export default function PieceView({
   const {
     board,
     pieces,
+    cells,
     isHandlingPiece,
     isPlaying,
     swap,
@@ -42,6 +44,7 @@ export default function PieceView({
     dispatch
   } = useApp()
   const piece = pieces[position[0]][position[1]]
+  const cell = cells[position[0]][position[1]]
   const moveSkill = activeSkill === Skill.Swap ? activeSkill : undefined
 
   const [isMoving, setIsMoving] = useState(false)
@@ -168,7 +171,7 @@ export default function PieceView({
       setIsSwapping(false)
       api.start({ x: 0, y: 0, immediate: true })
     }
-  }, [pieces]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pieces, cells]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ダブルクリックでブースター発動
   const handleDoubleTap = useCallback(() => {
@@ -177,7 +180,7 @@ export default function PieceView({
     if (!canMove(board, move)) return
     playMove(move).catch(console.error)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMoving, isSwapping, position, board, piece])
+  }, [isMoving, isSwapping, position, board, piece, cell])
   // シングルタップでスキル発動
   const handleSingleTap = useCallback(() => {
     if (isMoving || isSwapping) return
@@ -192,7 +195,7 @@ export default function PieceView({
     if (!canMove(board, move)) return
     playMove(move).catch(console.error)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeSkill, isMoving, isSwapping, position, board, piece])
+  }, [activeSkill, isMoving, isSwapping, position, board, piece, cell])
   const doubleTapBind = useDoubleTap(handleDoubleTap, 300, {
     onSingleTap: handleSingleTap
   })
@@ -215,10 +218,10 @@ export default function PieceView({
       anim.currentTime = animRef.currentTime ?? 0
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isSuggested, pieces]
+    [isSuggested, pieces, cells]
   )
 
-  const classes = useMemo(() => pieceClasses(piece), [piece])
+  const classes = useMemo(() => pieceClasses(piece, cell), [piece, cell])
 
   return (
     <div
@@ -245,7 +248,7 @@ export default function PieceView({
   )
 }
 
-function pieceClasses(piece: Piece): string[] {
+function pieceClasses(piece: Piece, cell: Cell): string[] {
   const classes = []
 
   if (piece.face === Kind.Unknown) {
@@ -304,6 +307,10 @@ function pieceClasses(piece: Piece): string[] {
 
   if (piece.jelly > 0) {
     classes.push('is-jelly-' + String(piece.jelly))
+  }
+
+  if (cell.web > 0) {
+    classes.push('is-web-' + String(cell.web))
   }
 
   return classes

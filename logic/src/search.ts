@@ -4,8 +4,9 @@ import {
   isBooster,
   isColor,
   type Board,
+  type BoardState,
   type Color,
-  type Piece
+  type Position
 } from './board'
 import { BoardMove, InvalidMove, Move, Skill, applyMove, canMove } from './move'
 
@@ -80,18 +81,18 @@ export function* search<T extends Record<string, Condition>>(
     conditionToName.set(cond, name)
   }
 
-  const initialPieces = board.pieces
+  const initialState = board.state
 
-  type State = [Piece[][], Skills, Path, Move | undefined]
-  let states: State[] = [[board.pieces, skills, [], undefined]]
+  type State = [BoardState, Skills, Path, Move | undefined]
+  let states: State[] = [[board.state, skills, [], undefined]]
   let unfulfilleds = Object.values(conditions)
   for (let step = 0; step <= maxMove; step++) {
     const nextStates: State[] = []
 
     const fulfilleds = new Set<Condition>()
     while (states.length > 0) {
-      const [pieces, skills, path, move] = states.shift() as State
-      board.pieces = pieces
+      const [state, skills, path, move] = states.shift() as State
+      board.state = state
 
       let newPath = path
       if (move !== undefined) {
@@ -105,7 +106,7 @@ export function* search<T extends Record<string, Condition>>(
           if (error instanceof InvalidMove) {
             if (canSwap && pair.every(p => isColor(p.face))) {
               states.push([
-                pieces,
+                state,
                 removeSkill(skills, Skill.Swap),
                 path,
                 new Move(move.position, move.direction, Skill.Swap)
@@ -118,7 +119,7 @@ export function* search<T extends Record<string, Condition>>(
 
         if (canSwap && pair.some(p => isBooster(p.face))) {
           states.push([
-            pieces,
+            state,
             removeSkill(skills, Skill.Swap),
             path,
             new Move(move.position, move.direction, Skill.Swap)
@@ -139,7 +140,7 @@ export function* search<T extends Record<string, Condition>>(
       }
 
       for (const [move, newSkills] of allMoves(board, skills)) {
-        nextStates.push([board.pieces, newSkills, newPath, move])
+        nextStates.push([board.state, newSkills, newPath, move])
       }
     }
 
@@ -149,7 +150,7 @@ export function* search<T extends Record<string, Condition>>(
     states = nextStates
   }
 
-  board.pieces = initialPieces
+  board.state = initialState
 }
 
 function allMoves(board: Board, skills: Skills): Array<[Move, Skills]> {
@@ -229,11 +230,17 @@ const ADJACENTS = [
   [0, 1]
 ]
 
+function isMovable(board: Board, position: Position): boolean {
+  return board.cell(position).web === 0
+}
+
 export function hasSpecialCombo(board: Board): boolean {
   for (const pos of board.allPositions()) {
-    if (board.piece(pos).face !== Kind.Special) continue
+    if (board.piece(pos).face !== Kind.Special || !isMovable(board, pos))
+      continue
     for (const [dx, dy] of ADJACENTS) {
-      if (isBooster(board.piece([pos[0] + dx, pos[1] + dy]).face)) {
+      const adjPos: Position = [pos[0] + dx, pos[1] + dy]
+      if (isMovable(board, adjPos) && isBooster(board.piece(adjPos).face)) {
         return true
       }
     }
@@ -250,9 +257,10 @@ export function hasSpecial(board: Board): boolean {
 
 export function hasBombCombo(board: Board): boolean {
   for (const pos of board.allPositions()) {
-    if (board.piece(pos).face !== Kind.Bomb) continue
+    if (board.piece(pos).face !== Kind.Bomb || !isMovable(board, pos)) continue
     for (const [dx, dy] of ADJACENTS) {
-      if (isBooster(board.piece([pos[0] + dx, pos[1] + dy]).face)) {
+      const adjPos: Position = [pos[0] + dx, pos[1] + dy]
+      if (isMovable(board, adjPos) && isBooster(board.piece(adjPos).face)) {
         return true
       }
     }

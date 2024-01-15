@@ -3,6 +3,7 @@ import {
   GeneralSet,
   positionToInt,
   suggest,
+  type Cell,
   type Killers,
   type Piece,
   type Position,
@@ -21,12 +22,15 @@ const STAGE_CACHE_KEY = 'AppContext.stage'
 const INITIAL_STAGE: CurrentStageName = currentStages[0]
 
 type Pieces = Piece[][]
+type Cells = Cell[][]
 type SimpleKillers = [number, number, number]
+type History = [Pieces, Cells]
 
 export type AppState = {
   stage: StageName
   board: Board
   pieces: Pieces
+  cells: Cells
   suppliedPieces: Piece[]
 
   suggestedPositions: GeneralSet<Position>
@@ -35,7 +39,7 @@ export type AppState = {
   killers: SimpleKillers
   isPieceSupplied: boolean
 
-  histories: Pieces[]
+  histories: History[]
   historyIndex: number
 
   isHandlingPiece: boolean
@@ -104,12 +108,13 @@ export const initialState: AppState = {
   stage: initialStage,
   board: initialBoard,
   pieces: initialBoard.pieces,
+  cells: initialBoard.cells,
   suppliedPieces: [],
   suggestedPositions: new GeneralSet(positionToInt, suggest(initialBoard)),
   activeSkill: undefined,
   killers: [0, 0, 0],
   isPieceSupplied: false,
-  histories: [initialBoard.pieces],
+  histories: [[initialBoard.pieces, initialBoard.cells]],
   historyIndex: 0,
   isHandlingPiece: false,
   isPlaying: false
@@ -165,12 +170,13 @@ function setStage(
     stage,
     board,
     pieces: board.pieces,
+    cells: board.cells,
     suppliedPieces,
     suggestedPositions: new GeneralSet(positionToInt, suggest(board)),
     activeSkill: state.activeSkill,
     killers: state.killers,
     isPieceSupplied: state.isPieceSupplied,
-    histories: [board.pieces],
+    histories: [[board.pieces, board.cells]],
     historyIndex: 0,
     isHandlingPiece: false,
     isPlaying: false
@@ -202,7 +208,7 @@ function moved(state: AppState, complete: boolean): AppState {
     ? {
         histories: state.histories
           .slice(0, state.historyIndex + 1)
-          .concat([state.board.pieces]),
+          .concat([[state.board.pieces, state.board.cells]]),
         historyIndex: state.historyIndex + 1
       }
     : {}
@@ -210,6 +216,7 @@ function moved(state: AppState, complete: boolean): AppState {
     ...state,
     ...historyProps,
     pieces: state.board.pieces,
+    cells: state.board.cells,
     suggestedPositions: new GeneralSet(
       positionToInt,
       complete ? suggest(state.board) : []
@@ -247,10 +254,13 @@ function simpleKillersToKillers(killers: SimpleKillers): Killers {
 
 function historyTo(state: AppState, historyIndex: number): AppState {
   if (historyIndex < 0 || historyIndex >= state.histories.length) return state
-  state.board.pieces = state.histories[historyIndex]
+  const history = state.histories[historyIndex]
+  state.board.pieces = history[0]
+  state.board.cells = history[1]
   return {
     ...state,
     pieces: state.board.pieces,
+    cells: state.board.cells,
     suggestedPositions: new GeneralSet(positionToInt, suggest(state.board)),
     historyIndex
   }
@@ -260,8 +270,9 @@ function reset(state: AppState): AppState {
   return {
     ...state,
     pieces: state.board.pieces,
+    cells: state.board.cells,
     suggestedPositions: new GeneralSet(positionToInt, suggest(state.board)),
-    histories: [state.board.pieces],
+    histories: [[state.board.pieces, state.board.cells]],
     historyIndex: 0,
     isHandlingPiece: false,
     isPlaying: false,

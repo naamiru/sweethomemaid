@@ -41,18 +41,63 @@
     }
     &.is-special {
       background-image: url('./assets/piece-images/n.png');
+      &.is-web-1 {
+        background-image: url('./assets/piece-images/n_web1.png');
+      }
+      &.is-web-2 {
+        background-image: url('./assets/piece-images/n_web2.png');
+      }
+      &.is-web-3 {
+        background-image: url('./assets/piece-images/n_web3.png');
+      }
     }
     &.is-bomb {
       background-image: url('./assets/piece-images/b.png');
+      &.is-web-1 {
+        background-image: url('./assets/piece-images/bomb_web1.png');
+      }
+      &.is-web-2 {
+        background-image: url('./assets/piece-images/bomb_web2.png');
+      }
+      &.is-web-3 {
+        background-image: url('./assets/piece-images/bomb_web3.png');
+      }
     }
     &.is-hrocket {
       background-image: url('./assets/piece-images/rh.png');
+      &.is-web-1 {
+        background-image: url('./assets/piece-images/rh_web1.png');
+      }
+      &.is-web-2 {
+        background-image: url('./assets/piece-images/rh_web2.png');
+      }
+      &.is-web-3 {
+        background-image: url('./assets/piece-images/rh_web3.png');
+      }
     }
     &.is-vrocket {
       background-image: url('./assets/piece-images/rv.png');
+      &.is-web-1 {
+        background-image: url('./assets/piece-images/rv_web1.png');
+      }
+      &.is-web-2 {
+        background-image: url('./assets/piece-images/rv_web2.png');
+      }
+      &.is-web-3 {
+        background-image: url('./assets/piece-images/rv_web3.png');
+      }
     }
     &.is-missile {
       background-image: url('./assets/piece-images/m.png');
+      &.is-web-1 {
+        background-image: url('./assets/piece-images/m_web1.png');
+      }
+      &.is-web-2 {
+        background-image: url('./assets/piece-images/m_web2.png');
+      }
+      &.is-web-3 {
+        background-image: url('./assets/piece-images/m_web3.png');
+      }
     }
     &.is-red {
       background-image: url('./assets/piece-images/r0.png');
@@ -82,6 +127,15 @@
       }
       &.is-chain-3 {
         background-image: url('./assets/piece-images/r_chain3.png');
+      }
+      &.is-web-1 {
+        background-image: url('./assets/piece-images/r_web1.png');
+      }
+      &.is-web-2 {
+        background-image: url('./assets/piece-images/r_web2.png');
+      }
+      &.is-web-3 {
+        background-image: url('./assets/piece-images/r_web3.png');
       }
     }
     &.is-blue {
@@ -152,6 +206,15 @@
       &.is-jelly-3 {
         background-image: url('./assets/piece-images/g_jelly3.png');
       }
+      &.is-web-1 {
+        background-image: url('./assets/piece-images/g_web1.png');
+      }
+      &.is-web-2 {
+        background-image: url('./assets/piece-images/g_web2.png');
+      }
+      &.is-web-3 {
+        background-image: url('./assets/piece-images/g_web3.png');
+      }
     }
     &.is-yellow {
       background-image: url('./assets/piece-images/y0.png');
@@ -212,6 +275,15 @@
       &.is-jelly-3 {
         background-image: url('./assets/piece-images/a_jelly3.png');
       }
+      &.is-web-1 {
+        background-image: url('./assets/piece-images/a_web1.png');
+      }
+      &.is-web-2 {
+        background-image: url('./assets/piece-images/a_web2.png');
+      }
+      &.is-web-3 {
+        background-image: url('./assets/piece-images/a_web3.png');
+      }
     }
     &.is-pink {
       background-image: url('./assets/piece-images/p0.png');
@@ -250,6 +322,15 @@
       }
       &.is-jelly-3 {
         background-image: url('./assets/piece-images/p_jelly3.png');
+      }
+      &.is-web-1 {
+        background-image: url('./assets/piece-images/p_web1.png');
+      }
+      &.is-web-2 {
+        background-image: url('./assets/piece-images/p_web2.png');
+      }
+      &.is-web-3 {
+        background-image: url('./assets/piece-images/p_web3.png');
       }
     }
     &.is-wood-1 {

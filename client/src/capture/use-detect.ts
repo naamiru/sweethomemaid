@@ -1,9 +1,11 @@
 import {
   Kind,
+  createCell,
   createPiece,
   getKind,
   positiveDigitToken,
   type BoardConfig,
+  type Cell,
   type Piece,
   type Position
 } from '@sweethomemaid/logic'
@@ -32,7 +34,7 @@ export function useDetect(): (
     async (image, bounds) => {
       const config = await getStageConfig(stage)
 
-      for await (const [position, piece] of detectPieces(
+      for await (const [position, piece, cell] of detectPieces(
         image,
         bounds,
         board.width,
@@ -41,6 +43,7 @@ export function useDetect(): (
       )) {
         if (board.piece(position).face !== Kind.Out) {
           board.setPiece(position, piece)
+          board.setCell(position, cell)
         }
       }
 
@@ -79,7 +82,7 @@ async function* detectPieces(
   width: number,
   height: number,
   pieceMask: boolean[]
-): AsyncGenerator<[Position, Piece]> {
+): AsyncGenerator<[Position, Piece, Cell]> {
   const pieceBounds: Bounds[] = []
   const pieceWidth = Math.floor(bounds[2] / width)
   const pieceHeight = Math.floor(bounds[3] / height)
@@ -101,8 +104,14 @@ async function* detectPieces(
     pieceMask
   )) {
     const position: Position = [Math.floor(i / height) + 1, (i % height) + 1]
-    const piece = JSON.parse(JSON.stringify(PIECE_FOR_INDEX[index]))
-    yield [position, piece]
+    const piece = JSON.parse(JSON.stringify(PIECE_FOR_INDEX[index])) as
+      | Piece
+      | [Piece, Cell]
+    if (piece instanceof Array) {
+      yield [position, ...piece]
+    } else {
+      yield [position, piece, createCell()]
+    }
     i++
   }
 }
@@ -228,11 +237,14 @@ function* inputTensors(
   }
 }
 
-const PIECE_FOR_INDEX = [
-  createPiece(Kind.Aqua, 0),
+const PIECE_FOR_INDEX: Array<Piece | [Piece, Cell]> = [
+  createPiece(Kind.Aqua),
   createPiece(Kind.Aqua, 0, 0, 1),
   createPiece(Kind.Aqua, 0, 0, 2),
   createPiece(Kind.Aqua, 0, 0, 3),
+  [createPiece(Kind.Aqua), createCell(1)],
+  [createPiece(Kind.Aqua), createCell(2)],
+  [createPiece(Kind.Aqua), createCell(3)],
   createPiece(Kind.Bomb),
   createPiece(Kind.Blue, 0),
   createPiece(Kind.Blue, 1),
@@ -247,6 +259,9 @@ const PIECE_FOR_INDEX = [
   createPiece(Kind.Blue, 0, 0, 1),
   createPiece(Kind.Blue, 0, 0, 2),
   createPiece(Kind.Blue, 0, 0, 3),
+  [createPiece(Kind.Bomb), createCell(1)],
+  [createPiece(Kind.Bomb), createCell(2)],
+  [createPiece(Kind.Bomb), createCell(3)],
   createPiece({ kind: Kind.Button, count: 1 }),
   createPiece({ kind: Kind.Button, count: 2 }),
   createPiece({ kind: Kind.Button, count: 3 }),
@@ -261,11 +276,20 @@ const PIECE_FOR_INDEX = [
   createPiece(Kind.Green, 0, 0, 1),
   createPiece(Kind.Green, 0, 0, 2),
   createPiece(Kind.Green, 0, 0, 3),
+  [createPiece(Kind.Green), createCell(1)],
+  [createPiece(Kind.Green), createCell(2)],
+  [createPiece(Kind.Green), createCell(3)],
   createPiece(Kind.Missile),
+  [createPiece(Kind.Missile), createCell(1)],
+  [createPiece(Kind.Missile), createCell(2)],
+  [createPiece(Kind.Missile), createCell(3)],
   createPiece({ kind: Kind.Mouse, count: 1 }),
   createPiece({ kind: Kind.Mouse, count: 2 }),
   createPiece({ kind: Kind.Mouse, count: 3 }),
   createPiece(Kind.Special),
+  [createPiece(Kind.Special), createCell(1)],
+  [createPiece(Kind.Special), createCell(2)],
+  [createPiece(Kind.Special), createCell(3)],
   createPiece(Kind.Pink, 0),
   createPiece(Kind.Pink, 0, 1),
   createPiece(Kind.Pink, 0, 2),
@@ -273,6 +297,9 @@ const PIECE_FOR_INDEX = [
   createPiece(Kind.Pink, 0, 0, 1),
   createPiece(Kind.Pink, 0, 0, 2),
   createPiece(Kind.Pink, 0, 0, 3),
+  [createPiece(Kind.Pink), createCell(1)],
+  [createPiece(Kind.Pink), createCell(2)],
+  [createPiece(Kind.Pink), createCell(3)],
   createPiece({ kind: Kind.Present, count: 1 }),
   createPiece({ kind: Kind.Present, count: 2 }),
   createPiece({ kind: Kind.Present, count: 3 }),
@@ -288,8 +315,17 @@ const PIECE_FOR_INDEX = [
   createPiece(Kind.Red, 0, 1),
   createPiece(Kind.Red, 0, 2),
   createPiece(Kind.Red, 0, 3),
+  [createPiece(Kind.Red), createCell(1)],
+  [createPiece(Kind.Red), createCell(2)],
+  [createPiece(Kind.Red), createCell(3)],
   createPiece(Kind.HRocket),
+  [createPiece(Kind.HRocket), createCell(1)],
+  [createPiece(Kind.HRocket), createCell(2)],
+  [createPiece(Kind.HRocket), createCell(3)],
   createPiece(Kind.VRocket),
+  [createPiece(Kind.VRocket), createCell(1)],
+  [createPiece(Kind.VRocket), createCell(2)],
+  [createPiece(Kind.VRocket), createCell(3)],
   createPiece({ kind: Kind.Wood, count: 1 }),
   createPiece({ kind: Kind.Wood, count: 2 }),
   createPiece({ kind: Kind.Wood, count: 3 }),
@@ -343,12 +379,19 @@ function getPieceMask(config: BoardConfig): boolean[] {
   const ice = 'ices' in config
   const chain = 'chains' in config
   const jelly = 'jellies' in config
+  const web = 'webs' in config
 
   return PIECE_FOR_INDEX.map(piece => {
+    let cell: Cell | undefined
+    if (piece instanceof Array) {
+      cell = piece[1]
+      piece = piece[0]
+    }
     if (!kinds.has(getKind(piece.face))) return false
     if (!ice && piece.ice > 0) return false
     if (!chain && piece.chain > 0) return false
     if (!jelly && piece.jelly > 0) return false
+    if (!web && (cell?.web ?? 0) > 0) return false
     return true
   })
 }
