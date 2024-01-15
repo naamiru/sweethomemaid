@@ -30,6 +30,7 @@ function createBoard(
     chain?: string
     jelly?: string
     mikan?: string
+    web?: string
     killers?: Killers
     upstreams?: string
   } = {}
@@ -55,6 +56,7 @@ function createBoard(
   if (options.chain !== undefined) updateChain(board, options.chain)
   if (options.jelly !== undefined) updateJelly(board, options.jelly)
   if (options.mikan !== undefined) updateMikan(board, options.mikan)
+  if (options.web !== undefined) updateWeb(board, options.web)
   if (options.killers !== undefined) board.killers = options.killers
   if (options.upstreams !== undefined) updateUpstream(board, options.upstreams)
 
@@ -162,6 +164,13 @@ function updateMikan(board: Board, expr: string): void {
         )
       )
     }
+  }
+}
+
+function updateWeb(board: Board, expr: string): void {
+  for (const [pos, count] of digitToken(expr)) {
+    const cell = board.cell(pos)
+    board.setCell(pos, { ...cell, web: count })
   }
 }
 
@@ -1671,7 +1680,8 @@ describe('applyMove', () => {
     applyMove(board, move)
     const expectedBoard =
       expected instanceof Board ? expected : createBoard(expected)
-    expect(board.pieces).toEqual(expectedBoard.pieces)
+    expect(board.pieces, 'pieces').toEqual(expectedBoard.pieces)
+    expect(board.cells, 'cells').toEqual(expectedBoard.cells)
   }
 
   test('盤面外は動かせない', () => {
@@ -2371,6 +2381,51 @@ describe('applyMove', () => {
       }),
       new Move([1, 1], Direction.Zero),
       createBoard('xxrrr', { jelly: '00001' })
+    )
+  })
+
+  test('蜘蛛の巣は動かせない 移動元', () => {
+    expect(() =>
+      moved(
+        createBoard('rbrr', { web: '1000' }),
+        new Move([1, 1], Direction.Right)
+      )
+    ).toThrowError(InvalidMove)
+  })
+
+  test('蜘蛛の巣は動かせない 移動先', () => {
+    expect(() =>
+      moved(
+        createBoard('rbrr', { web: '0100' }),
+        new Move([1, 1], Direction.Right)
+      )
+    ).toThrowError(InvalidMove)
+  })
+
+  test('蜘蛛の巣の中身はマッチするが蜘蛛の巣は消えない', () => {
+    expectMove(
+      createBoard('rbrr', { web: '0010' }),
+      new Move([1, 1], Direction.Right),
+      createBoard('bxxx', { web: '0010' })
+    )
+  })
+
+  test('蜘蛛の巣をブースターで消す', () => {
+    expectMove(
+      createBoard('Hrrr', { web: '0012' }),
+      new Move([1, 1], Direction.Zero),
+      createBoard('xxxx', { web: '0001' })
+    )
+  })
+
+  test('蜘蛛の巣をブースターで消す キラー1', () => {
+    expectMove(
+      createBoard('Hrbrb', {
+        web: '00123',
+        killers: { web: { rocket: 1 } }
+      }),
+      new Move([1, 1], Direction.Zero),
+      createBoard('xxxxx', { web: '00001' })
     )
   })
 

@@ -92,7 +92,7 @@ export function* moveScenes(
     )
     yield MoveScene.Match
   } else {
-    if (mv.pieces().some(isFixedPiece)) {
+    if (mv.positions().some(pos => isFixedPiece(board, pos))) {
       throw new InvalidMove()
     }
 
@@ -187,7 +187,7 @@ export function canMove(board: Board, move: Move): boolean {
     return isColor(board.piece(move.position).face)
   }
 
-  if (mv.pieces().some(isFixedPiece)) {
+  if (mv.positions().some(pos => isFixedPiece(board, pos))) {
     return false
   }
 
@@ -367,18 +367,24 @@ function add(position: Position, diff: [number, number]): Position {
   return [position[0] + diff[0], position[1] + diff[1]]
 }
 
-function isFixedPiece(piece: Piece): boolean {
-  if (piece.ice > 0) return true
-  return (
+function isFixedPiece(board: Board, position: Position): boolean {
+  const piece = board.piece(position)
+  if (
     piece.face === Kind.Out ||
     piece.face === Kind.Empty ||
     piece.face === Kind.Unknown ||
+    piece.ice > 0 ||
     piece.chain > 0 ||
     piece.jelly > 0 ||
     getKind(piece.face) === Kind.Present ||
     getKind(piece.face) === Kind.Mikan ||
     getKind(piece.face) === Kind.Button
-  )
+  ) {
+    return true
+  }
+
+  const cell = board.cell(position)
+  return cell.web > 0
 }
 
 /** 揃っている色を探す  */
@@ -1016,29 +1022,23 @@ function applyBoosterEffects(
   if (position !== undefined) {
     board.setPiece(position, createPiece(Kind.Empty))
   }
-  for (const [booster, positions] of effects.entries()) {
+  for (const [key, positions] of effects.entries()) {
+    const booster = key === Kind.Empty ? undefined : key
     for (const pos of positions) {
       const piece = board.piece(pos)
       if (piece.face instanceof Object && piece.face.kind === Kind.Mikan) {
         for (const p of mikanPositions(pos, piece.face.position)) {
-          board.setPiece(
-            p,
-            matchedPiece(
-              board,
-              board.piece(p),
-              booster === Kind.Empty ? undefined : booster
-            )
-          )
+          board.setPiece(p, matchedPiece(board, board.piece(p), booster))
         }
       } else {
-        board.setPiece(
-          pos,
-          matchedPiece(
-            board,
-            piece,
-            booster === Kind.Empty ? undefined : booster
-          )
-        )
+        board.setPiece(pos, matchedPiece(board, piece, booster))
+      }
+
+      // 蜘蛛の巣を消す
+      const cell = board.cell(pos)
+      if (cell.web > 0) {
+        const count = 1 + board.killer('web', booster)
+        board.setCell(pos, { ...cell, web: Math.max(cell.web - count, 0) })
       }
     }
   }

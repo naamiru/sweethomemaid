@@ -1,5 +1,6 @@
 import {
   Board,
+  type Cell,
   type Direction,
   type Killers,
   type Piece,
@@ -10,6 +11,7 @@ import { GeneralMap, GeneralSet } from './utils'
 
 type BoardData = {
   pieces: Piece[][]
+  cells: Cell[][]
   upstreams: Direction[][]
   killers: Killers
   links: Array<[Position, Position[]]>
@@ -19,6 +21,7 @@ type BoardData = {
 export function serialize(board: Board): BoardData {
   return {
     pieces: board.pieces,
+    cells: board.cells,
     upstreams: board.upstreams,
     killers: board.killers,
     links: board.links === undefined ? [] : [...board.links.entries()],
@@ -28,6 +31,7 @@ export function serialize(board: Board): BoardData {
 
 export function deserialize({
   pieces,
+  cells,
   upstreams,
   killers,
   links,
@@ -35,6 +39,7 @@ export function deserialize({
 }: BoardData): Board {
   return new Board(
     pieces,
+    cells,
     upstreams,
     killers,
     new GeneralMap(positionToInt, links),

@@ -240,7 +240,8 @@ function simpleKillersToKillers(killers: SimpleKillers): Killers {
     present: killer,
     jelly: killer,
     mikan: killer,
-    button: killer
+    button: killer,
+    web: killer
   }
 }
 

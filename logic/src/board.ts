@@ -87,6 +87,17 @@ export function createPiece(face: Face, ice = 0, chain = 0, jelly = 0): Piece {
   }
 }
 
+// 盤面の特定位置に固定されたギミック
+export type Cell = {
+  web: number
+}
+
+export function createCell(web = 0): Cell {
+  return {
+    web
+  }
+}
+
 export type Killer = {
   bomb?: number
   rocket?: number
@@ -102,6 +113,7 @@ export type Killers = {
   jelly?: Killer
   mikan?: Killer
   button?: Killer
+  web?: Killer
 }
 
 export type Position = [number, number]
@@ -117,6 +129,7 @@ export enum Direction {
 export class Board {
   constructor(
     public pieces: Piece[][],
+    public cells: Cell[][],
     public upstreams: Direction[][],
     public killers: Killers,
 
@@ -133,12 +146,10 @@ export class Board {
   static create(width: number, height: number): Board {
     return new Board(
       Array.from({ length: width + 2 }, () =>
-        Array.from({ length: height + 2 }, () => ({
-          face: Kind.Out,
-          ice: 0,
-          chain: 0,
-          jelly: 0
-        }))
+        Array.from({ length: height + 2 }, () => createPiece(Kind.Out))
+      ),
+      Array.from({ length: width + 2 }, () =>
+        Array.from({ length: height + 2 }, () => createCell())
       ),
       Array.from({ length: width + 2 }, () =>
         Array.from({ length: height + 2 }, () => Direction.Up)
@@ -165,6 +176,19 @@ export class Board {
       ...this.pieces.slice(0, x),
       [...this.pieces[x].slice(0, y), piece, ...this.pieces[x].slice(y + 1)],
       ...this.pieces.slice(x + 1)
+    ]
+  }
+
+  cell(position: Position): Cell {
+    return this.cells[position[0]][position[1]]
+  }
+
+  setCell(position: Position, cell: Cell): void {
+    const [x, y] = position
+    this.cells = [
+      ...this.cells.slice(0, x),
+      [...this.cells[x].slice(0, y), cell, ...this.cells[x].slice(y + 1)],
+      ...this.cells.slice(x + 1)
     ]
   }
 
@@ -205,6 +229,7 @@ export class Board {
   copy(): Board {
     return new Board(
       this.pieces,
+      this.cells,
       this.upstreams,
       this.killers,
       this.links,

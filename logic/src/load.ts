@@ -21,6 +21,7 @@ export type BoardConfig = {
   presents?: string
   mikans?: string
   buttons?: string
+  webs?: string
   links?: Array<[Position, Position]>
   warps?: string
   fallFrom?: string
@@ -38,6 +39,7 @@ export function load(config: BoardConfig): Board {
   if (config.presents !== undefined) updatePresent(board, config.presents)
   if (config.mikans !== undefined) updateMikan(board, config.mikans)
   if (config.buttons !== undefined) updateButton(board, config.buttons)
+  if (config.webs !== undefined) updateWeb(board, config.webs)
   if (config.links !== undefined) updateLink(board, config.links)
   if (config.warps !== undefined) updateWarp(board, config.warps)
   if (config.fallFrom !== undefined) updateFallFrom(board, config.fallFrom)
@@ -193,6 +195,16 @@ function updateButton(board: Board, expr: string): void {
         piece.jelly
       )
     )
+  }
+}
+
+function updateWeb(board: Board, expr: string): void {
+  for (const [pos, count] of positiveDigitToken(expr)) {
+    const cell = board.cell(pos)
+    board.setCell(pos, {
+      ...cell,
+      web: count
+    })
   }
 }
 
