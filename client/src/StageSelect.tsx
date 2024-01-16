@@ -119,6 +119,8 @@ export default function StageSelect(): ReactNode {
                   <option value="newyear_9_1">年はじめ9 wave1</option>
                   <option value="newyear_9_2">年はじめ9 wave2</option>
                   */}
+                  <option value="newyear_10_1">年はじめ10 wave1</option>
+                  <option value="newyear_10_2">年はじめ10 wave2</option>
                 </optgroup>
               </>
             ) : (

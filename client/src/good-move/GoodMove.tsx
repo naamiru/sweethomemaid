@@ -48,14 +48,17 @@ export default function GoodMove(): ReactNode {
   }
 
   const [goodMoves, setGoodMoves] = useState<GoodMoves>({})
+  const [isLoading, setIsLoading] = useState(false)
   const { board, histories, historyIndex, isPlaying } = useApp()
   useEffect(() => {
     setGoodMoves({})
+    setIsLoading(true)
     const worker = new Worker(new URL('./worker.ts', import.meta.url), {
       type: 'module'
     })
     worker.onmessage = event => {
       setGoodMoves(event.data)
+      setIsLoading(false)
     }
     worker.postMessage({
       board: serialize(board),
@@ -64,6 +67,7 @@ export default function GoodMove(): ReactNode {
 
     return () => {
       worker.terminate()
+      setIsLoading(false)
     }
   }, [board, histories, historyIndex, skills])
 
@@ -103,6 +107,9 @@ export default function GoodMove(): ReactNode {
               />
             ))}
           </div>
+          {isLoading && (
+            <button className="button is-white is-loading is-small" disabled />
+          )}
         </div>
         {[1, 2].map(
           step =>
