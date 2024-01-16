@@ -50,10 +50,13 @@ export default function GoodMove(): ReactNode {
 
   const [goodMoves, setGoodMoves] = useState<GoodMoves>({})
   const [isLoading, setIsLoading] = useState(false)
+  const [selectedMoves, setSelectedMoves] = useState<Move[]>([])
+
   const { board, histories, historyIndex, isPlaying } = useApp()
   useEffect(() => {
     setGoodMoves({})
     setIsLoading(true)
+    setSelectedMoves([])
     const worker = new Worker(new URL('./worker.ts', import.meta.url), {
       type: 'module'
     })
@@ -72,7 +75,6 @@ export default function GoodMove(): ReactNode {
     }
   }, [board, histories, historyIndex, skills])
 
-  const [selectedMoves, setSelectedMoves] = useState<Move[]>([])
   function selectMoves(step: number, condition: string): void {
     if (goodMoves[step]?.[condition] === undefined) return
     setSelectedMoves(goodMoves[step][condition])
