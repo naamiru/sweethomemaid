@@ -220,6 +220,15 @@ function allMoves(board: Board, skills: Skills): Array<[Move, Skills]> {
     }
   }
 
+  if (hasSkill(skills, Skill.PieceBreak)) {
+    for (const pos of board.allPositions()) {
+      moves.push([
+        new Move(pos, Direction.Zero, Skill.PieceBreak),
+        removeSkill(skills, Skill.PieceBreak)
+      ])
+    }
+  }
+
   return moves
 }
 

@@ -7,6 +7,10 @@
     font-weight: bold;
     margin-bottom: 8px;
 
+    > .text {
+      word-break: keep-all;
+    }
+
     > .skills {
       display: flex;
       gap: 8px;
@@ -22,6 +26,13 @@
           opacity: 0.5;
         }
       }
+    }
+
+    > .button.is-loading {
+      pointer-events: none;
+      flex-shrink: 1;
+      background-color: transparent;
+      border: none;
     }
   }
 
@@ -96,7 +107,8 @@
   .fa-del-color::before,
   .fa-cross-rockets::before,
   .fa-h3-rockets::before,
-  .fa-h-rocket::before {
+  .fa-h-rocket::before,
+  .fa-piece-break::before {
     content: '';
     display: inline-block;
     width: calc(var(--unit) / 2);
@@ -118,5 +130,8 @@
   }
   .fa-h-rocket::before {
     background-image: url('../assets/skills/himariko_newyear.png');
+  }
+  .fa-piece-break::before {
+    background-image: url('../assets/skills/iroha_off.png');
   }
 }

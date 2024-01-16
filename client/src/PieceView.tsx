@@ -184,13 +184,7 @@ export default function PieceView({
   // シングルタップでスキル発動
   const handleSingleTap = useCallback(() => {
     if (isMoving || isSwapping) return
-    if (
-      activeSkill !== Skill.CrossRockets &&
-      activeSkill !== Skill.H3Rockets &&
-      activeSkill !== Skill.HRocket &&
-      activeSkill !== Skill.DelColor
-    )
-      return
+    if (activeSkill === undefined || activeSkill === Skill.Swap) return
     const move = new Move(position, Direction.Zero, activeSkill)
     if (!canMove(board, move)) return
     playMove(move).catch(console.error)

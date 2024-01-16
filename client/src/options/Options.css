@@ -20,25 +20,25 @@
       > .body {
         display: flex;
         gap: 10px;
+        max-width: 400px;
       }
 
       .skill-item {
-        width: 50px;
-        height: 50px;
-        border-radius: 8px;
+        flex: 1;
+        aspect-ratio: 1/1;
         cursor: pointer;
-
-        &:not(.is-active):hover {
-          box-shadow: 0 0 0 4px rgba(255, 140, 0, 0.25);
-        }
-
-        &.is-active {
-          box-shadow: 0 0 0 4px darkorange;
-        }
 
         > img {
           object-fit: contain;
           border-radius: 8px;
+        }
+
+        &:not(.is-active):hover > img {
+          box-shadow: 0 0 0 4px rgba(255, 140, 0, 0.25);
+        }
+
+        &.is-active > img {
+          box-shadow: 0 0 0 4px darkorange;
         }
       }
     }

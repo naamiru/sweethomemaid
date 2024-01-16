@@ -19,7 +19,8 @@ export enum Skill {
   CrossRockets = 1 << 1,
   H3Rockets = 1 << 2,
   HRocket = 1 << 3,
-  DelColor = 1 << 4
+  DelColor = 1 << 4,
+  PieceBreak = 1 << 5
 }
 
 export class Move {
@@ -178,7 +179,8 @@ export function canMove(board: Board, move: Move): boolean {
   if (
     move.skill === Skill.CrossRockets ||
     move.skill === Skill.H3Rockets ||
-    move.skill === Skill.HRocket
+    move.skill === Skill.HRocket ||
+    move.skill === Skill.PieceBreak
   ) {
     return board.piece(move.position).face !== Kind.Out
   }
@@ -1047,7 +1049,7 @@ function applyBoosterEffects(
 function skillEffects(
   board: Board,
   position: Position,
-  skill: Skill.CrossRockets | Skill.H3Rockets | Skill.HRocket | Skill.DelColor
+  skill: Exclude<Skill, Skill.Swap>
 ): Map<Booster | Kind.Empty, Position[]> {
   const positions = new GeneralSet(positionToInt)
   function add(pos: Position): void {
@@ -1084,6 +1086,9 @@ function skillEffects(
         add(pos)
       }
     }
+  } else if (skill === Skill.PieceBreak) {
+    boosterAs = Kind.Empty
+    add(position)
   }
 
   return new Map([[boosterAs, [...positions]]])
