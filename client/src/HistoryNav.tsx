@@ -6,7 +6,7 @@ export default function HistoryNav(): ReactNode {
   return (
     <div className="history-nav">
       <button
-        className="button"
+        className="button is-white"
         disabled={historyIndex === 0}
         onClick={() => {
           dispatch({ type: 'historyBackFirst' })
@@ -18,7 +18,7 @@ export default function HistoryNav(): ReactNode {
       </button>
 
       <button
-        className="button is-disabled"
+        className="button is-white"
         disabled={historyIndex === 0}
         onClick={() => {
           dispatch({ type: 'historyBack' })
@@ -30,7 +30,7 @@ export default function HistoryNav(): ReactNode {
       </button>
 
       <button
-        className="button"
+        className="button is-white"
         disabled={historyIndex === histories.length - 1}
         onClick={() => {
           dispatch({ type: 'historyForward' })
@@ -42,7 +42,7 @@ export default function HistoryNav(): ReactNode {
       </button>
 
       <button
-        className="button"
+        className="button is-white"
         disabled={historyIndex === histories.length - 1}
         onClick={() => {
           dispatch({ type: 'historyForwardLast' })

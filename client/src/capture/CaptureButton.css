@@ -5,16 +5,6 @@
   }
 
   .file-label .file-cta {
-    background-color: white;
-
-    &:not(:hover) {
-      border-color: transparent;
-    }
-
-    &:active {
-      border-color: #4a4a4a;
-    }
-
     .file-label {
       font-size: 0.9rem;
     }

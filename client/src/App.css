@@ -84,22 +84,6 @@ body {
 
   > .history-nav {
     flex-grow: 1;
-
-    .button {
-      &:focus {
-        border-color: #b5b5b5;
-        box-shadow: none;
-      }
-
-      &:active {
-        border-color: #4a4a4a;
-      }
-
-      &:not(:hover):not(:active),
-      &[disabled] {
-        border-color: transparent;
-      }
-    }
   }
 }
 

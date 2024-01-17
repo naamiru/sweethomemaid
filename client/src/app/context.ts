@@ -19,6 +19,8 @@ import {
 } from '../stages'
 
 const STAGE_CACHE_KEY = 'AppContext.stage'
+const KILLERS_CACHE_KEY = 'AppContext.killers'
+const IS_PIECE_SUPPLIED_CACHE_KEY = 'AppContext.isPieceSupplied'
 const INITIAL_STAGE: CurrentStageName = currentStages[0]
 
 type Pieces = Piece[][]
@@ -103,6 +105,20 @@ const initialStage =
   cachedStage !== undefined && stages.includes(cachedStage)
     ? cachedStage
     : INITIAL_STAGE
+
+const cachedKillers = cache.get<SimpleKillers>(KILLERS_CACHE_KEY)
+const initialKillers: SimpleKillers =
+  cachedKillers !== undefined &&
+  cachedKillers instanceof Array &&
+  cachedKillers.length === 3 &&
+  cachedKillers.every(Number.isInteger)
+    ? cachedKillers
+    : [0, 0, 0]
+
+const cachedIsPieceSupplied = cache.get<boolean>(IS_PIECE_SUPPLIED_CACHE_KEY)
+const initialIsPieceSupplied =
+  typeof cachedIsPieceSupplied === 'boolean' ? cachedIsPieceSupplied : false
+
 const initialBoard = Board.create(9, 9)
 export const initialState: AppState = {
   stage: initialStage,
@@ -112,8 +128,8 @@ export const initialState: AppState = {
   suppliedPieces: [],
   suggestedPositions: new GeneralSet(positionToInt, suggest(initialBoard)),
   activeSkill: undefined,
-  killers: [0, 0, 0],
-  isPieceSupplied: false,
+  killers: initialKillers,
+  isPieceSupplied: initialIsPieceSupplied,
   histories: [[initialBoard.pieces, initialBoard.cells]],
   historyIndex: 0,
   isHandlingPiece: false,
@@ -141,6 +157,7 @@ export function reduce(state: AppState, action: AppAction): AppState {
     case 'setKillers':
       return setKillers(state, action.value)
     case 'setIsPieceSupplied':
+      cache.set(IS_PIECE_SUPPLIED_CACHE_KEY, action.value)
       return {
         ...state,
         isPieceSupplied: action.value
@@ -229,6 +246,7 @@ function moved(state: AppState, complete: boolean): AppState {
 }
 
 function setKillers(state: AppState, killers: SimpleKillers): AppState {
+  cache.set(KILLERS_CACHE_KEY, killers)
   const { board } = state
   board.killers = simpleKillersToKillers(killers)
   return {

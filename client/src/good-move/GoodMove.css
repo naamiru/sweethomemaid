@@ -1,4 +1,6 @@
 .good-move {
+  min-height: 120px;
+
   > .head {
     display: flex;
     align-items: center;

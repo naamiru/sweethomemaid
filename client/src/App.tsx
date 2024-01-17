@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast'
 import './App.css'
 import BoardView from './BoardView'
 import HistoryNav from './HistoryNav'
+import SkillSelect from './SkillSelect'
 import StageSelect from './StageSelect'
 import { AppProvider } from './app/provider'
 import Capture from './capture/Capture'
@@ -27,13 +28,14 @@ function App(): ReactNode {
         <div className="app-operations">
           <HistoryNav />
           <Capture />
+          <Options />
         </div>
         <div className="app-main">
           <main>
             <BoardView />
           </main>
           <aside>
-            <Options />
+            <SkillSelect />
             <GoodMove />
           </aside>
         </div>

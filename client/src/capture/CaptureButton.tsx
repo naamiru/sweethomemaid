@@ -33,7 +33,7 @@ export default function CaptureButton(): ReactNode {
 
   return (
     <div
-      className={classNames('file capture-button', {
+      className={classNames('file capture-button is-white', {
         'is-disabled': isLoading || isExtensionCapturing
       })}
       aria-label={`スクリーンショットから

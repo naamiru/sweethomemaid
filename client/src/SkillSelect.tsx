@@ -1,13 +1,14 @@
 import { Skill } from '@sweethomemaid/logic'
 import classNames from 'classnames'
 import { useCallback, type ReactNode } from 'react'
-import { useApp } from '../app/use-app'
-import crossRocketsImage from '../assets/skills/himariko_bath.png'
-import hRocketImage from '../assets/skills/himariko_newyear.png'
-import swapImage from '../assets/skills/iroha_bunny.png'
-import pieceBreakImage from '../assets/skills/iroha_off.png'
-import h3RocketsImage from '../assets/skills/nia_bath.png'
-import delColorImage from '../assets/skills/tsumugi_bunny.png'
+import './SkillSelect.css'
+import { useApp } from './app/use-app'
+import crossRocketsImage from './assets/skills/himariko_bath.png'
+import hRocketImage from './assets/skills/himariko_newyear.png'
+import swapImage from './assets/skills/iroha_bunny.png'
+import pieceBreakImage from './assets/skills/iroha_off.png'
+import h3RocketsImage from './assets/skills/nia_bath.png'
+import delColorImage from './assets/skills/tsumugi_bunny.png'
 
 const SKILL_IMAGES = {
   [Skill.Swap]: swapImage,
@@ -18,10 +19,10 @@ const SKILL_IMAGES = {
   [Skill.PieceBreak]: pieceBreakImage
 }
 
-export default function SkillOption(): ReactNode {
+export default function SkillSelect(): ReactNode {
   return (
-    <div className="option skill-option">
-      <div className="head">表示スキル</div>
+    <div className="skill-select">
+      <div className="head">スキル</div>
       <div className="body">
         <SkillItem skill={Skill.Swap} />
         <SkillItem skill={Skill.DelColor} />
