@@ -9,10 +9,13 @@ import classNames from 'classnames'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useApp } from '../app/use-app'
 import bombImage from '../assets/piece-images/b.png'
+import missileImage from '../assets/piece-images/m.png'
 import specialImage from '../assets/piece-images/n.png'
-import rocketImage from '../assets/piece-images/rh.png'
+import hRocketImage from '../assets/piece-images/rh.png'
+import vRocketImage from '../assets/piece-images/rv.png'
+
 import crossRocketsImage from '../assets/skills/himariko_bath.png'
-import hRocketImage from '../assets/skills/himariko_newyear.png'
+import hRocketSkillImage from '../assets/skills/himariko_newyear.png'
 import swapImage from '../assets/skills/iroha_bunny.png'
 import pieceBreakImage from '../assets/skills/iroha_off.png'
 import h3RocketsImage from '../assets/skills/nia_bath.png'
@@ -21,6 +24,34 @@ import delColorImage from '../assets/skills/tsumugi_bunny.png'
 import './GoodMove.css'
 
 const CONDITION_NAMES: Array<[string, ReactNode]> = [
+  [
+    'hasMissileHRocket',
+    <>
+      <img src={missileImage} width="20" />
+      <img src={hRocketImage} width="20" />
+    </>
+  ],
+  [
+    'hasMissileVRocket',
+    <>
+      <img src={missileImage} width="20" />
+      <img src={vRocketImage} width="20" />
+    </>
+  ],
+  [
+    'hasMissileBomb',
+    <>
+      <img src={missileImage} width="20" />
+      <img src={bombImage} width="20" />
+    </>
+  ],
+  [
+    'hasMissileMissile',
+    <>
+      <img src={missileImage} width="20" />
+      <img src={missileImage} width="20" />
+    </>
+  ],
   [
     'hasSpecialCombo',
     <>
@@ -35,7 +66,10 @@ const CONDITION_NAMES: Array<[string, ReactNode]> = [
     </>
   ],
   ['hasBomb', <img src={bombImage} width="20" />],
-  ['hasRocket', <img src={rocketImage} width="20" />]
+  ['hasRocket', <img src={hRocketImage} width="20" />],
+  ['hasHRocket', <img src={hRocketImage} width="20" />],
+  ['hasVRocket', <img src={vRocketImage} width="20" />],
+  ['hasMissile', <img src={missileImage} width="20" />]
 ]
 
 export default function GoodMove(): ReactNode {
@@ -52,7 +86,7 @@ export default function GoodMove(): ReactNode {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedMoves, setSelectedMoves] = useState<Move[]>([])
 
-  const { board, histories, historyIndex, isPlaying } = useApp()
+  const { stage, board, histories, historyIndex, isPlaying } = useApp()
   useEffect(() => {
     setGoodMoves({})
     setIsLoading(true)
@@ -66,14 +100,15 @@ export default function GoodMove(): ReactNode {
     }
     worker.postMessage({
       board: serialize(board),
-      skills
+      skills,
+      isTeams: stage.startsWith('teams_2_')
     })
 
     return () => {
       worker.terminate()
       setIsLoading(false)
     }
-  }, [board, histories, historyIndex, skills])
+  }, [stage, board, histories, historyIndex, skills])
 
   function selectMoves(step: number, condition: string): void {
     if (goodMoves[step]?.[condition] === undefined) return
@@ -95,7 +130,7 @@ export default function GoodMove(): ReactNode {
                 [Skill.DelColor, delColorImage],
                 [Skill.H3Rockets, h3RocketsImage],
                 [Skill.CrossRockets, crossRocketsImage],
-                [Skill.HRocket, hRocketImage],
+                [Skill.HRocket, hRocketSkillImage],
                 [Skill.PieceBreak, pieceBreakImage]
               ] as const
             ).map(([skill, image]) => (
