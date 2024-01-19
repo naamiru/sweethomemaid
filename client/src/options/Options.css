@@ -1,3 +1,7 @@
+.options-modal .modal-content {
+  max-width: calc(100% - 30px);
+}
+
 .options {
   > .head {
     margin-bottom: 20px;

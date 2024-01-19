@@ -20,7 +20,9 @@ export default function Options(): ReactNode {
           <i className="fas fa-gear" />
         </span>
       </button>
-      <div className={classNames('modal', { 'is-active': isOpen })}>
+      <div
+        className={classNames('modal options-modal', { 'is-active': isOpen })}
+      >
         <div className="modal-background" onClick={close} />
         <div className="modal-content">
           <div className="box">
