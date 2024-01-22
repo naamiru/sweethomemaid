@@ -2,6 +2,7 @@ import { type BoardConfig } from '@sweethomemaid/logic'
 
 export const currentStages = [
   'teams_2_1',
+  'teams_2_2',
   'masters_9_1',
   'masters_9_2',
   'masters_9_3',
