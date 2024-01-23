@@ -381,6 +381,19 @@
       background-image: url('./assets/piece-images/present15.png');
     }
 
+    &.is-bubble-red-1 {
+      background-image: url('./assets/piece-images/bubble_r1.png');
+    }
+    &.is-bubble-red-2 {
+      background-image: url('./assets/piece-images/bubble_r2.png');
+    }
+    &.is-bubble-blue-1 {
+      background-image: url('./assets/piece-images/bubble_b1.png');
+    }
+    &.is-bubble-blue-2 {
+      background-image: url('./assets/piece-images/bubble_b2.png');
+    }
+
     &.is-mikan {
       width: 200%;
       height: 200%;

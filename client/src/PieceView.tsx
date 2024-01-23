@@ -276,6 +276,8 @@ function pieceClasses(piece: Piece, cell: Cell): string[] {
         classes.push('is-mikan')
         classes.push('is-mikan-' + String(Math.min(piece.face.count, 30)))
       }
+    } else if (piece.face.kind === Kind.Bubble) {
+      classes.push(`is-bubble-${piece.face.color}-${piece.face.count}`)
     } else {
       classes.push(
         'is-' +

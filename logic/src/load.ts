@@ -22,6 +22,7 @@ export type BoardConfig = {
   mikans?: string
   buttons?: string
   webs?: string
+  bubbles?: string
   links?: Array<[Position, Position]>
   warps?: string
   fallFrom?: string
@@ -40,6 +41,7 @@ export function load(config: BoardConfig): Board {
   if (config.mikans !== undefined) updateMikan(board, config.mikans)
   if (config.buttons !== undefined) updateButton(board, config.buttons)
   if (config.webs !== undefined) updateWeb(board, config.webs)
+  if (config.bubbles !== undefined) updateBubble(board, config.bubbles)
   if (config.links !== undefined) updateLink(board, config.links)
   if (config.warps !== undefined) updateWarp(board, config.warps)
   if (config.fallFrom !== undefined) updateFallFrom(board, config.fallFrom)
@@ -205,6 +207,17 @@ function updateWeb(board: Board, expr: string): void {
       ...cell,
       web: count
     })
+  }
+}
+
+function updateBubble(board: Board, expr: string): void {
+  for (const [pos, count] of positiveDigitToken(expr)) {
+    const face: Face =
+      count < 10
+        ? { kind: Kind.Bubble, count, color: 'red' }
+        : { kind: Kind.Bubble, count: count - 9, color: 'blue' }
+    const piece = board.piece(pos)
+    board.setPiece(pos, createPiece(face, piece.ice, piece.chain, piece.jelly))
   }
 }
 

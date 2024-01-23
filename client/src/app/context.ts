@@ -266,7 +266,8 @@ function simpleKillersToKillers(killers: SimpleKillers): Killers {
     jelly: killer,
     mikan: killer,
     button: killer,
-    web: killer
+    web: killer,
+    bubble: killer
   }
 }
 

@@ -380,7 +380,8 @@ function isFixedPiece(board: Board, position: Position): boolean {
     piece.jelly > 0 ||
     getKind(piece.face) === Kind.Present ||
     getKind(piece.face) === Kind.Mikan ||
-    getKind(piece.face) === Kind.Button
+    getKind(piece.face) === Kind.Button ||
+    getKind(piece.face) === Kind.Bubble
   ) {
     return true
   }
@@ -795,6 +796,8 @@ function applyMatches(
     const piece = board.piece(position)
     if (getKind(piece.face) === Kind.Present) {
       board.setPiece(position, matchedPiece(board, piece))
+    } else if (getKind(piece.face) === Kind.Bubble) {
+      board.setPiece(position, matchedPiece(board, piece))
     } else if (piece.jelly > 0) {
       board.setPiece(position, matchedPiece(board, piece))
     } else if (piece.face instanceof Object && piece.face.kind === Kind.Mikan) {
@@ -1132,12 +1135,13 @@ function matchedPiece(
     ['mouse', Kind.Mouse],
     ['wood', Kind.Wood],
     ['present', Kind.Present],
-    ['button', Kind.Button]
+    ['button', Kind.Button],
+    ['bubble', Kind.Bubble]
   ] as const) {
     if (face instanceof Object && face.kind === kind) {
       const count = 1 + board.killer(killerName, booster)
       if (count < face.count) {
-        return createPiece({ kind, count: face.count - count })
+        return createPiece({ ...face, count: face.count - count })
       } else {
         return createPiece(Kind.Empty)
       }
@@ -1181,6 +1185,7 @@ export function fall(
       getKind(piece.face) !== Kind.Present &&
       getKind(piece.face) !== Kind.Mikan &&
       getKind(piece.face) !== Kind.Button &&
+      getKind(piece.face) !== Kind.Bubble &&
       (stopPiece === undefined || stopPiece !== piece)
     )
   }
