@@ -25,30 +25,30 @@ import './GoodMove.css'
 
 const CONDITION_NAMES: Array<[string, ReactNode]> = [
   [
-    'hasMissileHRocket',
+    'hasSpecialSpecial',
     <>
-      <img src={missileImage} width="20" />
-      <img src={hRocketImage} width="20" />
+      <img src={specialImage} width="20" />
+      <img src={specialImage} width="20" />
     </>
   ],
   [
-    'hasMissileVRocket',
+    'hasSpecialBomb',
     <>
-      <img src={missileImage} width="20" />
-      <img src={vRocketImage} width="20" />
-    </>
-  ],
-  [
-    'hasMissileBomb',
-    <>
-      <img src={missileImage} width="20" />
+      <img src={specialImage} width="20" />
       <img src={bombImage} width="20" />
     </>
   ],
   [
-    'hasMissileMissile',
+    'hasSpecialRocket',
     <>
-      <img src={missileImage} width="20" />
+      <img src={specialImage} width="20" />
+      <img src={hRocketImage} width="20" />
+    </>
+  ],
+  [
+    'hasSpecialMissile',
+    <>
+      <img src={specialImage} width="20" />
       <img src={missileImage} width="20" />
     </>
   ],
@@ -60,6 +60,27 @@ const CONDITION_NAMES: Array<[string, ReactNode]> = [
   ],
   ['hasSpecial', <img src={specialImage} width="20" />],
   [
+    'hasBombBomb',
+    <>
+      <img src={bombImage} width="20" />
+      <img src={bombImage} width="20" />
+    </>
+  ],
+  [
+    'hasBombRocket',
+    <>
+      <img src={bombImage} width="20" />
+      <img src={hRocketImage} width="20" />
+    </>
+  ],
+  [
+    'hasMissileBomb',
+    <>
+      <img src={bombImage} width="20" />
+      <img src={missileImage} width="20" />
+    </>
+  ],
+  [
     'hasBombCombo',
     <>
       <img src={bombImage} width="20" /> ➕
@@ -69,6 +90,27 @@ const CONDITION_NAMES: Array<[string, ReactNode]> = [
   ['hasRocket', <img src={hRocketImage} width="20" />],
   ['hasHRocket', <img src={hRocketImage} width="20" />],
   ['hasVRocket', <img src={vRocketImage} width="20" />],
+  [
+    'hasMissileHRocket',
+    <>
+      <img src={hRocketImage} width="20" />
+      <img src={missileImage} width="20" />
+    </>
+  ],
+  [
+    'hasMissileVRocket',
+    <>
+      <img src={vRocketImage} width="20" />
+      <img src={missileImage} width="20" />
+    </>
+  ],
+  [
+    'hasMissileMissile',
+    <>
+      <img src={missileImage} width="20" />
+      <img src={missileImage} width="20" />
+    </>
+  ],
   ['hasMissile', <img src={missileImage} width="20" />]
 ]
 

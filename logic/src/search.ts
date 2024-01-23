@@ -22,16 +22,20 @@ export const DEFAULT_CONDITIONS = {
 }
 
 export const TEAMS_CONDITIONS = {
+  hasSpecialSpecial,
+  hasSpecialBomb,
+  hasSpecialRocket,
+  hasSpecialMissile,
+  hasSpecial,
+  hasBombRocket,
+  hasBombBomb,
+  hasBomb,
+  hasHRocket,
+  hasVRocket,
   hasMissileHRocket,
   hasMissileVRocket,
   hasMissileBomb,
   hasMissileMissile,
-  hasSpecialCombo,
-  hasSpecial,
-  hasBombCombo,
-  hasBomb,
-  hasHRocket,
-  hasVRocket,
   hasMissile
 }
 
@@ -295,6 +299,37 @@ export function hasBombCombo(board: Board): boolean {
   return false
 }
 
+export function hasBombRocket(board: Board): boolean {
+  for (const pos of board.allPositions()) {
+    if (board.piece(pos).face !== Kind.Bomb || !isMovable(board, pos)) continue
+    for (const [dx, dy] of ADJACENTS) {
+      const adjPos: Position = [pos[0] + dx, pos[1] + dy]
+      if (isMovable(board, adjPos)) {
+        const face = board.piece(adjPos).face
+        if (face === Kind.VRocket || face === Kind.HRocket) {
+          return true
+        }
+      }
+    }
+  }
+  return false
+}
+
+export function hasBombBomb(board: Board): boolean {
+  for (const pos of board.allPositions()) {
+    if (board.piece(pos).face !== Kind.Bomb || !isMovable(board, pos)) continue
+    for (const [dx, dy] of ADJACENTS) {
+      if (dx < 0 || dy < 0) continue // 右下側のみチェック
+
+      const adjPos: Position = [pos[0] + dx, pos[1] + dy]
+      if (isMovable(board, adjPos) && board.piece(adjPos).face === Kind.Bomb) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
 export function hasBomb(board: Board): boolean {
   for (const pos of board.allPositions()) {
     if (board.piece(pos).face === Kind.Bomb) return true
@@ -393,6 +428,73 @@ export function hasMissileMissile(board: Board): boolean {
       if (
         isMovable(board, adjPos) &&
         board.piece(adjPos).face === Kind.Missile
+      ) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
+export function hasSpecialBomb(board: Board): boolean {
+  for (const pos of board.allPositions()) {
+    if (board.piece(pos).face !== Kind.Special || !isMovable(board, pos))
+      continue
+    for (const [dx, dy] of ADJACENTS) {
+      const adjPos: Position = [pos[0] + dx, pos[1] + dy]
+      if (isMovable(board, adjPos) && board.piece(adjPos).face === Kind.Bomb) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
+export function hasSpecialRocket(board: Board): boolean {
+  for (const pos of board.allPositions()) {
+    if (board.piece(pos).face !== Kind.Special || !isMovable(board, pos))
+      continue
+    for (const [dx, dy] of ADJACENTS) {
+      const adjPos: Position = [pos[0] + dx, pos[1] + dy]
+      if (isMovable(board, adjPos)) {
+        const face = board.piece(adjPos).face
+        if (face === Kind.VRocket || face === Kind.HRocket) {
+          return true
+        }
+      }
+    }
+  }
+  return false
+}
+
+export function hasSpecialMissile(board: Board): boolean {
+  for (const pos of board.allPositions()) {
+    if (board.piece(pos).face !== Kind.Special || !isMovable(board, pos))
+      continue
+    for (const [dx, dy] of ADJACENTS) {
+      const adjPos: Position = [pos[0] + dx, pos[1] + dy]
+      if (
+        isMovable(board, adjPos) &&
+        board.piece(adjPos).face === Kind.Missile
+      ) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
+export function hasSpecialSpecial(board: Board): boolean {
+  for (const pos of board.allPositions()) {
+    if (board.piece(pos).face !== Kind.Special || !isMovable(board, pos))
+      continue
+    for (const [dx, dy] of ADJACENTS) {
+      if (dx < 0 || dy < 0) continue // 右下側のみチェック
+
+      const adjPos: Position = [pos[0] + dx, pos[1] + dy]
+      if (
+        isMovable(board, adjPos) &&
+        board.piece(adjPos).face === Kind.Special
       ) {
         return true
       }
