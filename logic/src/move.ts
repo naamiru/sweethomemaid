@@ -792,7 +792,14 @@ function applyMatches(
     }
   }
 
-  for (const position of adjacents) {
+  applyMatchAdjacents(board, adjacents)
+}
+
+function applyMatchAdjacents(
+  board: Board,
+  positions: Iterable<Position>
+): void {
+  for (const position of positions) {
     const piece = board.piece(position)
     if (getKind(piece.face) === Kind.Present) {
       board.setPiece(position, matchedPiece(board, piece))
@@ -1046,6 +1053,24 @@ function applyBoosterEffects(
         board.setPiece(pos, matchedPiece(board, piece, booster))
       }
     }
+  }
+
+  // スペシャルに隣接したギミックを消す
+  const specialEffect = effects.get(Kind.Empty)
+  if (specialEffect !== undefined) {
+    const adjacents = new GeneralSet(positionToInt)
+    for (const pos of specialEffect) {
+      adjacents.add([pos[0] - 1, pos[1]])
+      adjacents.add([pos[0] + 1, pos[1]])
+      adjacents.add([pos[0], pos[1] - 1])
+      adjacents.add([pos[0], pos[1] + 1])
+    }
+    for (const positions of effects.values()) {
+      for (const pos of positions) {
+        adjacents.delete(pos)
+      }
+    }
+    applyMatchAdjacents(board, adjacents)
   }
 }
 
