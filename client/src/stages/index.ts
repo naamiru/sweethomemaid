@@ -1,9 +1,11 @@
 import { type BoardConfig } from '@sweethomemaid/logic'
 
 export const currentStages = [
-  'teams_2_1',
-  'teams_2_2',
-  'teams_2_3',
+  'masters_11_1',
+  'masters_11_2',
+  'masters_11_3'
+] as const
+export const oldStages = [
   'masters_10_1',
   'masters_10_2',
   'masters_10_3',
@@ -17,15 +19,16 @@ export const currentStages = [
   'newyear_5_2',
   'newyear_6_1',
   'newyear_6_2',
+  'teams_2_1',
+  'teams_2_2',
+  'teams_2_3',
   'newyear_7',
   'newyear_8_1',
   'newyear_8_2',
   'newyear_9_1',
   'newyear_9_2',
   'newyear_10_1',
-  'newyear_10_2'
-] as const
-export const oldStages = [
+  'newyear_10_2',
   'masters_9_1',
   'masters_9_2',
   'masters_9_3',
