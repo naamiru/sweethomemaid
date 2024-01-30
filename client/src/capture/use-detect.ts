@@ -345,7 +345,10 @@ const PIECE_FOR_INDEX: Array<Piece | [Piece, Cell]> = [
   createPiece(Kind.Yellow, 6),
   createPiece(Kind.Yellow, 0, 1),
   createPiece(Kind.Yellow, 0, 2),
-  createPiece(Kind.Yellow, 0, 3)
+  createPiece(Kind.Yellow, 0, 3),
+  createPiece(Kind.Yellow, 0, 0, 1),
+  createPiece(Kind.Yellow, 0, 0, 2),
+  createPiece(Kind.Yellow, 0, 0, 3)
 ]
 
 function getPieceMask(config: BoardConfig): boolean[] {
