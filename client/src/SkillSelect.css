@@ -9,18 +9,24 @@
 
   > .body {
     display: flex;
-    gap: 10px;
     max-width: 400px;
+    gap: 10px;
+    flex-wrap: wrap;
   }
 
   .skill-item {
+    min-width: calc(25% - 10px);
     flex: 1;
     aspect-ratio: 1/1;
-    cursor: pointer;
+
+    &:not(.is-stub) {
+      cursor: pointer;
+    }
 
     > img {
       object-fit: contain;
       border-radius: 8px;
+      vertical-align: middle;
     }
 
     &:not(.is-active):hover > img {

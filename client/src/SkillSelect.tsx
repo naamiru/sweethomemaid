@@ -8,6 +8,7 @@ import hRocketImage from './assets/skills/himariko_newyear.png'
 import swapImage from './assets/skills/iroha_bunny.png'
 import pieceBreakImage from './assets/skills/iroha_off.png'
 import h3RocketsImage from './assets/skills/nia_bath.png'
+import bombImage from './assets/skills/scarlet_bunny.png'
 import delColorImage from './assets/skills/tsumugi_bunny.png'
 
 const SKILL_IMAGES = {
@@ -16,7 +17,8 @@ const SKILL_IMAGES = {
   [Skill.H3Rockets]: h3RocketsImage,
   [Skill.HRocket]: hRocketImage,
   [Skill.DelColor]: delColorImage,
-  [Skill.PieceBreak]: pieceBreakImage
+  [Skill.PieceBreak]: pieceBreakImage,
+  [Skill.Bomb]: bombImage
 }
 
 export default function SkillSelect(): ReactNode {
@@ -26,10 +28,12 @@ export default function SkillSelect(): ReactNode {
       <div className="body">
         <SkillItem skill={Skill.Swap} />
         <SkillItem skill={Skill.DelColor} />
+        <SkillItem skill={Skill.Bomb} />
+        <SkillItem skill={Skill.PieceBreak} />
         <SkillItem skill={Skill.H3Rockets} />
         <SkillItem skill={Skill.CrossRockets} />
         <SkillItem skill={Skill.HRocket} />
-        <SkillItem skill={Skill.PieceBreak} />
+        <div className="skill-item is-stub" />
       </div>
     </div>
   )

@@ -20,7 +20,8 @@ export enum Skill {
   H3Rockets = 1 << 2,
   HRocket = 1 << 3,
   DelColor = 1 << 4,
-  PieceBreak = 1 << 5
+  PieceBreak = 1 << 5,
+  Bomb = 1 << 6
 }
 
 export class Move {
@@ -180,7 +181,8 @@ export function canMove(board: Board, move: Move): boolean {
     move.skill === Skill.CrossRockets ||
     move.skill === Skill.H3Rockets ||
     move.skill === Skill.HRocket ||
-    move.skill === Skill.PieceBreak
+    move.skill === Skill.PieceBreak ||
+    move.skill === Skill.Bomb
   ) {
     return board.piece(move.position).face !== Kind.Out
   }
@@ -797,7 +799,8 @@ function applyMatches(
 
 function applyMatchAdjacents(
   board: Board,
-  positions: Iterable<Position>
+  positions: Iterable<Position>,
+  isSpecial = false
 ): void {
   for (const position of positions) {
     const piece = board.piece(position)
@@ -805,7 +808,7 @@ function applyMatchAdjacents(
       board.setPiece(position, matchedPiece(board, piece))
     } else if (getKind(piece.face) === Kind.Bubble) {
       board.setPiece(position, matchedPiece(board, piece))
-    } else if (piece.jelly > 0) {
+    } else if (piece.jelly > 0 && !isSpecial) {
       board.setPiece(position, matchedPiece(board, piece))
     } else if (piece.face instanceof Object && piece.face.kind === Kind.Mikan) {
       for (const pos of mikanPositions(position, piece.face.position)) {
@@ -1070,7 +1073,7 @@ function applyBoosterEffects(
         adjacents.delete(pos)
       }
     }
-    applyMatchAdjacents(board, adjacents)
+    applyMatchAdjacents(board, adjacents, true)
   }
 }
 
@@ -1116,6 +1119,12 @@ function skillEffects(
     }
   } else if (skill === Skill.PieceBreak) {
     boosterAs = Kind.Empty
+    add(position)
+  } else if (skill === Skill.Bomb) {
+    boosterAs = Kind.Bomb
+    for (const pos of boosterRange(board, position, Kind.Bomb)) {
+      add(pos)
+    }
     add(position)
   }
 

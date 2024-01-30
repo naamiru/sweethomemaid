@@ -19,6 +19,7 @@ import hRocketSkillImage from '../assets/skills/himariko_newyear.png'
 import swapImage from '../assets/skills/iroha_bunny.png'
 import pieceBreakImage from '../assets/skills/iroha_off.png'
 import h3RocketsImage from '../assets/skills/nia_bath.png'
+import bombSkillImage from '../assets/skills/scarlet_bunny.png'
 import delColorImage from '../assets/skills/tsumugi_bunny.png'
 
 import './GoodMove.css'
@@ -165,32 +166,36 @@ export default function GoodMove(): ReactNode {
       <div className={classNames('good-move', { 'is-disabled': isPlaying })}>
         <div className="head">
           <div className="text">先読み</div>
-          <div className="skills">
-            {(
-              [
-                [Skill.Swap, swapImage],
-                [Skill.DelColor, delColorImage],
-                [Skill.H3Rockets, h3RocketsImage],
-                [Skill.CrossRockets, crossRocketsImage],
-                [Skill.HRocket, hRocketSkillImage],
-                [Skill.PieceBreak, pieceBreakImage]
-              ] as const
-            ).map(([skill, image]) => (
-              <img
-                src={image}
-                className={classNames({
-                  'is-disabled': (skills & skill) === 0
-                })}
-                onClick={() => {
-                  toggleSkill(skill)
-                }}
-                key={skill}
-              />
-            ))}
-          </div>
-          {isLoading && (
-            <button className="button is-white is-loading is-small" disabled />
-          )}
+          <button
+            className={classNames('button is-white is-loading is-small', {
+              'is-visible': isLoading
+            })}
+            disabled
+          />
+        </div>
+        <div className="skills">
+          {(
+            [
+              [Skill.Swap, swapImage],
+              [Skill.DelColor, delColorImage],
+              [Skill.Bomb, bombSkillImage],
+              [Skill.PieceBreak, pieceBreakImage],
+              [Skill.H3Rockets, h3RocketsImage],
+              [Skill.CrossRockets, crossRocketsImage],
+              [Skill.HRocket, hRocketSkillImage]
+            ] as const
+          ).map(([skill, image]) => (
+            <img
+              src={image}
+              className={classNames({
+                'is-disabled': (skills & skill) === 0
+              })}
+              onClick={() => {
+                toggleSkill(skill)
+              }}
+              key={skill}
+            />
+          ))}
         </div>
         {[1, 2].map(
           step =>
@@ -233,7 +238,8 @@ const SkillIconName: Record<Exclude<Skill, Skill.Swap>, string> = {
   [Skill.CrossRockets]: 'cross-rockets',
   [Skill.H3Rockets]: 'h3-rockets',
   [Skill.HRocket]: 'h-rocket',
-  [Skill.PieceBreak]: 'piece-break'
+  [Skill.PieceBreak]: 'piece-break',
+  [Skill.Bomb]: 'fast-bomb'
 }
 
 const DirectionIconName: Record<Direction, string> = {

@@ -3,38 +3,39 @@
 
   > .head {
     display: flex;
+    gap: 10px;
     align-items: center;
-    gap: 20px;
     font-size: 0.75rem;
     font-weight: bold;
-    margin-bottom: 8px;
-
-    > .text {
-      word-break: keep-all;
-    }
-
-    > .skills {
-      display: flex;
-      gap: 8px;
-      flex-grow: 1;
-
-      > img {
-        width: 30px;
-        height: 30px;
-        border-radius: 5px;
-        cursor: pointer;
-
-        &.is-disabled {
-          opacity: 0.5;
-        }
-      }
-    }
+    margin-bottom: 6px;
 
     > .button.is-loading {
       pointer-events: none;
       flex-shrink: 1;
       background-color: transparent;
       border: none;
+
+      &:not(.is-visible) {
+        visibility: hidden;
+      }
+    }
+  }
+
+  > .skills {
+    display: flex;
+    gap: 8px;
+    flex-grow: 1;
+    margin-bottom: 8px;
+
+    > img {
+      width: 30px;
+      height: 30px;
+      border-radius: 5px;
+      cursor: pointer;
+
+      &.is-disabled {
+        opacity: 0.5;
+      }
     }
   }
 
@@ -110,7 +111,8 @@
   .fa-cross-rockets::before,
   .fa-h3-rockets::before,
   .fa-h-rocket::before,
-  .fa-piece-break::before {
+  .fa-piece-break::before,
+  .fa-fast-bomb::before {
     content: '';
     display: inline-block;
     width: calc(var(--unit) / 2);
@@ -135,5 +137,8 @@
   }
   .fa-piece-break::before {
     background-image: url('../assets/skills/iroha_off.png');
+  }
+  .fa-fast-bomb::before {
+    background-image: url('../assets/skills/scarlet_bunny.png');
   }
 }
