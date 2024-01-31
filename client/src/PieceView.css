@@ -98,6 +98,12 @@
       &.is-web-3 {
         background-image: url('./assets/piece-images/m_web3.png');
       }
+      &.is-jelly-1 {
+        background-image: url('./assets/piece-images/m_jelly1.png');
+      }
+      &.is-jelly-2 {
+        background-image: url('./assets/piece-images/m_jelly2.png');
+      }
     }
     &.is-red {
       background-image: url('./assets/piece-images/r0.png');

@@ -284,6 +284,8 @@ const PIECE_FOR_INDEX: Array<Piece | [Piece, Cell]> = [
   [createPiece(Kind.Green), createCell(2)],
   [createPiece(Kind.Green), createCell(3)],
   createPiece(Kind.Missile),
+  createPiece(Kind.Missile, 0, 0, 1),
+  createPiece(Kind.Missile, 0, 0, 2),
   [createPiece(Kind.Missile), createCell(1)],
   [createPiece(Kind.Missile), createCell(2)],
   [createPiece(Kind.Missile), createCell(3)],

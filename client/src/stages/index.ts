@@ -2,6 +2,8 @@ import { type BoardConfig } from '@sweethomemaid/logic'
 
 export const currentStages = [
   'valentine_1',
+  'valentine_2_1',
+  'valentine_2_2',
   'valentine_5_1',
   'valentine_5_2',
   'valentine_5_3',
