@@ -799,8 +799,7 @@ function applyMatches(
 
 function applyMatchAdjacents(
   board: Board,
-  positions: Iterable<Position>,
-  isSpecial = false
+  positions: Iterable<Position>
 ): void {
   for (const position of positions) {
     const piece = board.piece(position)
@@ -808,7 +807,7 @@ function applyMatchAdjacents(
       board.setPiece(position, matchedPiece(board, piece))
     } else if (getKind(piece.face) === Kind.Bubble) {
       board.setPiece(position, matchedPiece(board, piece))
-    } else if (piece.jelly > 0 && !isSpecial) {
+    } else if (piece.jelly > 0) {
       board.setPiece(position, matchedPiece(board, piece))
     } else if (piece.face instanceof Object && piece.face.kind === Kind.Mikan) {
       for (const pos of mikanPositions(position, piece.face.position)) {
@@ -1034,9 +1033,35 @@ function applyBoosterEffects(
   position: Position | undefined,
   effects: Map<Booster | Kind.Empty, Position[]>
 ): void {
+  // スペシャル対象に隣接した、ギミックを消されるマスを事前に算出しておく
+  const specialAdjacents = new GeneralSet(positionToInt)
+  const specialEffect = effects.get(Kind.Empty)
+  if (specialEffect !== undefined) {
+    for (const pos of specialEffect) {
+      const piece = board.piece(pos)
+      if (piece.jelly > 0) {
+        // ゼリーマスをスペシャルで消した場合は隣接ギミックを消さない
+        continue
+      }
+      specialAdjacents.add([pos[0] - 1, pos[1]])
+      specialAdjacents.add([pos[0] + 1, pos[1]])
+      specialAdjacents.add([pos[0], pos[1] - 1])
+      specialAdjacents.add([pos[0], pos[1] + 1])
+    }
+    // 直接ブースターで消されるマスは除外
+    for (const positions of effects.values()) {
+      for (const pos of positions) {
+        specialAdjacents.delete(pos)
+      }
+    }
+  }
+
+  // ブースターの起点を消す
   if (position !== undefined) {
     board.setPiece(position, createPiece(Kind.Empty))
   }
+
+  // 直接ブースターで消す
   for (const [key, positions] of effects.entries()) {
     const booster = key === Kind.Empty ? undefined : key
     for (const pos of positions) {
@@ -1059,22 +1084,7 @@ function applyBoosterEffects(
   }
 
   // スペシャルに隣接したギミックを消す
-  const specialEffect = effects.get(Kind.Empty)
-  if (specialEffect !== undefined) {
-    const adjacents = new GeneralSet(positionToInt)
-    for (const pos of specialEffect) {
-      adjacents.add([pos[0] - 1, pos[1]])
-      adjacents.add([pos[0] + 1, pos[1]])
-      adjacents.add([pos[0], pos[1] - 1])
-      adjacents.add([pos[0], pos[1] + 1])
-    }
-    for (const positions of effects.values()) {
-      for (const pos of positions) {
-        adjacents.delete(pos)
-      }
-    }
-    applyMatchAdjacents(board, adjacents, true)
-  }
+  applyMatchAdjacents(board, specialAdjacents)
 }
 
 function skillEffects(
