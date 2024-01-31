@@ -94,6 +94,9 @@ export default function StageSelect(): ReactNode {
                   <option value="valentine_1">チョコパラダイス1</option>
                   <option value="valentine_2_1">チョコパラダイス2 wave1</option>
                   <option value="valentine_2_2">チョコパラダイス2 wave2</option>
+                  <option value="valentine_4_1">チョコパラダイス4 wave1</option>
+                  <option value="valentine_4_2">チョコパラダイス4 wave2</option>
+                  <option value="valentine_4_3">チョコパラダイス4 wave3</option>
                   <option value="valentine_5_1">チョコパラダイス5 wave1</option>
                   <option value="valentine_5_2">チョコパラダイス5 wave2</option>
                   <option value="valentine_5_3">チョコパラダイス5 wave3</option>

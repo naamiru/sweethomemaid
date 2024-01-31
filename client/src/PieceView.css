@@ -305,7 +305,11 @@
       &.is-jelly-4 {
         background-image: url('./assets/piece-images/a_jelly4.png');
       }
-      &.is-jelly-5 {
+      &.is-jelly-5,
+      &.is-jelly-6,
+      &.is-jelly-7,
+      &.is-jelly-8,
+      &.is-jelly-9 {
         background-image: url('./assets/piece-images/a_jelly5.png');
       }
       &.is-web-1 {
@@ -359,7 +363,8 @@
       &.is-jelly-4 {
         background-image: url('./assets/piece-images/p_jelly4.png');
       }
-      &.is-jelly-5 {
+      &.is-jelly-5,
+      &.is-jelly-6 {
         background-image: url('./assets/piece-images/p_jelly5.png');
       }
       &.is-web-1 {
