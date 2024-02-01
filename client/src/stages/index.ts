@@ -4,6 +4,7 @@ export const currentStages = [
   'valentine_1',
   'valentine_2_1',
   'valentine_2_2',
+  'valentine_3',
   'valentine_4_1',
   'valentine_4_2',
   'valentine_4_3',

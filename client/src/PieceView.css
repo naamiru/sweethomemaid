@@ -86,6 +86,12 @@
       &.is-web-3 {
         background-image: url('./assets/piece-images/rv_web3.png');
       }
+      &.is-jelly-1 {
+        background-image: url('./assets/piece-images/rv_jelly1.png');
+      }
+      &.is-jelly-2 {
+        background-image: url('./assets/piece-images/rv_jelly2.png');
+      }
     }
     &.is-missile {
       background-image: url('./assets/piece-images/m.png');
@@ -103,6 +109,9 @@
       }
       &.is-jelly-2 {
         background-image: url('./assets/piece-images/m_jelly2.png');
+      }
+      &.is-jelly-3 {
+        background-image: url('./assets/piece-images/m_jelly3.png');
       }
     }
     &.is-red {
