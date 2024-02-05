@@ -24,7 +24,9 @@ export enum Kind {
   Present,
   Mikan,
   Button,
-  Bubble
+  Bubble,
+  Cat,
+  Printer
 }
 
 const boosters = [
@@ -56,6 +58,7 @@ export type Face =
   | Exclude<Kind, Obstacle>
   | { kind: Obstacle; count: number }
   | { kind: Kind.Mikan; count: number; position: [0 | 1, 0 | 1] } // position: [x, y]
+  | { kind: Kind.Printer; position: [0 | 1, 0 | 1] } // position: [x, y]
   | { kind: Kind.Bubble; count: number; color: 'red' | 'blue' }
 
 export function getKind(face: Face): Kind {
@@ -117,6 +120,7 @@ export type Killers = {
   button?: Killer
   web?: Killer
   bubble?: Killer
+  printer?: Killer
 }
 
 export type Position = [number, number]

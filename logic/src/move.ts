@@ -164,14 +164,45 @@ export function* moveScenes(
     }
   }
 
+  const getFallenCats = fallenCatsFn(board)
+  let fallenCats = getFallenCats()
+
   do {
     applyMatches(board, matches, skips)
     skips = undefined
-    if (matches.length > 0) yield MoveScene.Match
+    applyFallenCats(board, fallenCats)
+    if (matches.length > 0 || fallenCats.length > 0) yield MoveScene.Match
+
     const falled = fall(board, options)
     if (falled) yield MoveScene.Fall
     matches = findMatches(board)
-  } while (matches.length > 0)
+    fallenCats = getFallenCats()
+  } while (matches.length > 0 || fallenCats.length > 0)
+}
+
+function fallenCatsFn(board: Board): () => Position[] {
+  // 猫が落ちる場所
+  const catHoles: Position[] = []
+  for (const pos of board.allPositions()) {
+    if (board.piece(pos).face === Kind.Out) continue
+    let downstream: Position
+    const upstream = board.upstream(pos)
+    if (upstream === Direction.Up) {
+      downstream = [pos[0], pos[1] + 1]
+    } else if (upstream === Direction.Down) {
+      downstream = [pos[0], pos[1] - 1]
+    } else if (upstream === Direction.Left) {
+      downstream = [pos[0], pos[1] + 1]
+    } else {
+      // upstream === Direction.Right
+      downstream = [pos[0], pos[1] - 1]
+    }
+    if (board.piece(downstream).face === Kind.Out) {
+      catHoles.push(pos)
+    }
+  }
+
+  return () => catHoles.filter(pos => board.piece(pos).face === Kind.Cat)
 }
 
 export function canMove(board: Board, move: Move): boolean {
@@ -383,7 +414,8 @@ function isFixedPiece(board: Board, position: Position): boolean {
     getKind(piece.face) === Kind.Present ||
     getKind(piece.face) === Kind.Mikan ||
     getKind(piece.face) === Kind.Button ||
-    getKind(piece.face) === Kind.Bubble
+    getKind(piece.face) === Kind.Bubble ||
+    getKind(piece.face) === Kind.Printer
   ) {
     return true
   }
@@ -1205,7 +1237,23 @@ function matchedPiece(
     }
   }
 
+  if (face instanceof Object && face.kind === Kind.Printer) {
+    // 3Dプリンター削除は未実装
+    return piece
+  }
+
+  if (face === Kind.Cat) {
+    // 猫は最下段から落ちる以外では消えない
+    return piece
+  }
+
   return createPiece(Kind.Empty)
+}
+
+function applyFallenCats(board: Board, positions: Position[]): void {
+  for (const position of positions) {
+    board.setPiece(position, createPiece(Kind.Empty))
+  }
 }
 
 /**
@@ -1230,6 +1278,7 @@ export function fall(
       getKind(piece.face) !== Kind.Mikan &&
       getKind(piece.face) !== Kind.Button &&
       getKind(piece.face) !== Kind.Bubble &&
+      getKind(piece.face) !== Kind.Printer &&
       (stopPiece === undefined || stopPiece !== piece)
     )
   }

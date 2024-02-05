@@ -270,11 +270,17 @@ function pieceClasses(piece: Piece, cell: Cell): string[] {
           [Kind.Missile]: 'missile'
         }[piece.face]
     )
+  } else if (piece.face === Kind.Cat) {
+    classes.push('is-cat')
   } else if (piece.face instanceof Object) {
     if (piece.face.kind === Kind.Mikan) {
       if (piece.face.position[0] === 0 && piece.face.position[1] === 0) {
         classes.push('is-mikan')
         classes.push('is-mikan-' + String(Math.min(piece.face.count, 30)))
+      }
+    } else if (piece.face.kind === Kind.Printer) {
+      if (piece.face.position[0] === 0 && piece.face.position[1] === 0) {
+        classes.push('is-printer')
       }
     } else if (piece.face.kind === Kind.Bubble) {
       classes.push(`is-bubble-${piece.face.color}-${piece.face.count}`)

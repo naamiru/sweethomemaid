@@ -16,6 +16,7 @@ import { useCallback } from 'react'
 import { useApp } from '../app/use-app'
 import mikanClassifierUrl from '../assets/mikan_classifier.onnx'
 import pieceClassifierUrl from '../assets/piece_classifier.onnx'
+import printerClassifierUrl from '../assets/printer_classifier.onnx'
 
 import { getStageConfig } from '../stages'
 
@@ -65,6 +66,29 @@ export function useDetect(): (
             board.setPiece(
               pos,
               createPiece({ kind: Kind.Mikan, count, position: diff })
+            )
+          }
+        }
+      }
+
+      if (config.printers !== undefined) {
+        for await (const position of detectPrinters(
+          image,
+          bounds,
+          board.width,
+          board.height,
+          config.printers
+        )) {
+          for (const diff of [
+            [0, 0],
+            [0, 1],
+            [1, 0],
+            [1, 1]
+          ] as Array<[0 | 1, 0 | 1]>) {
+            const pos: Position = [position[0] + diff[0], position[1] + diff[1]]
+            board.setPiece(
+              pos,
+              createPiece({ kind: Kind.Printer, position: diff })
             )
           }
         }
@@ -151,6 +175,46 @@ async function* detectMikans(
     const count = MIKAN_COUNT_FOR_INDEX[index]
     if (count > 0) {
       yield [positions[i], count]
+    }
+    i++
+  }
+}
+
+const PRINTER_COUNT_FOR_INDEX = [0, 1]
+const PRINTER_IMAGE_SIZE = 32
+
+async function* detectPrinters(
+  image: HTMLImageElement,
+  bounds: Bounds,
+  width: number,
+  height: number,
+  printers: string
+): AsyncGenerator<Position> {
+  const positions: Position[] = []
+  for (const [pos] of positiveDigitToken(printers)) {
+    positions.push(pos)
+  }
+
+  const pieceBounds: Bounds[] = []
+  const pieceWidth = Math.floor(bounds[2] / width)
+  const pieceHeight = Math.floor(bounds[3] / height)
+  for (const [x, y] of positions) {
+    pieceBounds.push([
+      bounds[0] + (x - 1) * pieceWidth,
+      bounds[1] + (y - 1) * pieceHeight,
+      pieceWidth * 2,
+      pieceHeight * 2
+    ])
+  }
+
+  let i = 0
+  for await (const index of classify(
+    printerClassifierUrl,
+    inputTensors(image, pieceBounds, PRINTER_IMAGE_SIZE)
+  )) {
+    const count = PRINTER_COUNT_FOR_INDEX[index]
+    if (count > 0) {
+      yield positions[i]
     }
     i++
   }
@@ -269,6 +333,7 @@ const PIECE_FOR_INDEX: Array<Piece | [Piece, Cell]> = [
   createPiece({ kind: Kind.Button, count: 1 }),
   createPiece({ kind: Kind.Button, count: 2 }),
   createPiece({ kind: Kind.Button, count: 3 }),
+  createPiece(Kind.Cat),
   createPiece(Kind.Empty),
   createPiece(Kind.Green, 0),
   createPiece(Kind.Green, 1),
@@ -385,7 +450,8 @@ function getPieceMask(config: BoardConfig): boolean[] {
     ['woods', Kind.Wood],
     ['presents', Kind.Present],
     ['buttons', Kind.Button],
-    ['bubbles', Kind.Bubble]
+    ['bubbles', Kind.Bubble],
+    ['printers', Kind.Cat]
   ] as const) {
     if (prop in config) {
       kinds.add(obstacle)

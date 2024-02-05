@@ -20,6 +20,7 @@ export type BoardConfig = {
   jellies?: string
   presents?: string
   mikans?: string
+  printers?: string
   buttons?: string
   webs?: string
   bubbles?: string
@@ -39,6 +40,7 @@ export function load(config: BoardConfig): Board {
   if (config.jellies !== undefined) updateJelly(board, config.jellies)
   if (config.presents !== undefined) updatePresent(board, config.presents)
   if (config.mikans !== undefined) updateMikan(board, config.mikans)
+  if (config.printers !== undefined) updatePrinter(board, config.printers)
   if (config.buttons !== undefined) updateButton(board, config.buttons)
   if (config.webs !== undefined) updateWeb(board, config.webs)
   if (config.bubbles !== undefined) updateBubble(board, config.bubbles)
@@ -176,6 +178,32 @@ function updateMikan(board: Board, expr: string): void {
         position,
         createPiece(
           { kind: Kind.Mikan, count, position: mikanPosition },
+          piece.ice,
+          piece.chain,
+          piece.jelly
+        )
+      )
+    }
+  }
+}
+
+function updatePrinter(board: Board, expr: string): void {
+  for (const [pos] of positiveDigitToken(expr)) {
+    for (const printerPosition of [
+      [0, 0],
+      [0, 1],
+      [1, 0],
+      [1, 1]
+    ] as Array<[0 | 1, 0 | 1]>) {
+      const position: Position = [
+        pos[0] + printerPosition[0],
+        pos[1] + printerPosition[1]
+      ]
+      const piece = board.piece(position)
+      board.setPiece(
+        position,
+        createPiece(
+          { kind: Kind.Printer, position: printerPosition },
           piece.ice,
           piece.chain,
           piece.jelly

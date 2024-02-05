@@ -39,6 +39,7 @@
     &.is-unknown {
       background-image: url('./assets/piece-images/unknown.png');
     }
+
     &.is-special {
       background-image: url('./assets/piece-images/n.png');
       &.is-web-1 {
@@ -114,6 +115,7 @@
         background-image: url('./assets/piece-images/m_jelly3.png');
       }
     }
+
     &.is-red {
       background-image: url('./assets/piece-images/r0.png');
       &.is-ice-1 {
@@ -153,6 +155,7 @@
         background-image: url('./assets/piece-images/r_web3.png');
       }
     }
+
     &.is-blue {
       background-image: url('./assets/piece-images/b0.png');
       &.is-ice-1 {
@@ -192,6 +195,7 @@
         background-image: url('./assets/piece-images/b_jelly3.png');
       }
     }
+
     &.is-green {
       background-image: url('./assets/piece-images/g0.png');
       &.is-ice-1 {
@@ -237,6 +241,7 @@
         background-image: url('./assets/piece-images/g_web3.png');
       }
     }
+
     &.is-yellow {
       background-image: url('./assets/piece-images/y0.png');
       &.is-ice-1 {
@@ -282,6 +287,7 @@
         background-image: url('./assets/piece-images/y_chain3.png');
       }
     }
+
     &.is-aqua {
       background-image: url('./assets/piece-images/a0.png');
       &.is-ice-1 {
@@ -331,6 +337,7 @@
         background-image: url('./assets/piece-images/a_web3.png');
       }
     }
+
     &.is-pink {
       background-image: url('./assets/piece-images/p0.png');
       &.is-ice-1 {
@@ -386,6 +393,7 @@
         background-image: url('./assets/piece-images/p_web3.png');
       }
     }
+
     &.is-wood-1 {
       background-image: url('./assets/piece-images/wood1.png');
     }
@@ -395,6 +403,7 @@
     &.is-wood-3 {
       background-image: url('./assets/piece-images/wood3.png');
     }
+
     &.is-button-1 {
       background-image: url('./assets/piece-images/button1.png');
     }
@@ -404,6 +413,7 @@
     &.is-button-3 {
       background-image: url('./assets/piece-images/button3.png');
     }
+
     &.is-present-1 {
       background-image: url('./assets/piece-images/present1.png');
     }
@@ -445,6 +455,10 @@
     }
     &.is-bubble-blue-2 {
       background-image: url('./assets/piece-images/bubble_b2.png');
+    }
+
+    &.is-cat {
+      background-image: url('./assets/piece-images/cat.png');
     }
 
     &.is-mikan {
@@ -508,6 +522,12 @@
     }
     &.is-mikan-30 {
       background-image: url('./assets/piece-images/mikan30.png');
+    }
+
+    &.is-printer {
+      width: 200%;
+      height: 200%;
+      background-image: url('./assets/piece-images/printer.png');
     }
   }
 }
