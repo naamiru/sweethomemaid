@@ -291,6 +291,7 @@ function pieceClasses(piece: Piece, cell: Cell): string[] {
             [Kind.Mouse]: 'mouse',
             [Kind.Wood]: 'wood',
             [Kind.Present]: 'present',
+            [Kind.Danbooru]: 'danbooru',
             [Kind.Button]: 'button'
           }[piece.face.kind] +
           '-' +

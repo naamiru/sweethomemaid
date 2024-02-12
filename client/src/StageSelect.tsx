@@ -103,7 +103,21 @@ export default function StageSelect(): ReactNode {
                   <option value="valentine_5_3">チョコパラダイス5 wave3</option>
                   <option value="valentine_5_4">チョコパラダイス5 wave4</option>
                 </optgroup>
-                <optgroup label="マスターズランキング 3Dプリンター">
+                <optgroup label="マスターズランキング">
+                  <option value="masters_13_1">
+                    マスターズ ダンボール（左上が紫）
+                  </option>
+                  <option value="masters_13_2">
+                    マスターズ ダンボール（左上が水）
+                  </option>
+                  <option value="masters_13_3">
+                    マスターズ ダンボール（左上が青）
+                  </option>
+                </optgroup>
+              </>
+            ) : (
+              <>
+                <optgroup label="第12回マスターズランキング 3Dプリンター">
                   <option value="masters_12_1">
                     マスターズ 3Dプリンター（左下が黄）
                   </option>
@@ -114,9 +128,6 @@ export default function StageSelect(): ReactNode {
                     マスターズ 3Dプリンター（左下が青）
                   </option>
                 </optgroup>
-              </>
-            ) : (
-              <>
                 <optgroup label="第11回マスターズランキング 氷">
                   <option value="masters_11_1">
                     マスターズ 氷（右上が紫）

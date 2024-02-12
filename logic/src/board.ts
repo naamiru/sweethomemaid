@@ -22,6 +22,7 @@ export enum Kind {
   Mouse,
   Wood,
   Present,
+  Danbooru,
   Mikan,
   Button,
   Bubble,
@@ -50,7 +51,13 @@ const colors = [
 
 export type Color = (typeof colors)[number]
 
-const obstacles = [Kind.Mouse, Kind.Wood, Kind.Present, Kind.Button] as const
+const obstacles = [
+  Kind.Mouse,
+  Kind.Wood,
+  Kind.Present,
+  Kind.Danbooru,
+  Kind.Button
+] as const
 
 type Obstacle = (typeof obstacles)[number]
 
@@ -114,6 +121,7 @@ export type Killers = {
   mouse?: Killer
   wood?: Killer
   present?: Killer
+  danbooru?: Killer
   chain?: Killer
   jelly?: Killer
   mikan?: Killer

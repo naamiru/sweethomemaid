@@ -412,6 +412,7 @@ function isFixedPiece(board: Board, position: Position): boolean {
     piece.chain > 0 ||
     piece.jelly > 0 ||
     getKind(piece.face) === Kind.Present ||
+    getKind(piece.face) === Kind.Danbooru ||
     getKind(piece.face) === Kind.Mikan ||
     getKind(piece.face) === Kind.Button ||
     getKind(piece.face) === Kind.Bubble ||
@@ -835,9 +836,12 @@ function applyMatchAdjacents(
 ): void {
   for (const position of positions) {
     const piece = board.piece(position)
-    if (getKind(piece.face) === Kind.Present) {
-      board.setPiece(position, matchedPiece(board, piece))
-    } else if (getKind(piece.face) === Kind.Bubble) {
+    const kind = getKind(piece.face)
+    if (
+      kind === Kind.Present ||
+      kind === Kind.Danbooru ||
+      kind === Kind.Bubble
+    ) {
       board.setPiece(position, matchedPiece(board, piece))
     } else if (piece.jelly > 0) {
       board.setPiece(position, matchedPiece(board, piece))
@@ -1211,6 +1215,7 @@ function matchedPiece(
     ['mouse', Kind.Mouse],
     ['wood', Kind.Wood],
     ['present', Kind.Present],
+    ['danbooru', Kind.Danbooru],
     ['button', Kind.Button],
     ['bubble', Kind.Bubble]
   ] as const) {
@@ -1275,6 +1280,7 @@ export function fall(
       piece.chain === 0 &&
       piece.jelly === 0 &&
       getKind(piece.face) !== Kind.Present &&
+      getKind(piece.face) !== Kind.Danbooru &&
       getKind(piece.face) !== Kind.Mikan &&
       getKind(piece.face) !== Kind.Button &&
       getKind(piece.face) !== Kind.Bubble &&

@@ -444,6 +444,43 @@
       background-image: url('./assets/piece-images/present15.png');
     }
 
+    &.is-danbooru-1 {
+      background-image: url('./assets/piece-images/danbooru1.png');
+    }
+    &.is-danbooru-2 {
+      background-image: url('./assets/piece-images/danbooru2.png');
+    }
+    &.is-danbooru-3 {
+      background-image: url('./assets/piece-images/danbooru3.png');
+    }
+    &.is-danbooru-4 {
+      background-image: url('./assets/piece-images/danbooru4.png');
+    }
+    &.is-danbooru-5 {
+      background-image: url('./assets/piece-images/danbooru5.png');
+    }
+    &.is-danbooru-6 {
+      background-image: url('./assets/piece-images/danbooru6.png');
+    }
+    &.is-danbooru-7 {
+      background-image: url('./assets/piece-images/danbooru7.png');
+    }
+    &.is-danbooru-8 {
+      background-image: url('./assets/piece-images/danbooru8.png');
+    }
+    &.is-danbooru-9 {
+      background-image: url('./assets/piece-images/danbooru9.png');
+    }
+    &.is-danbooru-10 {
+      background-image: url('./assets/piece-images/danbooru10.png');
+    }
+    &.is-danbooru-11 {
+      background-image: url('./assets/piece-images/danbooru11.png');
+    }
+    &.is-danbooru-12 {
+      background-image: url('./assets/piece-images/danbooru12.png');
+    }
+
     &.is-bubble-red-1 {
       background-image: url('./assets/piece-images/bubble_r1.png');
     }

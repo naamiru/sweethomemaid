@@ -19,6 +19,7 @@ export type BoardConfig = {
   chains?: string
   jellies?: string
   presents?: string
+  danboorus?: string
   mikans?: string
   printers?: string
   buttons?: string
@@ -39,6 +40,7 @@ export function load(config: BoardConfig): Board {
   if (config.chains !== undefined) updateChain(board, config.chains)
   if (config.jellies !== undefined) updateJelly(board, config.jellies)
   if (config.presents !== undefined) updatePresent(board, config.presents)
+  if (config.danboorus !== undefined) updateDanbooru(board, config.danboorus)
   if (config.mikans !== undefined) updateMikan(board, config.mikans)
   if (config.printers !== undefined) updatePrinter(board, config.printers)
   if (config.buttons !== undefined) updateButton(board, config.buttons)
@@ -153,6 +155,21 @@ function updatePresent(board: Board, expr: string): void {
       pos,
       createPiece(
         { kind: Kind.Present, count },
+        piece.ice,
+        piece.chain,
+        piece.jelly
+      )
+    )
+  }
+}
+
+function updateDanbooru(board: Board, expr: string): void {
+  for (const [pos, count] of positiveDigitToken(expr)) {
+    const piece = board.piece(pos)
+    board.setPiece(
+      pos,
+      createPiece(
+        { kind: Kind.Danbooru, count },
         piece.ice,
         piece.chain,
         piece.jelly
