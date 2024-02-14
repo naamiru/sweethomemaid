@@ -14,7 +14,8 @@ export const currentStages = [
   'valentine_5_1',
   'valentine_5_2',
   'valentine_5_3',
-  'valentine_5_4'
+  'valentine_5_4',
+  'valentine_10'
 ] as const
 export const oldStages = [
   'masters_12_1',

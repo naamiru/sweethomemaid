@@ -51,6 +51,15 @@
       &.is-web-3 {
         background-image: url('./assets/piece-images/n_web3.png');
       }
+      &.is-jelly-1 {
+        background-image: url('./assets/piece-images/n_jelly1.png');
+      }
+      &.is-jelly-2 {
+        background-image: url('./assets/piece-images/n_jelly2.png');
+      }
+      &.is-jelly-3 {
+        background-image: url('./assets/piece-images/n_jelly3.png');
+      }
     }
     &.is-bomb {
       background-image: url('./assets/piece-images/b.png');
@@ -63,6 +72,15 @@
       &.is-web-3 {
         background-image: url('./assets/piece-images/bomb_web3.png');
       }
+      &.is-jelly-1 {
+        background-image: url('./assets/piece-images/bomb_jelly1.png');
+      }
+      &.is-jelly-2 {
+        background-image: url('./assets/piece-images/bomb_jelly2.png');
+      }
+      &.is-jelly-3 {
+        background-image: url('./assets/piece-images/bomb_jelly3.png');
+      }
     }
     &.is-hrocket {
       background-image: url('./assets/piece-images/rh.png');
@@ -74,6 +92,15 @@
       }
       &.is-web-3 {
         background-image: url('./assets/piece-images/rh_web3.png');
+      }
+      &.is-jelly-1 {
+        background-image: url('./assets/piece-images/rh_jelly1.png');
+      }
+      &.is-jelly-2 {
+        background-image: url('./assets/piece-images/rh_jelly2.png');
+      }
+      &.is-jelly-3 {
+        background-image: url('./assets/piece-images/rh_jelly3.png');
       }
     }
     &.is-vrocket {
@@ -92,6 +119,9 @@
       }
       &.is-jelly-2 {
         background-image: url('./assets/piece-images/rv_jelly2.png');
+      }
+      &.is-jelly-3 {
+        background-image: url('./assets/piece-images/rv_jelly3.png');
       }
     }
     &.is-missile {
