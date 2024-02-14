@@ -57,7 +57,16 @@
       &.is-jelly-2 {
         background-image: url('./assets/piece-images/n_jelly2.png');
       }
-      &.is-jelly-3 {
+      &.is-jelly-3,
+      &.is-jelly-4,
+      &.is-jelly-5,
+      &.is-jelly-6,
+      &.is-jelly-7,
+      &.is-jelly-8,
+      &.is-jelly-9,
+      &.is-jelly-10,
+      &.is-jelly-11,
+      &.is-jelly-12 {
         background-image: url('./assets/piece-images/n_jelly3.png');
       }
     }
@@ -78,7 +87,16 @@
       &.is-jelly-2 {
         background-image: url('./assets/piece-images/bomb_jelly2.png');
       }
-      &.is-jelly-3 {
+      &.is-jelly-3,
+      &.is-jelly-4,
+      &.is-jelly-5,
+      &.is-jelly-6,
+      &.is-jelly-7,
+      &.is-jelly-8,
+      &.is-jelly-9,
+      &.is-jelly-10,
+      &.is-jelly-11,
+      &.is-jelly-12 {
         background-image: url('./assets/piece-images/bomb_jelly3.png');
       }
     }
@@ -99,7 +117,16 @@
       &.is-jelly-2 {
         background-image: url('./assets/piece-images/rh_jelly2.png');
       }
-      &.is-jelly-3 {
+      &.is-jelly-3,
+      &.is-jelly-4,
+      &.is-jelly-5,
+      &.is-jelly-6,
+      &.is-jelly-7,
+      &.is-jelly-8,
+      &.is-jelly-9,
+      &.is-jelly-10,
+      &.is-jelly-11,
+      &.is-jelly-12 {
         background-image: url('./assets/piece-images/rh_jelly3.png');
       }
     }
@@ -120,7 +147,16 @@
       &.is-jelly-2 {
         background-image: url('./assets/piece-images/rv_jelly2.png');
       }
-      &.is-jelly-3 {
+      &.is-jelly-3,
+      &.is-jelly-4,
+      &.is-jelly-5,
+      &.is-jelly-6,
+      &.is-jelly-7,
+      &.is-jelly-8,
+      &.is-jelly-9,
+      &.is-jelly-10,
+      &.is-jelly-11,
+      &.is-jelly-12 {
         background-image: url('./assets/piece-images/rv_jelly3.png');
       }
     }
@@ -141,7 +177,16 @@
       &.is-jelly-2 {
         background-image: url('./assets/piece-images/m_jelly2.png');
       }
-      &.is-jelly-3 {
+      &.is-jelly-3,
+      &.is-jelly-4,
+      &.is-jelly-5,
+      &.is-jelly-6,
+      &.is-jelly-7,
+      &.is-jelly-8,
+      &.is-jelly-9,
+      &.is-jelly-10,
+      &.is-jelly-11,
+      &.is-jelly-12 {
         background-image: url('./assets/piece-images/m_jelly3.png');
       }
     }
