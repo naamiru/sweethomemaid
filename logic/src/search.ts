@@ -271,7 +271,8 @@ const ADJACENTS = [
 ]
 
 function isMovable(board: Board, position: Position): boolean {
-  return board.cell(position).web === 0
+  const piece = board.piece(position)
+  return piece.ice === 0 && piece.jelly === 0 && board.cell(position).web === 0
 }
 
 export function hasSpecialCombo(board: Board): boolean {
