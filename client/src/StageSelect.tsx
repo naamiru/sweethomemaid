@@ -90,6 +90,9 @@ export default function StageSelect(): ReactNode {
           <select name="stage" value={stage} onChange={handleChange}>
             {stageType === 'current' ? (
               <>
+                <optgroup label="チームズフェスティバル">
+                  <option value="teams_3_1_1">チームフェス phase1 wave1</option>
+                </optgroup>
                 <optgroup label="チョコパラダイス">
                   <option value="valentine_1">チョコパラダイス1</option>
                   <option value="valentine_2_1">チョコパラダイス2 wave1</option>

@@ -57,17 +57,29 @@
       &.is-jelly-2 {
         background-image: url('./assets/piece-images/n_jelly2.png');
       }
-      &.is-jelly-3,
-      &.is-jelly-4,
-      &.is-jelly-5,
-      &.is-jelly-6,
-      &.is-jelly-7,
-      &.is-jelly-8,
+      &.is-jelly-3 {
+        background-image: url('./assets/piece-images/n_jelly3.png');
+      }
+      &.is-jelly-4 {
+        background-image: url('./assets/piece-images/n_jelly4.png');
+      }
+      &.is-jelly-5 {
+        background-image: url('./assets/piece-images/n_jelly5.png');
+      }
+      &.is-jelly-6 {
+        background-image: url('./assets/piece-images/n_jelly6.png');
+      }
+      &.is-jelly-7 {
+        background-image: url('./assets/piece-images/n_jelly7.png');
+      }
+      &.is-jelly-8 {
+        background-image: url('./assets/piece-images/n_jelly8.png');
+      }
       &.is-jelly-9,
       &.is-jelly-10,
       &.is-jelly-11,
       &.is-jelly-12 {
-        background-image: url('./assets/piece-images/n_jelly3.png');
+        background-image: url('./assets/piece-images/n_jelly9.png');
       }
     }
     &.is-bomb {
@@ -177,17 +189,29 @@
       &.is-jelly-2 {
         background-image: url('./assets/piece-images/m_jelly2.png');
       }
-      &.is-jelly-3,
-      &.is-jelly-4,
-      &.is-jelly-5,
-      &.is-jelly-6,
-      &.is-jelly-7,
-      &.is-jelly-8,
+      &.is-jelly-3 {
+        background-image: url('./assets/piece-images/m_jelly3.png');
+      }
+      &.is-jelly-4 {
+        background-image: url('./assets/piece-images/m_jelly4.png');
+      }
+      &.is-jelly-5 {
+        background-image: url('./assets/piece-images/m_jelly5.png');
+      }
+      &.is-jelly-6 {
+        background-image: url('./assets/piece-images/m_jelly6.png');
+      }
+      &.is-jelly-7 {
+        background-image: url('./assets/piece-images/m_jelly7.png');
+      }
+      &.is-jelly-8 {
+        background-image: url('./assets/piece-images/m_jelly8.png');
+      }
       &.is-jelly-9,
       &.is-jelly-10,
       &.is-jelly-11,
       &.is-jelly-12 {
-        background-image: url('./assets/piece-images/m_jelly3.png');
+        background-image: url('./assets/piece-images/m_jelly9.png');
       }
     }
 
@@ -306,6 +330,18 @@
       &.is-jelly-5 {
         background-image: url('./assets/piece-images/g_jelly5.png');
       }
+      &.is-jelly-6 {
+        background-image: url('./assets/piece-images/g_jelly6.png');
+      }
+      &.is-jelly-7 {
+        background-image: url('./assets/piece-images/g_jelly7.png');
+      }
+      &.is-jelly-8 {
+        background-image: url('./assets/piece-images/g_jelly8.png');
+      }
+      &.is-jelly-9 {
+        background-image: url('./assets/piece-images/g_jelly9.png');
+      }
       &.is-web-1 {
         background-image: url('./assets/piece-images/g_web1.png');
       }
@@ -352,6 +388,9 @@
       &.is-jelly-5 {
         background-image: url('./assets/piece-images/y_jelly5.png');
       }
+      &.is-jelly-6 {
+        background-image: url('./assets/piece-images/y_jelly6.png');
+      }
       &.is-chain-1 {
         background-image: url('./assets/piece-images/y_chain1.png');
       }
@@ -395,12 +434,20 @@
       &.is-jelly-4 {
         background-image: url('./assets/piece-images/a_jelly4.png');
       }
-      &.is-jelly-5,
-      &.is-jelly-6,
-      &.is-jelly-7,
-      &.is-jelly-8,
-      &.is-jelly-9 {
+      &.is-jelly-5 {
         background-image: url('./assets/piece-images/a_jelly5.png');
+      }
+      &.is-jelly-6 {
+        background-image: url('./assets/piece-images/a_jelly6.png');
+      }
+      &.is-jelly-7 {
+        background-image: url('./assets/piece-images/a_jelly7.png');
+      }
+      &.is-jelly-8 {
+        background-image: url('./assets/piece-images/a_jelly8.png');
+      }
+      &.is-jelly-9 {
+        background-image: url('./assets/piece-images/a_jelly9.png');
       }
       &.is-web-1 {
         background-image: url('./assets/piece-images/a_web1.png');
@@ -454,9 +501,20 @@
       &.is-jelly-4 {
         background-image: url('./assets/piece-images/p_jelly4.png');
       }
-      &.is-jelly-5,
-      &.is-jelly-6 {
+      &.is-jelly-5 {
         background-image: url('./assets/piece-images/p_jelly5.png');
+      }
+      &.is-jelly-6 {
+        background-image: url('./assets/piece-images/p_jelly6.png');
+      }
+      &.is-jelly-7 {
+        background-image: url('./assets/piece-images/p_jelly7.png');
+      }
+      &.is-jelly-8 {
+        background-image: url('./assets/piece-images/p_jelly8.png');
+      }
+      &.is-jelly-9 {
+        background-image: url('./assets/piece-images/p_jelly9.png');
       }
       &.is-web-1 {
         background-image: url('./assets/piece-images/p_web1.png');
