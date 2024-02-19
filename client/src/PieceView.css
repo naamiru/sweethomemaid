@@ -40,6 +40,36 @@
       background-image: url('./assets/piece-images/unknown.png');
     }
 
+    &.is-empty {
+      &.is-jelly-1 {
+        background-image: url('./assets/piece-images/empty_jelly1.png');
+      }
+      &.is-jelly-2 {
+        background-image: url('./assets/piece-images/empty_jelly2.png');
+      }
+      &.is-jelly-3 {
+        background-image: url('./assets/piece-images/empty_jelly3.png');
+      }
+      &.is-jelly-4 {
+        background-image: url('./assets/piece-images/empty_jelly4.png');
+      }
+      &.is-jelly-5 {
+        background-image: url('./assets/piece-images/empty_jelly5.png');
+      }
+      &.is-jelly-6 {
+        background-image: url('./assets/piece-images/empty_jelly6.png');
+      }
+      &.is-jelly-7 {
+        background-image: url('./assets/piece-images/empty_jelly7.png');
+      }
+      &.is-jelly-8 {
+        background-image: url('./assets/piece-images/empty_jelly8.png');
+      }
+      &.is-jelly-9 {
+        background-image: url('./assets/piece-images/empty_jelly9.png');
+      }
+    }
+
     &.is-special {
       background-image: url('./assets/piece-images/n.png');
       &.is-web-1 {
@@ -129,13 +159,27 @@
       &.is-jelly-2 {
         background-image: url('./assets/piece-images/rh_jelly2.png');
       }
-      &.is-jelly-3,
-      &.is-jelly-4,
-      &.is-jelly-5,
-      &.is-jelly-6,
-      &.is-jelly-7,
-      &.is-jelly-8,
-      &.is-jelly-9,
+      &.is-jelly-3 {
+        background-image: url('./assets/piece-images/rh_jelly3.png');
+      }
+      &.is-jelly-4 {
+        background-image: url('./assets/piece-images/rh_jelly4.png');
+      }
+      &.is-jelly-5 {
+        background-image: url('./assets/piece-images/rh_jelly5.png');
+      }
+      &.is-jelly-6 {
+        background-image: url('./assets/piece-images/rh_jelly6.png');
+      }
+      &.is-jelly-7 {
+        background-image: url('./assets/piece-images/rh_jelly7.png');
+      }
+      &.is-jelly-8 {
+        background-image: url('./assets/piece-images/rh_jelly8.png');
+      }
+      &.is-jelly-9 {
+        background-image: url('./assets/piece-images/rh_jelly9.png');
+      }
       &.is-jelly-10,
       &.is-jelly-11,
       &.is-jelly-12 {
@@ -535,6 +579,16 @@
     }
     &.is-wood-3 {
       background-image: url('./assets/piece-images/wood3.png');
+    }
+
+    &.is-peanut-1 {
+      background-image: url('./assets/piece-images/peanut1.png');
+    }
+    &.is-peanut-2 {
+      background-image: url('./assets/piece-images/peanut2.png');
+    }
+    &.is-peanut-3 {
+      background-image: url('./assets/piece-images/peanut3.png');
     }
 
     &.is-button-1 {

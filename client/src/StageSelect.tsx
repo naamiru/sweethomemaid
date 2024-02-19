@@ -92,6 +92,20 @@ export default function StageSelect(): ReactNode {
               <>
                 <optgroup label="チームズフェスティバル">
                   <option value="teams_3_1_1">チームフェス phase1 wave1</option>
+                  {/* 空のゼリーの処理に問題あり
+                  <option value="teams_3_1_2">チームフェス phase1 wave2</option>
+                  */}
+                </optgroup>
+                <optgroup label="マスターズランキング">
+                  <option value="masters_14_1">
+                    マスターズ ピーナッツ（上段左が黄）
+                  </option>
+                  <option value="masters_14_2">
+                    マスターズ ピーナッツ（上段左が水）
+                  </option>
+                  <option value="masters_14_3">
+                    マスターズ ピーナッツ（上段左が赤）
+                  </option>
                 </optgroup>
                 <optgroup label="チョコパラダイス">
                   <option value="valentine_1">チョコパラダイス1</option>
@@ -107,7 +121,10 @@ export default function StageSelect(): ReactNode {
                   <option value="valentine_5_4">チョコパラダイス5 wave4</option>
                   <option value="valentine_10">チョコパラダイス10</option>
                 </optgroup>
-                <optgroup label="マスターズランキング">
+              </>
+            ) : (
+              <>
+                <optgroup label="第13回マスターズランキング ダンボール箱">
                   <option value="masters_13_1">
                     マスターズ ダンボール（左上が紫）
                   </option>
@@ -118,9 +135,6 @@ export default function StageSelect(): ReactNode {
                     マスターズ ダンボール（左上が青）
                   </option>
                 </optgroup>
-              </>
-            ) : (
-              <>
                 <optgroup label="第12回マスターズランキング 3Dプリンター">
                   <option value="masters_12_1">
                     マスターズ 3Dプリンター（左下が黄）

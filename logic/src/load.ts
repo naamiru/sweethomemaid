@@ -15,6 +15,7 @@ export type BoardConfig = {
   colors?: string
   mice?: string
   woods?: string
+  peanuts?: string
   ices?: string
   chains?: string
   jellies?: string
@@ -36,6 +37,7 @@ export function load(config: BoardConfig): Board {
   if (config.colors !== undefined) updateColor(board, config.colors)
   if (config.mice !== undefined) updateMouse(board, config.mice)
   if (config.woods !== undefined) updateWood(board, config.woods)
+  if (config.peanuts !== undefined) updatePeanut(board, config.peanuts)
   if (config.ices !== undefined) updateIce(board, config.ices)
   if (config.chains !== undefined) updateChain(board, config.chains)
   if (config.jellies !== undefined) updateJelly(board, config.jellies)
@@ -116,6 +118,21 @@ function updateWood(board: Board, expr: string): void {
       pos,
       createPiece(
         { kind: Kind.Wood, count },
+        piece.ice,
+        piece.chain,
+        piece.jelly
+      )
+    )
+  }
+}
+
+function updatePeanut(board: Board, expr: string): void {
+  for (const [pos, count] of positiveDigitToken(expr)) {
+    const piece = board.piece(pos)
+    board.setPiece(
+      pos,
+      createPiece(
+        { kind: Kind.Peanut, count },
         piece.ice,
         piece.chain,
         piece.jelly

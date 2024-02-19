@@ -247,6 +247,8 @@ function pieceClasses(piece: Piece, cell: Cell): string[] {
 
   if (piece.face === Kind.Unknown) {
     classes.push('is-unknown')
+  } else if (piece.face === Kind.Empty) {
+    classes.push('is-empty')
   } else if (isColor(piece.face)) {
     classes.push(
       'is-' +
@@ -290,6 +292,7 @@ function pieceClasses(piece: Piece, cell: Cell): string[] {
           {
             [Kind.Mouse]: 'mouse',
             [Kind.Wood]: 'wood',
+            [Kind.Peanut]: 'peanut',
             [Kind.Present]: 'present',
             [Kind.Danbooru]: 'danbooru',
             [Kind.Button]: 'button'

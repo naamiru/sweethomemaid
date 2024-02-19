@@ -838,6 +838,7 @@ function applyMatchAdjacents(
     const piece = board.piece(position)
     const kind = getKind(piece.face)
     if (
+      kind === Kind.Peanut ||
       kind === Kind.Present ||
       kind === Kind.Danbooru ||
       kind === Kind.Bubble
@@ -1214,6 +1215,7 @@ function matchedPiece(
   for (const [killerName, kind] of [
     ['mouse', Kind.Mouse],
     ['wood', Kind.Wood],
+    ['peanut', Kind.Peanut],
     ['present', Kind.Present],
     ['danbooru', Kind.Danbooru],
     ['button', Kind.Button],
