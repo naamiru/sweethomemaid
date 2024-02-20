@@ -91,10 +91,11 @@ export default function StageSelect(): ReactNode {
             {stageType === 'current' ? (
               <>
                 <optgroup label="チームズフェスティバル">
-                  <option value="teams_3_1_1">チームフェス phase1 wave1</option>
                   {/* 空のゼリーの処理に問題あり
+                  <option value="teams_3_1_1">チームフェス phase1 wave1</option>
                   <option value="teams_3_1_2">チームフェス phase1 wave2</option>
                   */}
+                  <option value="teams_3_2">チームフェス phase2</option>
                 </optgroup>
                 <optgroup label="マスターズランキング">
                   <option value="masters_14_1">

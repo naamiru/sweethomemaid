@@ -312,6 +312,7 @@ const PIECE_FOR_INDEX: Array<Piece | [Piece, Cell]> = [
   createPiece(Kind.Aqua, 0, 0, 7),
   createPiece(Kind.Aqua, 0, 0, 8),
   createPiece(Kind.Aqua, 0, 0, 9),
+  createPiece(Kind.Aqua, 0, 0, 1000),
   [createPiece(Kind.Aqua), createCell(1)],
   [createPiece(Kind.Aqua), createCell(2)],
   [createPiece(Kind.Aqua), createCell(3)],
@@ -372,6 +373,7 @@ const PIECE_FOR_INDEX: Array<Piece | [Piece, Cell]> = [
   createPiece(Kind.Green, 0, 0, 7),
   createPiece(Kind.Green, 0, 0, 8),
   createPiece(Kind.Green, 0, 0, 9),
+  createPiece(Kind.Green, 0, 0, 1000),
   [createPiece(Kind.Green), createCell(1)],
   [createPiece(Kind.Green), createCell(2)],
   [createPiece(Kind.Green), createCell(3)],
@@ -420,6 +422,7 @@ const PIECE_FOR_INDEX: Array<Piece | [Piece, Cell]> = [
   createPiece(Kind.Pink, 0, 0, 7),
   createPiece(Kind.Pink, 0, 0, 8),
   createPiece(Kind.Pink, 0, 0, 9),
+  createPiece(Kind.Pink, 0, 0, 1000),
   [createPiece(Kind.Pink), createCell(1)],
   [createPiece(Kind.Pink), createCell(2)],
   [createPiece(Kind.Pink), createCell(3)],
@@ -482,7 +485,8 @@ const PIECE_FOR_INDEX: Array<Piece | [Piece, Cell]> = [
   createPiece(Kind.Yellow, 0, 0, 3),
   createPiece(Kind.Yellow, 0, 0, 4),
   createPiece(Kind.Yellow, 0, 0, 5),
-  createPiece(Kind.Yellow, 0, 0, 6)
+  createPiece(Kind.Yellow, 0, 0, 6),
+  createPiece(Kind.Yellow, 0, 0, 1000)
 ]
 
 function getPieceMask(config: BoardConfig): boolean[] {

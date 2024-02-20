@@ -386,6 +386,9 @@
       &.is-jelly-9 {
         background-image: url('./assets/piece-images/g_jelly9.png');
       }
+      &.is-jelly-inf {
+        background-image: url('./assets/piece-images/g_jelly_inf.png');
+      }
       &.is-web-1 {
         background-image: url('./assets/piece-images/g_web1.png');
       }
@@ -434,6 +437,9 @@
       }
       &.is-jelly-6 {
         background-image: url('./assets/piece-images/y_jelly6.png');
+      }
+      &.is-jelly-inf {
+        background-image: url('./assets/piece-images/y_jelly_inf.png');
       }
       &.is-chain-1 {
         background-image: url('./assets/piece-images/y_chain1.png');
@@ -492,6 +498,9 @@
       }
       &.is-jelly-9 {
         background-image: url('./assets/piece-images/a_jelly9.png');
+      }
+      &.is-jelly-inf {
+        background-image: url('./assets/piece-images/a_jelly_inf.png');
       }
       &.is-web-1 {
         background-image: url('./assets/piece-images/a_web1.png');
@@ -559,6 +568,9 @@
       }
       &.is-jelly-9 {
         background-image: url('./assets/piece-images/p_jelly9.png');
+      }
+      &.is-jelly-inf {
+        background-image: url('./assets/piece-images/p_jelly_inf.png');
       }
       &.is-web-1 {
         background-image: url('./assets/piece-images/p_web1.png');

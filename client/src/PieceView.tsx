@@ -312,7 +312,9 @@ function pieceClasses(piece: Piece, cell: Cell): string[] {
   }
 
   if (piece.jelly > 0) {
-    classes.push('is-jelly-' + String(piece.jelly))
+    classes.push(
+      'is-jelly-' + (piece.jelly >= 100 ? 'inf' : String(piece.jelly))
+    )
   }
 
   if (cell.web > 0) {
