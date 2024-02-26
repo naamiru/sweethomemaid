@@ -90,22 +90,15 @@ export default function StageSelect(): ReactNode {
           <select name="stage" value={stage} onChange={handleChange}>
             {stageType === 'current' ? (
               <>
-                <optgroup label="チームズフェスティバル">
-                  {/* 空のゼリーの処理に問題あり
-                  <option value="teams_3_1_1">チームフェス phase1 wave1</option>
-                  <option value="teams_3_1_2">チームフェス phase1 wave2</option>
-                  */}
-                  <option value="teams_3_2">チームフェス phase2</option>
-                </optgroup>
                 <optgroup label="マスターズランキング">
-                  <option value="masters_14_1">
-                    マスターズ ピーナッツ（上段左が黄）
+                  <option value="masters_15_1">
+                    マスターズ ネズミ（左上が黄）
                   </option>
-                  <option value="masters_14_2">
-                    マスターズ ピーナッツ（上段左が水）
+                  <option value="masters_15_2">
+                    マスターズ ネズミ（左上が赤）
                   </option>
-                  <option value="masters_14_3">
-                    マスターズ ピーナッツ（上段左が赤）
+                  <option value="masters_15_3">
+                    マスターズ ネズミ（左上が紫）
                   </option>
                 </optgroup>
                 <optgroup label="チョコパラダイス">
@@ -125,6 +118,24 @@ export default function StageSelect(): ReactNode {
               </>
             ) : (
               <>
+                <optgroup label="第14回マスターズランキング ピーナッツ">
+                  <option value="masters_14_1">
+                    マスターズ ピーナッツ（上段左が黄）
+                  </option>
+                  <option value="masters_14_2">
+                    マスターズ ピーナッツ（上段左が水）
+                  </option>
+                  <option value="masters_14_3">
+                    マスターズ ピーナッツ（上段左が赤）
+                  </option>
+                </optgroup>
+                <optgroup label="第3回チームズフェスティバル">
+                  {/* 空のゼリーの処理に問題あり
+                  <option value="teams_3_1_1">チームフェス phase1 wave1</option>
+                  <option value="teams_3_1_2">チームフェス phase1 wave2</option>
+                  */}
+                  <option value="teams_3_2">チームフェス phase2</option>
+                </optgroup>
                 <optgroup label="第13回マスターズランキング ダンボール箱">
                   <option value="masters_13_1">
                     マスターズ ダンボール（左上が紫）

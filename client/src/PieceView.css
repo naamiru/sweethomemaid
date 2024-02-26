@@ -593,6 +593,16 @@
       background-image: url('./assets/piece-images/wood3.png');
     }
 
+    &.is-mouse-1 {
+      background-image: url('./assets/piece-images/mouse1.png');
+    }
+    &.is-mouse-2 {
+      background-image: url('./assets/piece-images/mouse2.png');
+    }
+    &.is-mouse-3 {
+      background-image: url('./assets/piece-images/mouse3.png');
+    }
+
     &.is-peanut-1 {
       background-image: url('./assets/piece-images/peanut1.png');
     }

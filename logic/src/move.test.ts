@@ -2056,33 +2056,9 @@ describe('applyMove', () => {
     )
   })
 
-  test('ネズミをロケットで減らす', () => {
-    expectMove(
-      createBoard('H-.-', { mouse: '..2.' }),
-      new Move([1, 1], Direction.Zero),
-      createBoard('xx.x', { mouse: '..1.' })
-    )
-  })
-
   test('ネズミをロケットで消す', () => {
     expectMove(
-      createBoard('H-.-', { mouse: '..1.' }),
-      new Move([1, 1], Direction.Zero),
-      createBoard('xxxx')
-    )
-  })
-
-  test('ネズミをロケットで減らす キラー1', () => {
-    expectMove(
-      createBoard('H-.-', { mouse: '..3.', killers: { mouse: { rocket: 1 } } }),
-      new Move([1, 1], Direction.Zero),
-      createBoard('xx.x', { mouse: '..1.' })
-    )
-  })
-
-  test('ネズミをロケットで消す キラー1', () => {
-    expectMove(
-      createBoard('H-.-', { mouse: '..2.', killers: { mouse: { rocket: 1 } } }),
+      createBoard('H-.-', { mouse: '..2.' }),
       new Move([1, 1], Direction.Zero),
       createBoard('xxxx')
     )

@@ -1212,8 +1212,12 @@ function matchedPiece(
 
   const face = piece.face
 
+  // ネズミ移動は未実装。1回で消去する
+  if (face instanceof Object && face.kind === Kind.Mouse) {
+    return createPiece(Kind.Empty)
+  }
+
   for (const [killerName, kind] of [
-    ['mouse', Kind.Mouse],
     ['wood', Kind.Wood],
     ['peanut', Kind.Peanut],
     ['present', Kind.Present],
