@@ -28,7 +28,9 @@ export enum Kind {
   Button,
   Bubble,
   Cat,
-  Printer
+  Printer,
+  Egg,
+  Chick
 }
 
 const boosters = [
@@ -58,7 +60,8 @@ const obstacles = [
   Kind.Peanut,
   Kind.Present,
   Kind.Danbooru,
-  Kind.Button
+  Kind.Button,
+  Kind.Egg
 ] as const
 
 type Obstacle = (typeof obstacles)[number]
@@ -132,6 +135,7 @@ export type Killers = {
   web?: Killer
   bubble?: Killer
   printer?: Killer
+  egg?: Killer
 }
 
 export type Position = [number, number]

@@ -707,6 +707,26 @@
       background-image: url('./assets/piece-images/cat.png');
     }
 
+    &.is-chick {
+      background-image: url('./assets/piece-images/chick.png');
+    }
+
+    &.is-egg-1 {
+      background-image: url('./assets/piece-images/egg1.png');
+    }
+    &.is-egg-2 {
+      background-image: url('./assets/piece-images/egg2.png');
+    }
+    &.is-egg-3 {
+      background-image: url('./assets/piece-images/egg3.png');
+    }
+    &.is-egg-4 {
+      background-image: url('./assets/piece-images/egg4.png');
+    }
+    &.is-egg-5 {
+      background-image: url('./assets/piece-images/egg5.png');
+    }
+
     &.is-mikan {
       width: 200%;
       height: 200%;

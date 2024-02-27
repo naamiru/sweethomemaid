@@ -164,24 +164,24 @@ export function* moveScenes(
     }
   }
 
-  const getFallenCats = fallenCatsFn(board)
-  let fallenCats = getFallenCats()
+  const getFallenObjects = fallenObjectsFn(board)
+  let fallenObjects = getFallenObjects()
 
   do {
     applyMatches(board, matches, skips)
     skips = undefined
-    applyFallenCats(board, fallenCats)
-    if (matches.length > 0 || fallenCats.length > 0) yield MoveScene.Match
+    applyFallenObjects(board, fallenObjects)
+    if (matches.length > 0 || fallenObjects.length > 0) yield MoveScene.Match
 
     const falled = fall(board, options)
     if (falled) yield MoveScene.Fall
     matches = findMatches(board)
-    fallenCats = getFallenCats()
-  } while (matches.length > 0 || fallenCats.length > 0)
+    fallenObjects = getFallenObjects()
+  } while (matches.length > 0 || fallenObjects.length > 0)
 }
 
-function fallenCatsFn(board: Board): () => Position[] {
-  // 猫が落ちる場所
+function fallenObjectsFn(board: Board): () => Position[] {
+  // 猫・ヒヨコが落ちる場所
   const catHoles: Position[] = []
   for (const pos of board.allPositions()) {
     if (board.piece(pos).face === Kind.Out) continue
@@ -202,7 +202,11 @@ function fallenCatsFn(board: Board): () => Position[] {
     }
   }
 
-  return () => catHoles.filter(pos => board.piece(pos).face === Kind.Cat)
+  return () =>
+    catHoles.filter(pos => {
+      const face = board.piece(pos).face
+      return face === Kind.Cat || face === Kind.Chick
+    })
 }
 
 export function canMove(board: Board, move: Move): boolean {
@@ -841,7 +845,8 @@ function applyMatchAdjacents(
       kind === Kind.Peanut ||
       kind === Kind.Present ||
       kind === Kind.Danbooru ||
-      kind === Kind.Bubble
+      kind === Kind.Bubble ||
+      kind === Kind.Egg
     ) {
       board.setPiece(position, matchedPiece(board, piece))
     } else if (piece.jelly > 0) {
@@ -1223,7 +1228,8 @@ function matchedPiece(
     ['present', Kind.Present],
     ['danbooru', Kind.Danbooru],
     ['button', Kind.Button],
-    ['bubble', Kind.Bubble]
+    ['bubble', Kind.Bubble],
+    ['egg', Kind.Egg]
   ] as const) {
     if (face instanceof Object && face.kind === kind) {
       const count = 1 + board.killer(killerName, booster)
@@ -1261,7 +1267,7 @@ function matchedPiece(
   return createPiece(Kind.Empty)
 }
 
-function applyFallenCats(board: Board, positions: Position[]): void {
+function applyFallenObjects(board: Board, positions: Position[]): void {
   for (const position of positions) {
     board.setPiece(position, createPiece(Kind.Empty))
   }

@@ -344,6 +344,7 @@ const PIECE_FOR_INDEX: Array<Piece | [Piece, Cell]> = [
   createPiece({ kind: Kind.Button, count: 2 }),
   createPiece({ kind: Kind.Button, count: 3 }),
   createPiece(Kind.Cat),
+  createPiece(Kind.Chick),
   createPiece({ kind: Kind.Danbooru, count: 1 }),
   createPiece({ kind: Kind.Danbooru, count: 10 }),
   createPiece({ kind: Kind.Danbooru, count: 11 }),
@@ -356,6 +357,11 @@ const PIECE_FOR_INDEX: Array<Piece | [Piece, Cell]> = [
   createPiece({ kind: Kind.Danbooru, count: 7 }),
   createPiece({ kind: Kind.Danbooru, count: 8 }),
   createPiece({ kind: Kind.Danbooru, count: 9 }),
+  createPiece({ kind: Kind.Egg, count: 1 }),
+  createPiece({ kind: Kind.Egg, count: 2 }),
+  createPiece({ kind: Kind.Egg, count: 3 }),
+  createPiece({ kind: Kind.Egg, count: 4 }),
+  createPiece({ kind: Kind.Egg, count: 5 }),
   createPiece(Kind.Empty),
   createPiece(Kind.Green, 0),
   createPiece(Kind.Green, 1),
@@ -521,7 +527,9 @@ function getPieceMask(config: BoardConfig): boolean[] {
     ['danboorus', Kind.Danbooru],
     ['buttons', Kind.Button],
     ['bubbles', Kind.Bubble],
-    ['printers', Kind.Cat]
+    ['printers', Kind.Cat],
+    ['eggs', Kind.Egg],
+    ['eggs', Kind.Chick]
   ] as const) {
     if (prop in config) {
       kinds.add(obstacle)

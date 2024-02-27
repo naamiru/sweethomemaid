@@ -274,6 +274,8 @@ function pieceClasses(piece: Piece, cell: Cell): string[] {
     )
   } else if (piece.face === Kind.Cat) {
     classes.push('is-cat')
+  } else if (piece.face === Kind.Chick) {
+    classes.push('is-chick')
   } else if (piece.face instanceof Object) {
     if (piece.face.kind === Kind.Mikan) {
       if (piece.face.position[0] === 0 && piece.face.position[1] === 0) {
@@ -295,7 +297,8 @@ function pieceClasses(piece: Piece, cell: Cell): string[] {
             [Kind.Peanut]: 'peanut',
             [Kind.Present]: 'present',
             [Kind.Danbooru]: 'danbooru',
-            [Kind.Button]: 'button'
+            [Kind.Button]: 'button',
+            [Kind.Egg]: 'egg'
           }[piece.face.kind] +
           '-' +
           String(piece.face.count)
