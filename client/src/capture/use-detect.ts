@@ -362,6 +362,7 @@ const PIECE_FOR_INDEX: Array<Piece | [Piece, Cell]> = [
   createPiece({ kind: Kind.Egg, count: 3 }),
   createPiece({ kind: Kind.Egg, count: 4 }),
   createPiece({ kind: Kind.Egg, count: 5 }),
+  createPiece({ kind: Kind.Egg, count: 6 }),
   createPiece(Kind.Empty),
   createPiece(Kind.Green, 0),
   createPiece(Kind.Green, 1),

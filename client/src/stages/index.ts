@@ -6,6 +6,7 @@ export const currentStages = [
   'masters_15_3',
   'easter_1',
   'easter_2',
+  'easter_3',
   'easter_5'
 ] as const
 export const oldStages = [
