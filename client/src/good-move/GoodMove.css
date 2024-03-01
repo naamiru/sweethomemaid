@@ -111,8 +111,10 @@
   .fa-cross-rockets::before,
   .fa-h3-rockets::before,
   .fa-h-rocket::before,
+  .fa-v-rocket::before,
   .fa-piece-break::before,
-  .fa-fast-bomb::before {
+  .fa-fast-bomb::before,
+  .fa-mix-missile::before {
     content: '';
     display: inline-block;
     width: calc(var(--unit) / 2);
@@ -135,10 +137,16 @@
   .fa-h-rocket::before {
     background-image: url('../assets/skills/himariko_newyear.png');
   }
+  .fa-v-rocket::before {
+    background-image: url('../assets/skills/kanon_easter.png');
+  }
   .fa-piece-break::before {
     background-image: url('../assets/skills/iroha_choco.png');
   }
   .fa-fast-bomb::before {
     background-image: url('../assets/skills/scarlet_bunny.png');
+  }
+  .fa-mix-missile::before {
+    background-image: url('../assets/skills/nagi_bunny.png');
   }
 }

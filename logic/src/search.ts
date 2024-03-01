@@ -227,6 +227,18 @@ function allMoves(board: Board, skills: Skills): Array<[Move, Skills]> {
     }
   }
 
+  if (hasSkill(skills, Skill.VRocket)) {
+    for (let y = 1; y <= board.height; y++) {
+      for (let x = 1; x <= board.width; x++) {
+        const move = new Move([x, y], Direction.Zero, Skill.VRocket)
+        if (canMove(board, move)) {
+          moves.push([move, removeSkill(skills, Skill.VRocket)])
+          break
+        }
+      }
+    }
+  }
+
   if (hasSkill(skills, Skill.DelColor)) {
     const appeared = new Set<Color>()
     for (let y = 1; y <= board.height; y++) {
@@ -256,6 +268,15 @@ function allMoves(board: Board, skills: Skills): Array<[Move, Skills]> {
       moves.push([
         new Move(pos, Direction.Zero, Skill.Bomb),
         removeSkill(skills, Skill.Bomb)
+      ])
+    }
+  }
+
+  if (hasSkill(skills, Skill.MixMissile)) {
+    for (const pos of board.allPositions()) {
+      moves.push([
+        new Move(pos, Direction.Zero, Skill.MixMissile),
+        removeSkill(skills, Skill.MixMissile)
       ])
     }
   }

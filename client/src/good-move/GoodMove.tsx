@@ -18,6 +18,8 @@ import crossRocketsImage from '../assets/skills/himariko_bath.png'
 import hRocketSkillImage from '../assets/skills/himariko_newyear.png'
 import swapImage from '../assets/skills/iroha_bunny.png'
 import pieceBreakImage from '../assets/skills/iroha_choco.png'
+import vRocketSkillImage from '../assets/skills/kanon_easter.png'
+import mixMissileSkillImage from '../assets/skills/nagi_bunny.png'
 import h3RocketsImage from '../assets/skills/nia_bath.png'
 import bombSkillImage from '../assets/skills/scarlet_bunny.png'
 import delColorImage from '../assets/skills/tsumugi_bunny.png'
@@ -179,10 +181,12 @@ export default function GoodMove(): ReactNode {
               [Skill.Swap, swapImage],
               [Skill.DelColor, delColorImage],
               [Skill.Bomb, bombSkillImage],
+              [Skill.MixMissile, mixMissileSkillImage],
               [Skill.PieceBreak, pieceBreakImage],
               [Skill.H3Rockets, h3RocketsImage],
               [Skill.CrossRockets, crossRocketsImage],
-              [Skill.HRocket, hRocketSkillImage]
+              [Skill.HRocket, hRocketSkillImage],
+              [Skill.VRocket, vRocketSkillImage]
             ] as const
           ).map(([skill, image]) => (
             <img
@@ -238,8 +242,10 @@ const SkillIconName: Record<Exclude<Skill, Skill.Swap>, string> = {
   [Skill.CrossRockets]: 'cross-rockets',
   [Skill.H3Rockets]: 'h3-rockets',
   [Skill.HRocket]: 'h-rocket',
+  [Skill.VRocket]: 'v-rocket',
   [Skill.PieceBreak]: 'piece-break',
-  [Skill.Bomb]: 'fast-bomb'
+  [Skill.Bomb]: 'fast-bomb',
+  [Skill.MixMissile]: 'mix-missile'
 }
 
 const DirectionIconName: Record<Direction, string> = {

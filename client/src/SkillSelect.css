@@ -15,7 +15,7 @@
   }
 
   .skill-item {
-    min-width: calc(25% - 10px);
+    min-width: calc(20% - 10px);
     flex: 1;
     aspect-ratio: 1/1;
 
@@ -25,7 +25,7 @@
 
     > img {
       object-fit: contain;
-      border-radius: 8px;
+      border-radius: 6px;
       vertical-align: middle;
     }
 
