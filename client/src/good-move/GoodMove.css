@@ -26,6 +26,7 @@
     gap: 8px;
     flex-grow: 1;
     margin-bottom: 8px;
+    flex-wrap: wrap;
 
     > img {
       width: 30px;
