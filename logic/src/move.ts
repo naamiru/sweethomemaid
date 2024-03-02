@@ -979,28 +979,28 @@ function boosterRange(
         ((b1 === Kind.HRocket || b1 === Kind.VRocket) && b2 === Kind.Bomb)
       ) {
         // 横3列
-        for (let x = 1; x <= board.width; x++) {
-          append([x, cy - 1])
-          append([x, cy])
-          append([x, cy + 1])
+        for (const pos of [
+          hRocketRange(board, [cx, cy - 1], true),
+          hRocketRange(board, [cx, cy]),
+          hRocketRange(board, [cx, cy + 1], true)
+        ].flat()) {
+          append(pos)
         }
         // 縦3列
-        for (let y = 1; y <= board.height; y++) {
-          if (cy - 1 <= y && y <= cy + 1) continue // 横3列で追加済
-          append([cx - 1, y])
-          append([cx, y])
-          append([cx + 1, y])
+        for (const pos of [
+          vRocketRange(board, [cx - 1, cy]),
+          vRocketRange(board, [cx, cy]),
+          vRocketRange(board, [cx + 1, cy])
+        ].flat()) {
+          if (cy - 1 <= pos[1] && pos[1] <= cy + 1) continue // 横3列で追加済
+          append(pos)
         }
       } else if (
         (b1 === Kind.HRocket || b1 === Kind.VRocket) &&
         (b2 === Kind.HRocket || b2 === Kind.VRocket)
       ) {
-        for (let x = 1; x <= board.width; x++) {
-          append([x, cy])
-        }
-        for (let y = 1; y <= board.height; y++) {
-          append([cx, y])
-        }
+        for (const pos of hRocketRange(board, position)) append(pos)
+        for (const pos of vRocketRange(board, position)) append(pos)
       } else if (b1 === Kind.Missile && b2 === Kind.Missile) {
         for (let i = -1; i <= 1; i++) {
           for (let j = -1; j <= 1; j++) {
@@ -1032,13 +1032,9 @@ function boosterRange(
       append([cx + 2, cy + j])
     }
   } else if (booster === Kind.HRocket) {
-    for (let x = 1; x <= board.width; x++) {
-      append([x, cy])
-    }
+    for (const pos of hRocketRange(board, position)) append(pos)
   } else if (booster === Kind.VRocket) {
-    for (let y = 1; y <= board.height; y++) {
-      append([cx, y])
-    }
+    for (const pos of vRocketRange(board, position)) append(pos)
   } else if (booster === Kind.Missile) {
     append([cx, cy])
     append([cx - 1, cy])
@@ -1049,6 +1045,59 @@ function boosterRange(
   }
 
   return positions
+}
+
+function hRocketRange(
+  board: Board,
+  position: Position,
+  includeCenter = false
+): Position[] {
+  const range: Position[] = []
+
+  if (includeCenter) range.push(position)
+
+  for (let x = position[0] + 1; x <= board.width; x++) {
+    const pos: Position = [x, position[1]]
+    range.push(pos)
+    if (isRocketStopPiece(board.piece(pos))) break
+  }
+
+  for (let x = position[0] - 1; x >= 1; x--) {
+    const pos: Position = [x, position[1]]
+    range.push(pos)
+    if (isRocketStopPiece(board.piece(pos))) break
+  }
+
+  return range
+}
+
+function vRocketRange(
+  board: Board,
+  position: Position,
+  includeCenter = false
+): Position[] {
+  const range: Position[] = []
+
+  if (includeCenter) range.push(position)
+
+  for (let y = position[1] + 1; y <= board.height; y++) {
+    const pos: Position = [position[0], y]
+    range.push(pos)
+    if (isRocketStopPiece(board.piece(pos))) break
+  }
+
+  for (let y = position[1] - 1; y >= 1; y--) {
+    const pos: Position = [position[0], y]
+    range.push(pos)
+    if (isRocketStopPiece(board.piece(pos))) break
+  }
+
+  return range
+}
+
+function isRocketStopPiece(piece: Piece): boolean {
+  const kind = getKind(piece.face)
+  return kind === Kind.Peanut || kind === Kind.Egg
 }
 
 function boosterEffectAs(booster: BoosterCombo): Booster | Kind.Empty {
@@ -1149,26 +1198,16 @@ function skillEffects(
   let boosterAs: Booster | Kind.Empty = Kind.HRocket
 
   if (skill === Skill.CrossRockets) {
-    for (let x = 1; x <= board.width; x++) {
-      add([x, position[1]])
-    }
-    for (let y = 1; y <= board.height; y++) {
-      add([position[0], y])
-    }
+    for (const pos of hRocketRange(board, position, true)) add(pos)
+    for (const pos of vRocketRange(board, position, true)) add(pos)
   } else if (skill === Skill.H3Rockets) {
     for (let y = position[1] - 1; y <= position[1] + 1; y++) {
-      for (let x = 1; x <= board.width; x++) {
-        add([x, y])
-      }
+      for (const pos of hRocketRange(board, [position[0], y], true)) add(pos)
     }
   } else if (skill === Skill.HRocket) {
-    for (let x = 1; x <= board.width; x++) {
-      add([x, position[1]])
-    }
+    for (const pos of hRocketRange(board, position, true)) add(pos)
   } else if (skill === Skill.VRocket) {
-    for (let y = 1; y <= board.height; y++) {
-      add([position[0], y])
-    }
+    for (const pos of vRocketRange(board, position, true)) add(pos)
   } else if (skill === Skill.DelColor) {
     boosterAs = Kind.Empty
     const color = board.piece(position).face
