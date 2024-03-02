@@ -7,6 +7,8 @@ export const currentStages = [
   'easter_1',
   'easter_2',
   'easter_3',
+  'easter_4_1',
+  'easter_4_2',
   'easter_5'
 ] as const
 export const oldStages = [
