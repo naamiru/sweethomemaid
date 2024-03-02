@@ -1276,8 +1276,8 @@ function matchedPiece(
     return piece
   }
 
-  if (face === Kind.Cat) {
-    // 猫は最下段から落ちる以外では消えない
+  if (face === Kind.Cat || face === Kind.Chick) {
+    // 猫・ヒヨコは最下段から落ちる以外では消えない
     return piece
   }
 
