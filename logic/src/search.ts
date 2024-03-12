@@ -293,7 +293,12 @@ const ADJACENTS = [
 
 function isMovable(board: Board, position: Position): boolean {
   const piece = board.piece(position)
-  return piece.ice === 0 && piece.jelly === 0 && board.cell(position).web === 0
+  return (
+    piece.ice === 0 &&
+    piece.jelly === 0 &&
+    piece.chain === 0 &&
+    board.cell(position).web === 0
+  )
 }
 
 export function hasSpecialCombo(board: Board): boolean {

@@ -72,6 +72,15 @@
 
     &.is-special {
       background-image: url('./assets/piece-images/n.png');
+      &.is-chain-1 {
+        background-image: url('./assets/piece-images/n_chain1.png');
+      }
+      &.is-chain-2 {
+        background-image: url('./assets/piece-images/n_chain2.png');
+      }
+      &.is-chain-3 {
+        background-image: url('./assets/piece-images/n_chain3.png');
+      }
       &.is-web-1 {
         background-image: url('./assets/piece-images/n_web1.png');
       }
@@ -114,6 +123,15 @@
     }
     &.is-bomb {
       background-image: url('./assets/piece-images/b.png');
+      &.is-chain-1 {
+        background-image: url('./assets/piece-images/bomb_chain1.png');
+      }
+      &.is-chain-2 {
+        background-image: url('./assets/piece-images/bomb_chain2.png');
+      }
+      &.is-chain-3 {
+        background-image: url('./assets/piece-images/bomb_chain3.png');
+      }
       &.is-web-1 {
         background-image: url('./assets/piece-images/bomb_web1.png');
       }
@@ -144,6 +162,15 @@
     }
     &.is-hrocket {
       background-image: url('./assets/piece-images/rh.png');
+      &.is-chain-1 {
+        background-image: url('./assets/piece-images/rh_chain1.png');
+      }
+      &.is-chain-2 {
+        background-image: url('./assets/piece-images/rh_chain2.png');
+      }
+      &.is-chain-3 {
+        background-image: url('./assets/piece-images/rh_chain3.png');
+      }
       &.is-web-1 {
         background-image: url('./assets/piece-images/rh_web1.png');
       }
@@ -188,6 +215,15 @@
     }
     &.is-vrocket {
       background-image: url('./assets/piece-images/rv.png');
+      &.is-chain-1 {
+        background-image: url('./assets/piece-images/rv_chain1.png');
+      }
+      &.is-chain-2 {
+        background-image: url('./assets/piece-images/rv_chain2.png');
+      }
+      &.is-chain-3 {
+        background-image: url('./assets/piece-images/rv_chain3.png');
+      }
       &.is-web-1 {
         background-image: url('./assets/piece-images/rv_web1.png');
       }
@@ -218,6 +254,15 @@
     }
     &.is-missile {
       background-image: url('./assets/piece-images/m.png');
+      &.is-chain-1 {
+        background-image: url('./assets/piece-images/m_chain1.png');
+      }
+      &.is-chain-2 {
+        background-image: url('./assets/piece-images/m_chain2.png');
+      }
+      &.is-chain-3 {
+        background-image: url('./assets/piece-images/m_chain3.png');
+      }
       &.is-web-1 {
         background-image: url('./assets/piece-images/m_web1.png');
       }
