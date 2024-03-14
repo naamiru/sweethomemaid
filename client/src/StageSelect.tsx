@@ -112,6 +112,7 @@ export default function StageSelect(): ReactNode {
                     黄金のたまごを探せ！4 wave2
                   </option>
                   <option value="easter_5">黄金のたまごを探せ！5</option>
+                  <option value="easter_7">黄金のたまごを探せ！7</option>
                 </optgroup>
               </>
             ) : (
