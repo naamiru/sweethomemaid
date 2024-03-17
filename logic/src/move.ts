@@ -185,8 +185,24 @@ export function* moveScenes(
 function fallenObjectsFn(board: Board): () => Position[] {
   // 猫・ヒヨコが落ちる場所
   const catHoles: Position[] = []
+
+  // 除外するためにワープの入り口を計算
+  const warpFrom = new GeneralSet(positionToInt)
+  if (board.links !== undefined) {
+    for (const [from, tos] of board.links) {
+      for (const to of tos) {
+        if (Math.abs(to[0] - from[0]) >= 2 || Math.abs(to[1] - from[1]) >= 2) {
+          warpFrom.add(from)
+          break
+        }
+      }
+    }
+  }
+
   for (const pos of board.allPositions()) {
+    if (warpFrom.has(pos)) continue
     if (board.piece(pos).face === Kind.Out) continue
+
     let downstream: Position
     const upstream = board.upstream(pos)
     if (upstream === Direction.Up) {
