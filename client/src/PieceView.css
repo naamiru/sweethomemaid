@@ -771,7 +771,11 @@
     &.is-egg-5 {
       background-image: url('./assets/piece-images/egg5.png');
     }
-    &.is-egg-6 {
+    &.is-egg-6,
+    &.is-egg-7,
+    &.is-egg-8,
+    &.is-egg-9,
+    &.is-egg-10 {
       background-image: url('./assets/piece-images/egg6.png');
     }
 

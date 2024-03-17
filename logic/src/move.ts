@@ -192,12 +192,12 @@ function fallenObjectsFn(board: Board): () => Position[] {
     for (const [from, tos] of board.links) {
       for (const to of tos) {
         if (Math.abs(to[0] - from[0]) >= 2 || Math.abs(to[1] - from[1]) >= 2) {
-          warpFrom.add(from)
-          break
+          warpFrom.add(to)
         }
       }
     }
   }
+  console.log(Array.from(warpFrom))
 
   for (const pos of board.allPositions()) {
     if (warpFrom.has(pos)) continue
