@@ -94,14 +94,14 @@ export default function StageSelect(): ReactNode {
                   <option value="teams_4_1">チームフェス phase1</option>
                 </optgroup>
                 <optgroup label="マスターズランキング">
-                  <option value="masters_17_1">
-                    マスターズ 鎖（右下が水）
+                  <option value="masters_18_1">
+                    マスターズ プレゼント箱（左上が赤）
                   </option>
-                  <option value="masters_17_2">
-                    マスターズ 鎖（右下が紫）
+                  <option value="masters_18_2">
+                    マスターズ プレゼント箱（左上が黄）
                   </option>
-                  <option value="masters_17_3">
-                    マスターズ 鎖（右下が赤）
+                  <option value="masters_18_3">
+                    マスターズ プレゼント箱（左上が紫）
                   </option>
                 </optgroup>
                 <optgroup label="黄金のたまごを探せ！">
@@ -120,6 +120,17 @@ export default function StageSelect(): ReactNode {
               </>
             ) : (
               <>
+                <optgroup label="第17回マスターズランキング 鎖">
+                  <option value="masters_17_1">
+                    マスターズ 鎖（右下が水）
+                  </option>
+                  <option value="masters_17_2">
+                    マスターズ 鎖（右下が紫）
+                  </option>
+                  <option value="masters_17_3">
+                    マスターズ 鎖（右下が赤）
+                  </option>
+                </optgroup>
                 <optgroup label="第16回マスターズランキング 薪">
                   <option value="masters_16_1">
                     マスターズ 薪（最下段右が青）
