@@ -382,6 +382,15 @@
       &.is-jelly-3 {
         background-image: url('./assets/piece-images/b_jelly3.png');
       }
+      &.is-jelly-4 {
+        background-image: url('./assets/piece-images/b_jelly4.png');
+      }
+      &.is-jelly-5 {
+        background-image: url('./assets/piece-images/b_jelly5.png');
+      }
+      &.is-jelly-6 {
+        background-image: url('./assets/piece-images/b_jelly6.png');
+      }
     }
 
     &.is-green {
