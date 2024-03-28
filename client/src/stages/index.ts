@@ -4,16 +4,17 @@ export const currentStages = [
   'masters_19_1',
   'masters_19_2',
   'masters_19_3',
-  'teams_4_1',
+  'ekiben_4'
+] as const
+export const oldStages = [
   'easter_1',
   'easter_2',
   'easter_3',
   'easter_4_1',
   'easter_4_2',
   'easter_5',
-  'easter_7'
-] as const
-export const oldStages = [
+  'easter_7',
+  'teams_4_1',
   'masters_18_1',
   'masters_18_2',
   'masters_18_3',

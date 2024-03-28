@@ -197,7 +197,6 @@ function fallenObjectsFn(board: Board): () => Position[] {
       }
     }
   }
-  console.log(Array.from(warpFrom))
 
   for (const pos of board.allPositions()) {
     if (warpFrom.has(pos)) continue

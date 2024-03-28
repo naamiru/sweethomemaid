@@ -101,6 +101,12 @@ export default function StageSelect(): ReactNode {
                     マスターズ ゼリー（右上が水）
                   </option>
                 </optgroup>
+                <optgroup label="春の駅弁祭り">
+                  <option value="ekiben_4">春の駅弁祭り4</option>
+                </optgroup>
+              </>
+            ) : (
+              <>
                 <optgroup label="黄金のたまごを探せ！">
                   <option value="easter_1">黄金のたまごを探せ！1</option>
                   <option value="easter_2">黄金のたまごを探せ！2</option>
@@ -114,9 +120,6 @@ export default function StageSelect(): ReactNode {
                   <option value="easter_5">黄金のたまごを探せ！5</option>
                   <option value="easter_7">黄金のたまごを探せ！7</option>
                 </optgroup>
-              </>
-            ) : (
-              <>
                 <optgroup label="第18回マスターズランキング プレゼント箱">
                   <option value="masters_18_1">
                     マスターズ プレゼント箱（左上が赤）

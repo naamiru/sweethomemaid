@@ -141,6 +141,24 @@
       &.is-web-3 {
         background-image: url('./assets/piece-images/bomb_web3.png');
       }
+      &.is-web-4 {
+        background-image: url('./assets/piece-images/bomb_web4.png');
+      }
+      &.is-web-5 {
+        background-image: url('./assets/piece-images/bomb_web5.png');
+      }
+      &.is-web-6 {
+        background-image: url('./assets/piece-images/bomb_web6.png');
+      }
+      &.is-web-7 {
+        background-image: url('./assets/piece-images/bomb_web7.png');
+      }
+      &.is-web-8 {
+        background-image: url('./assets/piece-images/bomb_web8.png');
+      }
+      &.is-web-9 {
+        background-image: url('./assets/piece-images/bomb_web9.png');
+      }
       &.is-jelly-1 {
         background-image: url('./assets/piece-images/bomb_jelly1.png');
       }
@@ -232,6 +250,24 @@
       }
       &.is-web-3 {
         background-image: url('./assets/piece-images/rv_web3.png');
+      }
+      &.is-web-4 {
+        background-image: url('./assets/piece-images/rv_web4.png');
+      }
+      &.is-web-5 {
+        background-image: url('./assets/piece-images/rv_web5.png');
+      }
+      &.is-web-6 {
+        background-image: url('./assets/piece-images/rv_web6.png');
+      }
+      &.is-web-7 {
+        background-image: url('./assets/piece-images/rv_web7.png');
+      }
+      &.is-web-8 {
+        background-image: url('./assets/piece-images/rv_web8.png');
+      }
+      &.is-web-9 {
+        background-image: url('./assets/piece-images/rv_web9.png');
       }
       &.is-jelly-1 {
         background-image: url('./assets/piece-images/rv_jelly1.png');
