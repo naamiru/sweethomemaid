@@ -115,7 +115,8 @@
   .fa-v-rocket::before,
   .fa-piece-break::before,
   .fa-fast-bomb::before,
-  .fa-mix-missile::before {
+  .fa-mix-missile::before,
+  .fa-fast-missile::before {
     content: '';
     display: inline-block;
     width: calc(var(--unit) / 2);
@@ -149,5 +150,8 @@
   }
   .fa-mix-missile::before {
     background-image: url('../assets/skills/nagi_bunny.png');
+  }
+  .fa-fast-missile::before {
+    background-image: url('../assets/skills/iroha_ekiben.png');
   }
 }

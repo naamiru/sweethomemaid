@@ -18,6 +18,7 @@ import crossRocketsImage from '../assets/skills/himariko_bath.png'
 import hRocketSkillImage from '../assets/skills/himariko_newyear.png'
 import swapImage from '../assets/skills/iroha_bunny.png'
 import pieceBreakImage from '../assets/skills/iroha_choco.png'
+import missileSkillImage from '../assets/skills/iroha_ekiben.png'
 import vRocketSkillImage from '../assets/skills/kanon_easter.png'
 import mixMissileSkillImage from '../assets/skills/nagi_bunny.png'
 import h3RocketsImage from '../assets/skills/nia_bath.png'
@@ -182,6 +183,7 @@ export default function GoodMove(): ReactNode {
               [Skill.DelColor, delColorImage],
               [Skill.Bomb, bombSkillImage],
               [Skill.MixMissile, mixMissileSkillImage],
+              [Skill.Missile, missileSkillImage],
               [Skill.PieceBreak, pieceBreakImage],
               [Skill.H3Rockets, h3RocketsImage],
               [Skill.CrossRockets, crossRocketsImage],
@@ -245,7 +247,8 @@ const SkillIconName: Record<Exclude<Skill, Skill.Swap>, string> = {
   [Skill.VRocket]: 'v-rocket',
   [Skill.PieceBreak]: 'piece-break',
   [Skill.Bomb]: 'fast-bomb',
-  [Skill.MixMissile]: 'mix-missile'
+  [Skill.MixMissile]: 'mix-missile',
+  [Skill.Missile]: 'fast-missile'
 }
 
 const DirectionIconName: Record<Direction, string> = {

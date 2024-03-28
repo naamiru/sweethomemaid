@@ -281,6 +281,15 @@ function allMoves(board: Board, skills: Skills): Array<[Move, Skills]> {
     }
   }
 
+  if (hasSkill(skills, Skill.Missile)) {
+    for (const pos of board.allPositions()) {
+      moves.push([
+        new Move(pos, Direction.Zero, Skill.Missile),
+        removeSkill(skills, Skill.Missile)
+      ])
+    }
+  }
+
   return moves
 }
 

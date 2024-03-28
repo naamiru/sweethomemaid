@@ -23,7 +23,8 @@ export enum Skill {
   PieceBreak = 1 << 5,
   Bomb = 1 << 6,
   VRocket = 1 << 7,
-  MixMissile = 1 << 8
+  MixMissile = 1 << 8,
+  Missile = 1 << 9
 }
 
 export class Move {
@@ -236,7 +237,8 @@ export function canMove(board: Board, move: Move): boolean {
     move.skill === Skill.VRocket ||
     move.skill === Skill.PieceBreak ||
     move.skill === Skill.Bomb ||
-    move.skill === Skill.MixMissile
+    move.skill === Skill.MixMissile ||
+    move.skill === Skill.Missile
   ) {
     return board.piece(move.position).face !== Kind.Out
   }
@@ -1246,6 +1248,12 @@ function skillEffects(
       Kind.Missile,
       Kind.Missile
     ])) {
+      add(pos)
+    }
+    add(position)
+  } else if (skill === Skill.Missile) {
+    boosterAs = Kind.Missile
+    for (const pos of boosterRange(board, position, Kind.Missile)) {
       add(pos)
     }
     add(position)
