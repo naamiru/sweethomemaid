@@ -712,6 +712,15 @@
     &.is-button-3 {
       background-image: url('./assets/piece-images/button3.png');
     }
+    &.is-button-4 {
+      background-image: url('./assets/piece-images/button4.png');
+    }
+    &.is-button-5 {
+      background-image: url('./assets/piece-images/button5.png');
+    }
+    &.is-button-6 {
+      background-image: url('./assets/piece-images/button6.png');
+    }
 
     &.is-present-1 {
       background-image: url('./assets/piece-images/present1.png');
