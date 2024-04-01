@@ -24,7 +24,8 @@ export enum Skill {
   Bomb = 1 << 6,
   VRocket = 1 << 7,
   MixMissile = 1 << 8,
-  Missile = 1 << 9
+  Missile = 1 << 9,
+  V3Rockets = 1 << 10
 }
 
 export class Move {
@@ -233,6 +234,7 @@ export function canMove(board: Board, move: Move): boolean {
   if (
     move.skill === Skill.CrossRockets ||
     move.skill === Skill.H3Rockets ||
+    move.skill === Skill.V3Rockets ||
     move.skill === Skill.HRocket ||
     move.skill === Skill.VRocket ||
     move.skill === Skill.PieceBreak ||
@@ -1220,6 +1222,10 @@ function skillEffects(
   } else if (skill === Skill.H3Rockets) {
     for (let y = position[1] - 1; y <= position[1] + 1; y++) {
       for (const pos of hRocketRange(board, [position[0], y], true)) add(pos)
+    }
+  } else if (skill === Skill.V3Rockets) {
+    for (let x = position[0] - 1; x <= position[0] + 1; x++) {
+      for (const pos of vRocketRange(board, [x, position[1]], true)) add(pos)
     }
   } else if (skill === Skill.HRocket) {
     for (const pos of hRocketRange(board, position, true)) add(pos)

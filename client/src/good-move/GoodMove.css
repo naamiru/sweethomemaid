@@ -111,6 +111,7 @@
   .fa-del-color::before,
   .fa-cross-rockets::before,
   .fa-h3-rockets::before,
+  .fa-v3-rockets::before,
   .fa-h-rocket::before,
   .fa-v-rocket::before,
   .fa-piece-break::before,
@@ -135,6 +136,9 @@
   }
   .fa-h3-rockets::before {
     background-image: url('../assets/skills/nia_bath.png');
+  }
+  .fa-v3-rockets::before {
+    background-image: url('../assets/skills/kanon_bunny.png');
   }
   .fa-h-rocket::before {
     background-image: url('../assets/skills/himariko_newyear.png');

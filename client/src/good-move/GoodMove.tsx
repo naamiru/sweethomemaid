@@ -19,6 +19,7 @@ import hRocketSkillImage from '../assets/skills/himariko_newyear.png'
 import swapImage from '../assets/skills/iroha_bunny.png'
 import pieceBreakImage from '../assets/skills/iroha_choco.png'
 import missileSkillImage from '../assets/skills/iroha_ekiben.png'
+import v3RocketsImage from '../assets/skills/kanon_bunny.png'
 import vRocketSkillImage from '../assets/skills/kanon_easter.png'
 import mixMissileSkillImage from '../assets/skills/nagi_bunny.png'
 import h3RocketsImage from '../assets/skills/nia_bath.png'
@@ -183,12 +184,13 @@ export default function GoodMove(): ReactNode {
               [Skill.DelColor, delColorImage],
               [Skill.Bomb, bombSkillImage],
               [Skill.MixMissile, mixMissileSkillImage],
-              [Skill.Missile, missileSkillImage],
-              [Skill.PieceBreak, pieceBreakImage],
+              [Skill.V3Rockets, v3RocketsImage],
               [Skill.H3Rockets, h3RocketsImage],
               [Skill.CrossRockets, crossRocketsImage],
               [Skill.HRocket, hRocketSkillImage],
-              [Skill.VRocket, vRocketSkillImage]
+              [Skill.VRocket, vRocketSkillImage],
+              [Skill.Missile, missileSkillImage],
+              [Skill.PieceBreak, pieceBreakImage]
             ] as const
           ).map(([skill, image]) => (
             <img
@@ -243,6 +245,7 @@ const SkillIconName: Record<Exclude<Skill, Skill.Swap>, string> = {
   [Skill.DelColor]: 'del-color',
   [Skill.CrossRockets]: 'cross-rockets',
   [Skill.H3Rockets]: 'h3-rockets',
+  [Skill.V3Rockets]: 'v3-rockets',
   [Skill.HRocket]: 'h-rocket',
   [Skill.VRocket]: 'v-rocket',
   [Skill.PieceBreak]: 'piece-break',

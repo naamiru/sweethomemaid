@@ -8,6 +8,7 @@ import hRocketImage from './assets/skills/himariko_newyear.png'
 import swapImage from './assets/skills/iroha_bunny.png'
 import pieceBreakImage from './assets/skills/iroha_choco.png'
 import missileImage from './assets/skills/iroha_ekiben.png'
+import v3RocketsImage from './assets/skills/kanon_bunny.png'
 import vRocketImage from './assets/skills/kanon_easter.png'
 import mixMissileImage from './assets/skills/nagi_bunny.png'
 import h3RocketsImage from './assets/skills/nia_bath.png'
@@ -18,6 +19,7 @@ const SKILL_IMAGES = {
   [Skill.Swap]: swapImage,
   [Skill.CrossRockets]: crossRocketsImage,
   [Skill.H3Rockets]: h3RocketsImage,
+  [Skill.V3Rockets]: v3RocketsImage,
   [Skill.HRocket]: hRocketImage,
   [Skill.VRocket]: vRocketImage,
   [Skill.DelColor]: delColorImage,
@@ -31,6 +33,7 @@ const SKILL_NAME = {
   [Skill.Swap]: 'ピースチェンジ',
   [Skill.CrossRockets]: 'ファストクロスロケット',
   [Skill.H3Rockets]: 'ファスト3WAYロケット（横）',
+  [Skill.V3Rockets]: 'ファスト3WAYロケット（縦）',
   [Skill.HRocket]: 'ファストロケット（横）',
   [Skill.VRocket]: 'ファストロケット（縦）',
   [Skill.DelColor]: 'ファストスペシャル',
@@ -49,13 +52,17 @@ export default function SkillSelect(): ReactNode {
         <SkillItem skill={Skill.DelColor} />
         <SkillItem skill={Skill.Bomb} />
         <SkillItem skill={Skill.MixMissile} />
-        <SkillItem skill={Skill.Missile} />
-        <SkillItem skill={Skill.PieceBreak} />
+        <SkillItem skill={Skill.V3Rockets} />
         <SkillItem skill={Skill.H3Rockets} />
         <SkillItem skill={Skill.CrossRockets} />
         <SkillItem skill={Skill.HRocket} />
         <SkillItem skill={Skill.VRocket} />
-        {/* <div className="skill-item is-stub" /> */}
+        <SkillItem skill={Skill.Missile} />
+        <SkillItem skill={Skill.PieceBreak} />
+        <div className="skill-item is-stub" />
+        <div className="skill-item is-stub" />
+        <div className="skill-item is-stub" />
+        <div className="skill-item is-stub" />
       </div>
     </div>
   )

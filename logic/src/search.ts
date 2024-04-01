@@ -215,6 +215,18 @@ function allMoves(board: Board, skills: Skills): Array<[Move, Skills]> {
     }
   }
 
+  if (hasSkill(skills, Skill.V3Rockets)) {
+    for (let x = 1; x <= board.width; x++) {
+      for (let y = 1; y <= board.height; y++) {
+        const move = new Move([x, y], Direction.Zero, Skill.V3Rockets)
+        if (canMove(board, move)) {
+          moves.push([move, removeSkill(skills, Skill.V3Rockets)])
+          break
+        }
+      }
+    }
+  }
+
   if (hasSkill(skills, Skill.HRocket)) {
     for (let y = 1; y <= board.height; y++) {
       for (let x = 1; x <= board.width; x++) {
