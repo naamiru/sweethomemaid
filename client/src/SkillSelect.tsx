@@ -4,6 +4,7 @@ import { useCallback, type ReactNode } from 'react'
 import './SkillSelect.css'
 import { useApp } from './app/use-app'
 import crossRocketsImage from './assets/skills/himariko_bath.png'
+import mixBombImage from './assets/skills/himariko_ekiben.png'
 import hRocketImage from './assets/skills/himariko_newyear.png'
 import swapImage from './assets/skills/iroha_bunny.png'
 import pieceBreakImage from './assets/skills/iroha_choco.png'
@@ -26,7 +27,8 @@ const SKILL_IMAGES = {
   [Skill.PieceBreak]: pieceBreakImage,
   [Skill.Bomb]: bombImage,
   [Skill.MixMissile]: mixMissileImage,
-  [Skill.Missile]: missileImage
+  [Skill.Missile]: missileImage,
+  [Skill.MixBomb]: mixBombImage
 }
 
 const SKILL_NAME = {
@@ -40,7 +42,8 @@ const SKILL_NAME = {
   [Skill.PieceBreak]: 'ピースブレイク',
   [Skill.Bomb]: 'ファストボム',
   [Skill.MixMissile]: 'ファストミックスミサイル',
-  [Skill.Missile]: 'ファストミサイル'
+  [Skill.Missile]: 'ファストミサイル',
+  [Skill.MixBomb]: 'ファストミックスボム'
 }
 
 export default function SkillSelect(): ReactNode {
@@ -57,9 +60,9 @@ export default function SkillSelect(): ReactNode {
         <SkillItem skill={Skill.CrossRockets} />
         <SkillItem skill={Skill.HRocket} />
         <SkillItem skill={Skill.VRocket} />
+        <SkillItem skill={Skill.MixBomb} />
         <SkillItem skill={Skill.Missile} />
         <SkillItem skill={Skill.PieceBreak} />
-        <div className="skill-item is-stub" />
         <div className="skill-item is-stub" />
         <div className="skill-item is-stub" />
         <div className="skill-item is-stub" />

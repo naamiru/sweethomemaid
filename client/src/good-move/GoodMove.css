@@ -117,7 +117,8 @@
   .fa-piece-break::before,
   .fa-fast-bomb::before,
   .fa-mix-missile::before,
-  .fa-fast-missile::before {
+  .fa-fast-missile::before,
+  .fa-mix-bomb::before {
     content: '';
     display: inline-block;
     width: calc(var(--unit) / 2);
@@ -157,5 +158,8 @@
   }
   .fa-fast-missile::before {
     background-image: url('../assets/skills/iroha_ekiben.png');
+  }
+  .fa-mix-bomb::before {
+    background-image: url('../assets/skills/himariko_ekiben.png');
   }
 }

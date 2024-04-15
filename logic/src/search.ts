@@ -302,6 +302,15 @@ function allMoves(board: Board, skills: Skills): Array<[Move, Skills]> {
     }
   }
 
+  if (hasSkill(skills, Skill.MixBomb)) {
+    for (const pos of board.allPositions()) {
+      moves.push([
+        new Move(pos, Direction.Zero, Skill.MixBomb),
+        removeSkill(skills, Skill.MixBomb)
+      ])
+    }
+  }
+
   return moves
 }
 
