@@ -90,7 +90,16 @@ export default function StageSelect(): ReactNode {
           <select name="stage" value={stage} onChange={handleChange}>
             {stageType === 'current' ? (
               <>
-                <optgroup label="マスターズランキング">
+                <optgroup label="チームズフェスティバル">
+                  <option value="teams_5_1">チームフェス phase1</option>
+                </optgroup>
+                <optgroup label="春の駅弁祭り">
+                  <option value="ekiben_4">春の駅弁祭り4</option>
+                </optgroup>
+              </>
+            ) : (
+              <>
+                <optgroup label="第21回マスターズランキング">
                   <option value="masters_21_1">
                     マスターズ みかん箱（最上段左が紫）
                   </option>
@@ -101,12 +110,6 @@ export default function StageSelect(): ReactNode {
                     マスターズ みかん箱（最上段左が緑）
                   </option>
                 </optgroup>
-                <optgroup label="春の駅弁祭り">
-                  <option value="ekiben_4">春の駅弁祭り4</option>
-                </optgroup>
-              </>
-            ) : (
-              <>
                 <optgroup label="第20回マスターズランキング ボタン">
                   <option value="masters_20_1">
                     マスターズ ボタン（最上段左が青）
