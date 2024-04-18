@@ -1,6 +1,6 @@
 import { type BoardConfig } from '@sweethomemaid/logic'
 
-export const currentStages = ['teams_5_1', 'ekiben_4'] as const
+export const currentStages = ['teams_5_1', 'teams_5_2', 'ekiben_4'] as const
 export const oldStages = [
   'masters_21_1',
   'masters_21_2',

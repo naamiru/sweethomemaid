@@ -92,6 +92,7 @@ export default function StageSelect(): ReactNode {
               <>
                 <optgroup label="チームズフェスティバル">
                   <option value="teams_5_1">チームフェス phase1</option>
+                  <option value="teams_5_2">チームフェス phase2</option>
                 </optgroup>
                 <optgroup label="春の駅弁祭り">
                   <option value="ekiben_4">春の駅弁祭り4</option>
