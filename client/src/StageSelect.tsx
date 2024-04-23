@@ -90,6 +90,17 @@ export default function StageSelect(): ReactNode {
           <select name="stage" value={stage} onChange={handleChange}>
             {stageType === 'current' ? (
               <>
+                <optgroup label="マスターズランキング">
+                  <option value="masters_23_1">
+                    マスターズランキング 泡（左下が黄）
+                  </option>
+                  <option value="masters_23_2">
+                    マスターズランキング 泡（左下が緑）
+                  </option>
+                  <option value="masters_23_3">
+                    マスターズランキング 泡（左下が赤）
+                  </option>
+                </optgroup>
                 <optgroup label="チームズフェスティバル">
                   <option value="teams_5_1">チームフェス phase1</option>
                   <option value="teams_5_2">チームフェス phase2</option>
