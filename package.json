@@ -1,6 +1,6 @@
 {
   "name": "sweethomemaid",
-  "version": "0.1.84",
+  "version": "0.1.85",
   "description": "app for sweethomemaid",
   "scripts": {
     "dev": "npm -w client run dev"
