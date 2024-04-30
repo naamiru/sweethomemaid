@@ -559,22 +559,13 @@
     &.is-aqua {
       background-image: url('./assets/piece-images/a0.png');
       &.is-ice-1 {
-        background-image: url('./assets/piece-images/a1.png');
+        background-image: url('./assets/piece-images/a_ice1.png');
       }
       &.is-ice-2 {
-        background-image: url('./assets/piece-images/a2.png');
+        background-image: url('./assets/piece-images/a_ice2.png');
       }
       &.is-ice-3 {
-        background-image: url('./assets/piece-images/a3.png');
-      }
-      &.is-ice-4 {
-        background-image: url('./assets/piece-images/a4.png');
-      }
-      &.is-ice-5 {
-        background-image: url('./assets/piece-images/a5.png');
-      }
-      &.is-ice-6 {
-        background-image: url('./assets/piece-images/a6.png');
+        background-image: url('./assets/piece-images/a_ice3.png');
       }
       &.is-jelly-1 {
         background-image: url('./assets/piece-images/a_jelly1.png');

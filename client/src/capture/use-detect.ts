@@ -303,6 +303,9 @@ function* inputTensors(
 
 const PIECE_FOR_INDEX: Array<Piece | [Piece, Cell]> = [
   createPiece(Kind.Aqua),
+  createPiece(Kind.Aqua, 1),
+  createPiece(Kind.Aqua, 2),
+  createPiece(Kind.Aqua, 3),
   createPiece(Kind.Aqua, 0, 0, 1),
   createPiece(Kind.Aqua, 0, 0, 2),
   createPiece(Kind.Aqua, 0, 0, 3),
